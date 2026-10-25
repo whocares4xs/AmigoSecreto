@@ -3,87 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Lista de Deseos Compartida ✨</title>
+    <title>Lista de Deseos Compartida</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; color: #000000; }
         body { 
-            background: linear-gradient(135deg, #FF6B6B, #FFE66D, #4ECDC4); 
+            background: linear-gradient(180deg, #FFFFFF 0%, #F3E8FF 50%, #E9D5FF 100%); 
             min-height: 100vh; 
             padding: 20px; 
         }
         .container { 
             max-width: 900px; 
             margin: 0 auto; 
-            background: #fff; 
+            background: #FFFFFF; 
             border-radius: 24px; 
             padding: 35px; 
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.25); 
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15); 
+            border: 2px solid #DDD6FE;
         }
         .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(12px)} to {opacity:1; transform:translateY(0)} }
         
         h1, h2, h3 { 
-            color: #FF6B6B; 
+            color: #000000; 
             text-align: center; 
             margin-bottom: 25px; 
         }
         h1 { font-size: 2.2rem; }
-        h2 { color: #4ECDC4; font-size: 1.8rem; }
-        h3 { color: #FFE66D; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        h2 { color: #4C1D95; font-size: 1.8rem; }
+        h3 { color: #5B21B6; }
         
-        input, button, select, textarea { 
+        input, select, textarea { 
             padding: 16px; 
             margin: 10px 0; 
-            border-radius: 14px; 
-            border: 3px solid #4ECDC4; 
-            font-size: 17px; 
+            border-radius: 12px; 
+            border: 2px solid #C4B5FD; 
+            font-size: 16px; 
             width: 100%; 
             transition: all 0.2s ease;
+            background: #FAF5FF;
         }
         input:focus, select:focus { 
             outline: none; 
-            border-color: #FF6B6B; 
-            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2);
+            border-color: #7C3AED; 
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
         }
         button { 
-            background: linear-gradient(135deg, #FF6B6B, #FF8E8E); 
-            color: white; 
+            background: #22C55E; 
+            color: #FFFFFF !important; 
             border: none; 
             cursor: pointer; 
             font-weight: 700; 
             transition: all 0.3s ease; 
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
         }
         button:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            background: #16A34A; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
         }
         button.secondary { 
-            background: linear-gradient(135deg, #4ECDC4, #6ED8D0); 
-            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+            background: #7C3AED; 
+            color: #FFFFFF !important; 
         }
         button.secondary:hover { 
-            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+            background: #6D28D9; 
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
         }
-        button.small { padding: 10px 16px; font-size: 15px; width: auto; margin: 5px; }
+        button.small { padding: 10px 16px; font-size: 14px; width: auto; margin: 5px; }
         button.save-btn { 
-            background: linear-gradient(135deg, #22C55E, #4ADE80); 
+            background: #15803D; 
             margin-top: 22px; 
-            font-size: 19px; 
+            font-size: 18px; 
             padding: 18px; 
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            width: 100%;
         }
         button.save-btn:hover { 
-            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+            background: #166534; 
         }
         button.amazon-mx, button.amazon-us { 
-            background: linear-gradient(135deg, #FFB703, #FFCC33); 
-            color: #1A1A1A; 
-            font-weight: 700;
+            background: #F59E0B; 
+            color: #000000 !important; 
+        }
+        button.amazon-mx:hover, button.amazon-us:hover { 
+            background: #D97706; 
         }
         .btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; align-items: center; }
         .btn-row button { flex: 1; min-width: 140px; }
@@ -97,46 +106,48 @@
             font-weight: 600;
         }
         .status.ok { background: #D1FAE5; color: #065F46; border: 2px solid #6EE7B7; }
-        .status.wait { background: #FEF3C7; color: #92400E; border: 2px solid #FCD34D; }
+        .status.wait { background: #F3E8FF; color: #5B21B6; border: 2px solid #C4B5FD; }
 
-        /* LISTAS DISPONIBLES — VERDE, LETRAS GRANDES */
+        /* LISTAS DISPONIBLES — VERDE ACTIVA, LETRAS GRANDES */
         .list-card { 
             padding: 25px; 
-            background: linear-gradient(135deg, #22C55E, #4ADE80); 
-            border-radius: 18px; 
+            background: #22C55E; 
+            border-radius: 16px; 
             margin: 15px 0; 
             cursor: pointer; 
             transition: all 0.3s ease; 
-            color: white;
-            box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
         }
         .list-card:hover { 
-            transform: translateY(-4px) scale(1.02); 
-            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.45);
-            background: linear-gradient(135deg, #16A34A, #22C55E); 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+            background: #16A34A; 
         }
         .list-card strong { 
             font-size: 1.6rem; 
             display: block; 
             margin-bottom: 8px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+            color: #FFFFFF !important;
         }
         .list-card small { 
-            font-size: 1.05rem; 
-            opacity: 0.95;
+            font-size: 1rem; 
+            color: #F0FDF4 !important;
         }
         .list-card.empty { 
-            background: linear-gradient(135deg, #F59E0B, #FBBF24); 
-            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+            background: #8B5CF6; 
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
         }
         .list-card.empty:hover {
-            background: linear-gradient(135deg, #D97706, #F59E0B);
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.45);
+            background: #7C3AED;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+        }
+        .list-card.empty small {
+            color: #EDE9FE !important;
         }
         
         .member-row { 
             padding: 16px; 
-            border-bottom: 2px solid #F0FDF4; 
+            border-bottom: 2px solid #EDE9FE; 
             cursor: pointer; 
             transition: all 0.25s ease; 
             display: flex; 
@@ -146,75 +157,83 @@
             margin: 4px 0;
         }
         .member-row:hover { 
-            background: #F0FDF4; 
-            transform: translateX(5px);
+            background: #F3E8FF; 
         }
         .member-row.you { 
             font-weight: bold; 
-            background: linear-gradient(90deg, #CCFBF1, #99F6E4); 
-            border-left: 5px solid #14B8A6;
+            background: #EDE9FE; 
+            border-left: 4px solid #7C3AED;
         }
         
         .wish-item { 
             padding: 18px; 
-            border-bottom: 2px solid #F3F4F6; 
+            border-bottom: 2px solid #EDE9FE; 
             margin-bottom: 12px; 
             border-radius: 14px;
-            background: #FAFAFA;
+            background: #FAF5FF;
             transition: background 0.2s ease;
         }
-        .wish-item:hover { background: #FDF4FF; }
-        .wish-item a { color: #FF6B6B; text-decoration: none; font-weight: 600; }
+        .wish-item:hover { background: #F3E8FF; }
+        .wish-item a { color: #7C3AED; text-decoration: none; font-weight: 600; }
         .wish-item a:hover { text-decoration: underline; }
         .wish-item .del-btn { 
-            background: linear-gradient(135deg, #EF4444, #F87171); 
+            background: #EF4444; 
             padding: 8px 14px; 
             font-size: 14px; 
             width: auto; 
             border-radius: 10px;
         }
-        .wish-details { margin: 8px 0; font-size: 15px; color: #52525B; }
-        .wish-details strong { color: #FF6B6B; }
+        .wish-item .del-btn:hover { background: #DC2626; }
+        .wish-details { margin: 8px 0; font-size: 15px; color: #1F2937; }
+        .wish-details strong { color: #4C1D95; }
         .favorite-tag { 
             display: inline-block; 
-            background: linear-gradient(135deg, #FBBF24, #FCD34D); 
-            color: #78350F; 
+            background: #FBBF24; 
+            color: #000000 !important; 
             padding: 4px 12px; 
             border-radius: 20px; 
             font-size: 13px; 
-            font-weight: 800; 
+            font-weight: 700; 
             margin-left: 10px;
-            box-shadow: 0 2px 6px rgba(251, 191, 36, 0.3);
         }
         
+        /* IMAGEN DEL PRODUCTO - GARANTIZADA */
         .product-preview { 
             text-align: center; 
             margin: 25px 0; 
             padding: 25px; 
-            background: linear-gradient(135deg, #F0FDF4, #D1FAE5); 
+            background: #F3E8FF; 
             border-radius: 20px; 
-            border: 3px solid #86EFAC;
+            border: 2px solid #C4B5FD;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .product-preview img { 
             max-width: 300px; 
             max-height: 300px; 
+            width: 100%;
+            height: auto;
             object-fit: contain; 
-            border-radius: 16px; 
+            border-radius: 12px; 
             margin-bottom: 15px; 
-            background: #fff; 
-            padding: 15px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: #FFFFFF; 
+            padding: 10px; 
+            border: 1px solid #DDD6FE;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
         }
         .product-preview h3 { 
-            color: #065F46; 
-            font-size: 1.5rem;
+            color: #000000; 
+            font-size: 1.4rem;
         }
         .form-group { margin: 18px 0; }
         .form-group label { 
             font-weight: 700; 
             display: block; 
             margin-bottom: 8px; 
-            color: #4ECDC4; 
+            color: #4C1D95; 
             font-size: 16px;
         }
         
@@ -223,17 +242,16 @@
             align-items: center; 
             justify-content: space-between; 
             padding: 16px; 
-            background: linear-gradient(135deg, #F0F9FF, #E0F2FE); 
-            border-radius: 16px; 
+            background: #FAF5FF; 
+            border-radius: 14px; 
             margin: 12px 0; 
             flex-wrap: wrap; 
             gap: 12px; 
-            border: 2px solid #BAE6FD;
+            border: 2px solid #EDE9FE;
             transition: all 0.2s ease;
         }
         .store-option:hover { 
-            background: linear-gradient(135deg, #E0F2FE, #BAE6FD); 
-            transform: translateX(3px);
+            background: #F3E8FF; 
         }
         .store-option .store-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
         .store-option .switch-area { 
@@ -241,11 +259,10 @@
             align-items: center; 
             gap: 10px; 
             font-size: 14px; 
-            color: #475569; 
             font-weight: 600;
         }
         
-        /* Switch estilo mejorado */
+        /* Switch */
         .switch { position: relative; display: inline-block; width: 52px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { 
@@ -255,7 +272,6 @@
             background-color: #D1D5DB; 
             border-radius: 28px; 
             transition: .3s; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         .slider:before { 
             position: absolute; 
@@ -265,40 +281,41 @@
             background-color: white; 
             border-radius: 50%; 
             transition: .3s; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-        input:checked + .slider { background: linear-gradient(135deg, #22C55E, #4ADE80); }
+        input:checked + .slider { background-color: #22C55E; }
         input:checked + .slider:before { transform: translateX(24px); }
         
         .custom-store { 
             margin-top: 22px; 
             padding: 20px; 
-            background: linear-gradient(135deg, #FEF3C7, #FDE68A); 
-            border-radius: 16px; 
-            border: 3px solid #FBBF24; 
+            background: #F3E8FF; 
+            border-radius: 14px; 
+            border: 2px solid #C4B5FD; 
         }
-        .custom-store h4 { margin-bottom: 12px; color: #92400E; font-size: 1.1rem; }
+        .custom-store h4 { margin-bottom: 12px; color: #4C1D95; font-size: 1.1rem; }
         
         .back-link { 
-            color: #4ECDC4; 
+            color: #7C3AED; 
             cursor: pointer; 
             display: inline-block; 
             margin-bottom: 18px; 
             font-weight: 700;
-            transition: all 0.2s ease;
         }
         .back-link:hover { 
             text-decoration: underline; 
-            color: #FF6B6B;
+            color: #4C1D95;
         }
         .hidden { display: none !important; }
         
         .summary-box {
-            background: linear-gradient(135deg, #E0F2FE, #C7F2E9);
-            border-radius: 16px;
+            background: #F3E8FF;
+            border-radius: 14px;
             padding: 20px;
-            border: 3px solid #4ECDC4;
+            border: 2px solid #C4B5FD;
+            margin-top: 25px;
         }
+        .summary-box h4 { color: #4C1D95; text-align: center; margin-bottom: 15px; }
+        #sel-fav { color: #B45309; font-weight: 700; display: none; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -307,21 +324,21 @@
 
         <!-- PANTALLA 1: Bienvenida / Nombre -->
         <div id="screen-welcome" class="screen active">
-            <h1>✨ Lista de Deseos Compartida ✨</h1>
-            <h2>¡Bienvenido!</h2>
-            <p style="text-align:center; margin-bottom:25px; font-size:1.1rem; color:#6B7280;">Ingresa tu nombre para empezar</p>
+            <h1>Lista de Deseos Compartida</h1>
+            <h2>Bienvenido</h2>
+            <p style="text-align:center; margin-bottom:25px; font-size:1.1rem;">Ingresa tu nombre para empezar</p>
             <input type="text" id="user-name" placeholder="Escribe tu nombre aquí...">
-            <button onclick="goToLists()">✨ Continuar</button>
+            <button onclick="goToLists()">Continuar</button>
         </div>
 
-        <!-- PANTALLA 2: Listas disponibles → VERDE, LETRAS GRANDES -->
+        <!-- PANTALLA 2: Listas disponibles -->
         <div id="screen-lists" class="screen">
-            <h2>📋 Mis Listas de Deseos</h2>
+            <h2>Mis Listas de Deseos</h2>
             <p id="greeting" style="text-align:center; margin-bottom:20px; font-size:1.05rem;"></p>
-            <h3 style="color:#22C55E;">✅ Listas disponibles — Haz clic para entrar:</h3>
+            <h3>Listas disponibles — Haz clic para entrar:</h3>
             <div id="existing-lists"></div>
-            <input type="text" id="new-list-name" placeholder="O crea una lista nueva...">
-            <button onclick="createNewList">➕ Crear Lista Nueva</button>
+            <input type="text" id="new-list-name" placeholder="Nombre de la lista nueva...">
+            <button onclick="createNewList()">Crear Lista Nueva</button>
             <button class="secondary" onclick="goBackToName()" style="margin-top:8px;">← Cambiar mi nombre</button>
         </div>
 
@@ -329,7 +346,7 @@
         <div id="screen-group" class="screen">
             <span class="back-link" onclick="goBackToLists()">← Volver a listas</span>
             <h2 id="group-title"></h2>
-            <h3>👥 Participantes:</h3>
+            <h3>Participantes:</h3>
             <div id="members-list"></div>
             <button onclick="goToAddWishes()">➕ Agregar mis deseos</button>
         </div>
@@ -337,9 +354,9 @@
         <!-- PANTALLA 4: Buscar producto -->
         <div id="screen-search" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
-            <h2>🔍 Agregar Deseo</h2>
+            <h2>Agregar Deseo</h2>
             <input type="text" id="product-search" placeholder="¿Qué deseas buscar? Ej: zapatillas, cámara, audífonos...">
-            <button onclick="goToResults()">🔍 Buscar</button>
+            <button onclick="goToResults()">Buscar</button>
         </div>
 
         <!-- PANTALLA 5: Resultados y tiendas -->
@@ -347,27 +364,27 @@
             <span class="back-link" onclick="goBackToSearch()">← Nueva búsqueda</span>
             
             <div class="product-preview">
-                <img id="product-image" src="" alt="Imagen del producto" onerror="handleImageError()">
+                <img id="product-image" src="" alt="Imagen del producto">
                 <h3 id="product-name-display"></h3>
-                <p style="color:#059669; font-weight:600;">Especifica los detalles de tu producto</p>
+                <p style="color:#4C1D95; font-weight:600; margin-top:10px;">Especifica los detalles de tu producto</p>
             </div>
 
             <div class="form-group">
-                <label for="product-size">📏 Talla / Medida</label>
+                <label for="product-size">Talla / Medida</label>
                 <input type="text" id="product-size" placeholder="Ej: 42, M, 10 US..." oninput="updateSummary()">
             </div>
 
             <div class="form-group">
-                <label for="product-color">🎨 Color</label>
+                <label for="product-color">Color</label>
                 <input type="text" id="product-color" placeholder="Ej: Negro, Rojo, Azul..." oninput="updateSummary()">
             </div>
 
-            <h3 style="margin-top:35px; color:#FF6B6B;">🛒 Selecciona dónde buscar</h3>
+            <h3 style="margin-top:35px;">Selecciona dónde buscar</h3>
 
             <!-- Google Shop -->
             <div class="store-option">
                 <div class="store-buttons">
-                    <button onclick="openGoogleShop()">🔍 Google Shop</button>
+                    <button onclick="openGoogleShop()">Google Shop</button>
                 </div>
                 <div class="switch-area">
                     <label class="switch">
@@ -381,7 +398,7 @@
             <!-- Amazon Shop -->
             <div class="store-option">
                 <div class="store-buttons">
-                    <button onclick="toggleAmazonOptions()">🛒 Amazon Shop ▼</button>
+                    <button onclick="toggleAmazonOptions()">Amazon Shop ▼</button>
                 </div>
                 <div class="switch-area">
                     <label class="switch">
@@ -393,15 +410,15 @@
             </div>
             <div id="amazon-sub-options" class="hidden">
                 <div class="btn-row">
-                    <button class="amazon-mx" onclick="openAmazonMX()">🇲🇽 Amazon México</button>
-                    <button class="amazon-us" onclick="openAmazonUS()">🇺🇸 Amazon EE.UU.</button>
+                    <button class="amazon-mx" onclick="openAmazonMX()">Amazon México</button>
+                    <button class="amazon-us" onclick="openAmazonUS()">Amazon USA</button>
                 </div>
             </div>
 
             <!-- eBay Shop -->
             <div class="store-option">
                 <div class="store-buttons">
-                    <button onclick="openEbayShop()">🏷️ eBay Shop</button>
+                    <button onclick="openEbayShop()">eBay Shop</button>
                 </div>
                 <div class="switch-area">
                     <label class="switch">
@@ -414,7 +431,7 @@
 
             <!-- Tienda personalizada -->
             <div class="custom-store">
-                <h4>🌐 Tienda no listada — ¡Agrega la tuya!</h4>
+                <h4>Tienda no listada — Agrega la tuya</h4>
                 <input type="text" id="custom-store-name" placeholder="Nombre de la tienda" oninput="updateSummary()">
                 <input type="url" id="custom-store-url" placeholder="Enlace / URL de compra" oninput="updateSummary()">
                 <div class="switch-area" style="justify-content:flex-start; margin-top:8px;">
@@ -424,20 +441,20 @@
                     </label>
                     <span>Tienda favorita</span>
                 </div>
-                <button class="secondary small" onclick="setCustomStore()">✅ Seleccionar esta tienda</button>
+                <button class="secondary small" onclick="setCustomStore()">Seleccionar esta tienda</button>
             </div>
 
             <!-- Resumen -->
-            <div class="summary-box" style="margin-top:28px;">
-                <h4 style="text-align:center; margin-bottom:15px; color:#0D9488; font-size:1.15rem;">✨ Tu selección</h4>
-                <p style="margin:6px 0;"><strong>Producto:</strong> <span id="sel-name"></span></p>
-                <p style="margin:6px 0;"><strong>Talla:</strong> <span id="sel-size"></span></p>
-                <p style="margin:6px 0;"><strong>Color:</strong> <span id="sel-color"></span></p>
-                <p style="margin:6px 0;"><strong>Tienda elegida:</strong> <span id="sel-store">—</span></p>
-                <p id="sel-fav" style="color:#B45309; font-weight:800; display:none; margin-top:8px;">⭐ Esta es tu tienda favorita</p>
+            <div class="summary-box">
+                <h4>Tu selección</h4>
+                <p><strong>Producto:</strong> <span id="sel-name"></span></p>
+                <p><strong>Talla:</strong> <span id="sel-size"></span></p>
+                <p><strong>Color:</strong> <span id="sel-color"></span></p>
+                <p><strong>Tienda elegida:</strong> <span id="sel-store">—</span></p>
+                <p id="sel-fav">⭐ Esta es tu tienda favorita</p>
             </div>
 
-            <button class="save-btn" onclick="saveSelectedWish()">💾 Agregar y Guardar en mi lista</button>
+            <button class="save-btn" onclick="saveSelectedWish()">Agregar y Guardar en mi lista</button>
         </div>
 
         <!-- PANTALLA 6: Mis deseos / Vista de participante -->
@@ -446,7 +463,7 @@
             <h2 id="my-wishes-title"></h2>
             <div id="wishes-display-list"></div>
             <button class="secondary" onclick="goToSearch()">➕ Agregar otro deseo</button>
-            <button class="save-btn" onclick="saveAllToCloud()">💾 Guardar todo en la nube</button>
+            <button class="save-btn" onclick="saveAllToCloud()">Guardar todo en la nube</button>
         </div>
     </div>
 
@@ -485,7 +502,7 @@ let pendingProduct = {
 const connectedRef = db.ref(".info/connected");
 connectedRef.on("value", (snap) => {
   const status = document.getElementById("status-bar");
-  status.textContent = snap.val() === true ? "✅ Conectado — Sincronizado" : "⏳ Conectando...";
+  status.textContent = snap.val() === true ? "Conectado — Sincronizado" : "Conectando...";
   status.className = snap.val() === true ? "status ok" : "status wait";
 });
 
@@ -499,7 +516,7 @@ function goToLists() {
   const name = document.getElementById('user-name').value.trim();
   if (!name) return alert('Por favor escribe tu nombre');
   currentUser = name;
-  document.getElementById('greeting').textContent = `👋 Hola, ${currentUser}! Elige una lista o crea una nueva.`;
+  document.getElementById('greeting').textContent = `Hola, ${currentUser}! Elige una lista o crea una nueva.`;
   renderLists();
   showScreen('screen-lists');
 }
@@ -508,14 +525,14 @@ function goBackToName() {
   showScreen('screen-welcome');
 }
 
-// ========== PANTALLA 2: LISTAS — VERDE, LETRAS GRANDES ==========
+// ========== PANTALLA 2: LISTAS ==========
 async function renderLists() {
   const snap = await db.ref("lists").once("value");
   const container = document.getElementById('existing-lists');
   container.innerHTML = '';
   
   if (!snap.exists()) {
-    container.innerHTML = '<p style="color:#6B7280; text-align:center; padding:20px; font-size:1.05rem;">Aún no hay listas. ¡Crea la primera! 🎉</p>';
+    container.innerHTML = '<p style="text-align:center; padding:20px;">Aún no hay listas. ¡Crea la primera!</p>';
     return;
   }
   
@@ -527,7 +544,7 @@ async function renderLists() {
     card.innerHTML = `
       <strong>${list.name}</strong>
       <span>${count} participante${count !== 1 ? 's' : ''}</span>
-      ${count === 0 ? '<br><small style="opacity:0.9;">✨ Sé el primero en participar</small>' : ''}
+      ${count === 0 ? '<br><small>Sé el primero en participar</small>' : ''}
     `;
     card.onclick = () => openList(child.key);
     container.appendChild(card);
@@ -536,7 +553,7 @@ async function renderLists() {
 
 async function createNewList() {
   const name = document.getElementById('new-list-name').value.trim();
-  if (!name) return alert('Escribe un nombre para la lista ✨');
+  if (!name) return alert('Escribe un nombre para la lista');
   const newRef = db.ref("lists").push();
   currentListId = newRef.key;
   await newRef.set({ name: name, members: {} });
@@ -577,13 +594,13 @@ function renderGroupView(data = null) {
     return;
   }
   
-  document.getElementById('group-title').textContent = `📋 ${data.name}`;
+  document.getElementById('group-title').textContent = data.name;
   const container = document.getElementById('members-list');
   const members = data.members || {};
   container.innerHTML = '';
   
   if (Object.keys(members).length === 0) {
-    container.innerHTML = '<p style="color:#22C55E; padding:20px; text-align:center; font-size:1.05rem;">🎉 ¡Sé el primero en agregar deseos!</p>';
+    container.innerHTML = '<p style="text-align:center; padding:20px;">¡Sé el primero en agregar deseos!</p>';
     return;
   }
   
@@ -592,8 +609,8 @@ function renderGroupView(data = null) {
     const row = document.createElement('div');
     row.className = `member-row ${name === currentUser ? 'you' : ''}`;
     row.innerHTML = `
-      <span style="font-size:1.05rem;">${name} ${name === currentUser ? '👈 (Tú)' : ''}</span>
-      <span style="color:#22C55E; font-weight:700;">${count} deseo${count !== 1 ? 's' : ''} →</span>
+      <span>${name} ${name === currentUser ? '(Tú)' : ''}</span>
+      <span>${count} deseo${count !== 1 ? 's' : ''} →</span>
     `;
     row.onclick = () => viewParticipant(name);
     container.appendChild(row);
@@ -610,9 +627,9 @@ function viewParticipant(name) {
     const data = snap.val();
     const wishes = (data.members || {})[name] || [];
     const container = document.getElementById('wishes-display-list');
-    document.getElementById('my-wishes-title').textContent = `🎁 Lista de ${name}`;
+    document.getElementById('my-wishes-title').textContent = `Lista de ${name}`;
     if (wishes.length === 0) {
-      container.innerHTML = '<p style="color:#6B7280; text-align:center; padding:25px; font-size:1.05rem;">Aún no ha agregado deseos.</p>';
+      container.innerHTML = '<p style="text-align:center; padding:25px;">Aún no ha agregado deseos.</p>';
     } else {
       container.innerHTML = wishes.map(wish => renderWishCard(wish, false)).join('');
     }
@@ -631,19 +648,32 @@ function goBackToSearch() {
   goToSearch();
 }
 
-// ========== PANTALLA 5: RESULTADOS ==========
+// ========== PANTALLA 5: RESULTADOS — IMAGEN GARANTIZADA ==========
 function goToResults() {
   const query = document.getElementById('product-search').value.trim();
-  if (!query) return alert('Escribe el nombre del producto 🔍');
+  if (!query) return alert('Escribe el nombre del producto');
   
   pendingProduct.name = query;
   
+  // Imagen con múltiples fuentes de respaldo
   const encoded = encodeURIComponent(query);
+  
+  // Fuente principal
   pendingProduct.image = `https://loremflickr.com/400/400/${encoded}`;
   
   const imgEl = document.getElementById('product-image');
   imgEl.src = pendingProduct.image;
   imgEl.alt = `Imagen: ${query}`;
+  
+  // Primer respaldo si falla la principal
+  imgEl.onerror = function() {
+    this.src = `https://source.unsplash.com/400x400/?${encoded}`;
+    // Segundo respaldo si también falla
+    this.onerror = function() {
+      this.src = `https://picsum.photos/seed/${encoded}/400/400`;
+      this.onerror = null; // Detener bucle
+    };
+  };
   
   document.getElementById('product-name-display').textContent = query;
   document.getElementById('product-size').value = '';
@@ -653,11 +683,6 @@ function goToResults() {
   resetStoreSelection();
   updateSummary();
   showScreen('screen-results');
-}
-
-function handleImageError() {
-  const query = encodeURIComponent(pendingProduct.name);
-  document.getElementById('product-image').src = `https://source.unsplash.com/400x400/?${query}`;
 }
 
 function toggleAmazonOptions() {
@@ -693,7 +718,7 @@ function openAmazonMX() {
 function openAmazonUS() {
   const url = buildSearchUrl('https://www.amazon.com/s?k=', pendingProduct.name + '&language=es');
   window.open(url, '_blank');
-  pendingProduct.store = 'Amazon EE.UU. (Español)';
+  pendingProduct.store = 'Amazon USA';
   pendingProduct.url = url;
   updateSummary();
 }
@@ -709,13 +734,13 @@ function openEbayShop() {
 function setCustomStore() {
   const name = document.getElementById('custom-store-name').value.trim();
   const url = document.getElementById('custom-store-url').value.trim();
-  if (!name || !url) return alert('Escribe el nombre y el enlace de la tienda ✨');
+  if (!name || !url) return alert('Escribe el nombre y el enlace de la tienda');
   
   pendingProduct.store = name;
   pendingProduct.url = url;
   window.open(url, '_blank');
   updateSummary();
-  alert('✅ Tienda seleccionada');
+  alert('Tienda seleccionada ✅');
 }
 
 // === SWITCH FAVORITA ===
@@ -759,7 +784,7 @@ function resetPendingProduct() {
 // ========== GUARDAR ==========
 function saveSelectedWish() {
   if (!pendingProduct.store || !pendingProduct.url) {
-    return alert('Primero selecciona una tienda para continuar 🛒');
+    return alert('Primero selecciona una tienda para continuar');
   }
   
   const wish = {
@@ -774,7 +799,7 @@ function saveSelectedWish() {
   };
   
   localWishes.push(wish);
-  alert('✅ Agregado a tu lista');
+  alert('Agregado a tu lista ✅');
   
   resetPendingProduct();
   resetStoreSelection();
@@ -785,16 +810,17 @@ function renderWishCard(wish, allowDelete = true) {
   return `
     <div class="wish-item">
       <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:flex-start;">
-        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:12px; background:#F0FDF4; padding:8px;" onerror="this.src='https://loremflickr.com/100/100/gift'">
+        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:10px; background:#FFFFFF; padding:8px; border:1px solid #EDE9FE;" 
+             onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(wish.name)}/100/100'; this.onerror=null;">
         <div style="flex:1; min-width:200px;">
-          <strong style="font-size:17px; color:#FF6B6B;">${wish.name}</strong>
+          <strong style="font-size:17px;">${wish.name}</strong>
           ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
           <div class="wish-details">
             <strong>Talla:</strong> ${wish.size}<br>
             <strong>Color:</strong> ${wish.color}<br>
             <strong>Tienda:</strong> ${wish.store}<br>
-            <a href="${wish.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a><br>
-            <small style="color:#A1A1AA;">Agregado: ${wish.addedAt}</small>
+            <a href="${wish.url}" target="_blank" rel="noopener">Ir a comprar →</a><br>
+            <small style="color:#6B7280;">Agregado: ${wish.addedAt}</small>
           </div>
         </div>
         ${allowDelete ? `<button class="del-btn" onclick="removeWish(${localWishes.indexOf(wish)})">Eliminar</button>` : ''}
@@ -804,7 +830,7 @@ function renderWishCard(wish, allowDelete = true) {
 }
 
 async function loadMyWishes() {
-  document.getElementById('my-wishes-title').textContent = `🎁 Mis Deseos — ${currentUser}`;
+  document.getElementById('my-wishes-title').textContent = `Mis Deseos — ${currentUser}`;
   const snap = await db.ref(`lists/${currentListId}/members/${currentUser}`).once("value");
   localWishes = snap.exists() ? [...snap.val()] : [];
   renderMyWishesList();
@@ -814,14 +840,14 @@ async function loadMyWishes() {
 function renderMyWishesList() {
   const container = document.getElementById('wishes-display-list');
   if (localWishes.length === 0) {
-    container.innerHTML = '<p style="color:#6B7280; text-align:center; padding:25px; font-size:1.05rem;">Aún no tienes deseos. ¡Busca tu primer producto! 🎉</p>';
+    container.innerHTML = '<p style="text-align:center; padding:25px;">Aún no tienes deseos. ¡Busca tu primer producto!</p>';
     return;
   }
   container.innerHTML = localWishes.map((w, i) => renderWishCard(w, true)).join('');
 }
 
 function removeWish(index) {
-  if (confirm('¿Eliminar este deseo? 🗑️')) {
+  if (confirm('¿Eliminar este deseo?')) {
     localWishes.splice(index, 1);
     renderMyWishesList();
   }
@@ -829,7 +855,7 @@ function removeWish(index) {
 
 async function saveAllToCloud() {
   await db.ref(`lists/${currentListId}/members/${currentUser}`).set(localWishes);
-  alert('✅ ¡Guardado en la nube!\nTodos ven tus deseos ahora 🎉');
+  alert('¡Guardado en la nube! 🎉');
   goToGroup();
 }
 </script>
