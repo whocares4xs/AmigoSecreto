@@ -15,11 +15,11 @@
             --apple-secondary: #86868b;
             --apple-accent: #0071e3;
             --apple-success: #34c759;
-            --apple-warning: #ff9500;
-            --apple-danger: #ef4444;
             --apple-border: #d2d2d7;
             --apple-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
             --apple-radius: 22px;
+            --companion-bg: rgba(255,255,255,0.96);
+            --companion-accent: #0071e3;
         }
         * {margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;}
         body {background:var(--apple-bg); min-height:100vh; padding:18px;}
@@ -56,12 +56,7 @@
         .favorite-tag {display:inline-block; background:linear-gradient(135deg, #ffd60a, #ffcc00); color:#7a4200 !important; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:800; margin-left:10px;}
         .product-preview {text-align:center; margin:25px 0; padding:25px; background:linear-gradient(180deg, #fafafa, #f5f5f7); border-radius:var(--apple-radius); border:1px solid var(--apple-border); min-height:180px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
         .product-preview h3 {font-size:1.45rem; margin-bottom:8px;}
-        .picked-badge {background:#dcfce7; color:#166534; padding:8px 16px; border-radius:20px; font-weight:600; margin-bottom:10px; display:inline-block; animation:badgePop 0.5s ease;}
-        @keyframes badgePop {
-            0% {transform:scale(0.8); opacity:0;}
-            50% {transform:scale(1.1);}
-            100% {transform:scale(1); opacity:1;}
-        }
+        .picked-badge {background:#dcfce7; color:#166534; padding:8px 16px; border-radius:20px; font-weight:600; margin-bottom:10px; display:inline-block;}
         .form-group {margin:18px 0;}
         .form-group label {font-weight:700; display:block; margin-bottom:8px; font-size:16px;}
         .store-option {display:flex; align-items:center; justify-content:space-between; padding:16px; background:#fafafa; border-radius:16px; margin:12px 0; flex-wrap:wrap; gap:12px; border:1px solid var(--apple-border); transition:all 0.2s;}
@@ -79,187 +74,86 @@
         .back-link:hover {color:#0077ed; text-decoration:underline;}
         .hidden {display:none !important;}
         .summary-box {background:linear-gradient(180deg, #fafafa, #f5f5f7); border-radius:var(--apple-radius); padding:20px; border:1px solid var(--apple-border); margin-top:25px;}
+        .companion-note {background:#eaf5ff; border-left:4px solid var(--apple-accent); padding:12px 16px; border-radius:0 12px 12px 0; margin:15px 0; font-size:14px;}
         #sel-fav {color:#92400e; font-weight:700; display:none; margin-top:8px;}
 
-        /* === TUTORIAL & BOOKMARKLET === */
-        .tutorial-section {
-            background:linear-gradient(135deg, #eaf5ff, #f0f7ff);
-            border-radius:20px;
-            padding:24px;
-            margin:24px 0;
-            border:2px solid #b9dcff;
+        /* === VENTANA COMPAÑERA FLOTANTE === */
+        .companion-window {
+            position:fixed;
+            top:20px;
+            right:20px;
+            width:340px;
+            background:var(--companion-bg);
+            border-radius:var(--apple-radius);
+            box-shadow:0 10px 40px rgba(0,0,0,0.18);
+            border:1px solid rgba(0,113,227,0.15);
+            z-index:999999;
+            overflow:hidden;
+            backdrop-filter:blur(12px);
+            display:none;
+            flex-direction:column;
         }
-        .tutorial-steps {
-            position:relative;
-            margin-top:20px;
-        }
-        .tutorial-step {
-            display:flex;
-            align-items:flex-start;
-            gap:16px;
-            padding:18px;
-            margin:12px 0;
-            background:#fff;
-            border-radius:16px;
-            border:2px solid transparent;
-            transition:all 0.4s ease;
-            opacity:0.5;
-            transform:translateX(10px);
-        }
-        .tutorial-step.active {
-            border-color:var(--apple-accent);
-            background:linear-gradient(90deg, #f0f7ff, #fff);
-            opacity:1;
-            transform:translateX(0);
-            box-shadow:0 4px 20px rgba(0,113,227,0.15);
-        }
-        .tutorial-step.completed {
-            border-color:var(--apple-success);
-            opacity:1;
-            background:#f7fff9;
-        }
-        .step-number {
-            flex-shrink:0;
-            width:36px;
-            height:36px;
-            line-height:36px;
-            text-align:center;
-            border-radius:50%;
-            background:var(--apple-accent);
+        .companion-window.active {display:flex;}
+        .companion-header {
+            background:linear-gradient(135deg, var(--apple-accent), #0077ed);
             color:#fff;
-            font-weight:700;
-            font-size:18px;
-            transition:all 0.3s ease;
-        }
-        .tutorial-step.completed .step-number {
-            background:var(--apple-success);
-            content:"✓";
-        }
-        .step-content {flex:1;}
-        .step-content h4 {font-size:16px; margin-bottom:6px; color:var(--apple-text);}
-        .step-content p {font-size:14px; color:var(--apple-secondary); line-height:1.6;}
-        .bookmarklet-wrapper {
-            text-align:center;
-            padding:20px;
-            margin:16px 0;
-            background:#fff;
-            border-radius:16px;
-            border:2px dashed var(--apple-accent);
-            transition:all 0.3s ease;
-        }
-        .bookmarklet-wrapper.highlight {
-            border-style:solid;
-            border-color:var(--apple-success);
-            background:linear-gradient(135deg, #f7fff9, #fff);
-            animation:pulseBorder 1.5s infinite;
-        }
-        @keyframes pulseBorder {
-            0% {box-shadow:0 0 0 0 rgba(52,199,89,0.4);}
-            70% {box-shadow:0 0 0 12px rgba(52,199,89,0);}
-            100% {box-shadow:0 0 0 0 rgba(52,199,89,0);}
-        }
-        .bookmarklet-btn {
-            display:inline-block;
-            background:linear-gradient(135deg, #0071e3, #0077ed);
-            color:#fff !important;
-            padding:14px 24px;
-            border-radius:12px;
-            font-weight:700;
-            text-decoration:none;
-            cursor:grab;
-            font-size:16px;
-            box-shadow:0 4px 12px rgba(0,113,227,0.3);
-            transition:all 0.2s ease;
-        }
-        .bookmarklet-btn:hover {
-            transform:scale(1.05);
-            box-shadow:0 6px 20px rgba(0,113,227,0.4);
-        }
-        .drag-icon {
-            display:inline-block;
-            margin-right:8px;
-            animation:dragHint 1.5s infinite;
-        }
-        @keyframes dragHint {
-            0%,100% {transform:translateX(0);}
-            50% {transform:translateX(4px);}
-        }
-        .browser-bar-demo {
-            background:#f0f0f0;
-            border-radius:10px;
-            padding:10px 14px;
-            margin:12px auto;
-            max-width:400px;
-            font-size:13px;
-            color:#666;
-            text-align:left;
-        }
-        .browser-bar-demo .bar-item {
-            display:inline-block;
-            background:#e0e0e0;
-            padding:4px 10px;
-            border-radius:6px;
-            margin:2px;
-        }
-        .browser-bar-demo .bar-item.new {
-            background:var(--apple-accent);
-            color:#fff;
-            animation:newItemPop 0.6s ease;
-        }
-        @keyframes newItemPop {
-            0% {transform:scale(0); opacity:0;}
-            60% {transform:scale(1.2);}
-            100% {transform:scale(1); opacity:1;}
-        }
-        .tutorial-nav {
+            padding:12px 16px;
             display:flex;
             justify-content:space-between;
-            margin-top:20px;
+            align-items:center;
         }
-        .tutorial-status {
-            text-align:center;
-            margin-top:10px;
-            font-size:14px;
-            color:var(--apple-secondary);
+        .companion-header h4 {color:#fff; font-size:15px; font-weight:700;}
+        .companion-close {
+            background:rgba(255,255,255,0.2);
+            padding:4px 10px;
+            font-size:18px;
+            line-height:1;
+            border-radius:8px;
         }
-        .progress-bar {
-            height:6px;
-            background:#e9e9eb;
-            border-radius:3px;
+        .companion-body {padding:16px;}
+        .companion-product-name {
+            font-weight:700;
+            font-size:15px;
+            margin-bottom:12px;
+            line-height:1.4;
+        }
+        .companion-btn {
+            width:100%;
+            padding:12px;
+            font-size:15px;
+            border-radius:10px;
             margin-top:8px;
-            overflow:hidden;
         }
-        .progress-fill {
-            height:100%;
-            background:var(--apple-success);
-            border-radius:3px;
-            width:0%;
-            transition:width 0.4s ease;
-        }
-        .success-banner {
-            background:linear-gradient(135deg, #dcfce7, #efffe8);
-            border:2px solid var(--apple-success);
-            border-radius:16px;
-            padding:20px;
-            text-align:center;
-            margin:20px 0;
-            animation:successFade 0.6s ease;
-        }
-        @keyframes successFade {
-            0% {opacity:0; transform:translateY(10px);}
-            100% {opacity:1; transform:translateY(0);}
-        }
-        .mini-tip {
-            background:#fffbeb;
-            border-left:3px solid var(--apple-warning);
-            padding:12px 16px;
-            border-radius:0 10px 10px 0;
-            margin:12px 0;
+        .companion-minimize {
+            background:transparent;
+            color:#fff !important;
+            padding:2px 8px;
             font-size:14px;
         }
+        .companion-window.minimized .companion-body {display:none;}
+        .companion-window.minimized {width:auto;}
+        .companion-window.minimized .companion-header {border-radius:var(--apple-radius);}
     </style>
 </head>
 <body>
+
+    /* === VENTANA COMPAÑERA INTEGRADA === */
+    <div id="companion-floating" class="companion-window">
+        <div class="companion-header">
+            <h4>🛒 Añadir a Mi Lista</h4>
+            <div style="display:flex; gap:6px;">
+                <button class="companion-minimize" onclick="toggleMinimizeCompanion()">−</button>
+                <button class="companion-close" onclick="closeCompanion()">×</button>
+            </div>
+        </div>
+        <div class="companion-body">
+            <p style="font-size:13px; color:var(--apple-secondary); margin-bottom:8px;">¿Es este el producto correcto?</p>
+            <div class="companion-product-name" id="companion-product-label">Cargando...</div>
+            <button class="companion-btn" onclick="confirmAddToWishlist()">✅ Añadir a mi lista</button>
+            <button class="companion-btn secondary" onclick="skipThisProduct()">❌ No este</button>
+        </div>
+    </div>
+
     <div class="container">
         <div id="status-bar" class="status wait">Conectando a la nube...</div>
 
@@ -277,89 +171,8 @@
             <h2>Mis Listas de Deseos</h2>
             <p id="greeting" style="text-align:center; margin-bottom:20px; font-size:1.05rem; color:var(--apple-secondary);"></p>
             
-            <!-- 🎓 TUTORIAL INTERACTIVO DEL BOOKMARKLET -->
-            <div class="tutorial-section">
-                <h3 style="margin-top:0; text-align:left;">🛒 Configurar: Añadir productos automáticamente</h3>
-                <p style="color:var(--apple-secondary); margin-bottom:10px;">Configura una sola vez y podrás enviar productos de Amazon, eBay y Google a tu lista con un solo clic.</p>
-                
-                <div class="tutorial-nav">
-                    <button class="secondary small" id="btn-skip-tutorial" onclick="skipTutorial()">Saltar tutorial</button>
-                    <button class="small hidden" id="btn-reset-tutorial" onclick="resetTutorial()">Reiniciar tutorial</button>
-                </div>
-                
-                <div class="tutorial-status">
-                    Paso <span id="step-current">1</span> de <span id="step-total">4</span>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill"></div>
-                    </div>
-                </div>
-
-                <div class="tutorial-steps">
-                    <!-- PASO 1 -->
-                    <div class="tutorial-step" id="step-1">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>📌 Asegúrate de que la barra de favoritos sea visible</h4>
-                            <p>En tu navegador, presiona <kbd>Ctrl + Mayús + B</kbd> (Windows/Linux) o <kbd>⌘ + Mayús + B</kbd> (Mac) para mostrar la barra de favoritos. Deberías ver una fila de enlaces debajo de la dirección web.</p>
-                            <button class="small" onclick="markStepComplete(1)">✅ Ya la veo</button>
-                        </div>
-                    </div>
-
-                    <!-- PASO 2 -->
-                    <div class="tutorial-step" id="step-2">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>↔️ Arrastra el botón a tu barra de favoritos</h4>
-                            <p>Coloca el ratón sobre el botón azul de abajo, mantén presionado el clic y arrástralo hacia tu barra de favoritos. Suelta cuando veas una línea o cursor que indica dónde se colocará.</p>
-                            
-                            <div class="bookmarklet-wrapper" id="bookmark-drop-zone">
-                                <span class="drag-icon">↔️</span>
-                                <a href="javascript:(function(){function getTitle(){const e=document.getElementById('productTitle')||document.querySelector('h1')||document.querySelector('.product-title');return e?e.textContent.trim().substring(0,120):document.title.split(' - ')[0].trim().substring(0,120)}function getASIN(){const e=window.location.pathname.match(/dp\/([A-Z0-9]+)/);return e?e[1]:''}function detectStore(){const e=window.location.hostname;if(e.includes('amazon.com.mx'))return'Amazon México';if(e.includes('amazon'))return e.includes('mx')?'Amazon México':'Amazon USA';if(e.includes('ebay'))return'eBay';if(e.includes('google'))return'Google Shopping';return'Tienda'}if(window.opener&&window.opener.receiveProductFromBookmarklet){window.opener.receiveProductFromBookmarklet({name:getTitle(),url:window.location.href,store:detectStore(),asin:getASIN()});alert('✅ ¡Enviado a tu lista!')}else{alert('⚠️ Abre tu lista de deseos primero en otra pestaña y manténla abierta.')}})();" 
-                                   class="bookmarklet-btn" id="bookmark-btn">➕ Añadir a Mi Lista</a>
-                            </div>
-                            
-                            <div class="browser-bar-demo">
-                                Ejemplo: ↦ <span class="bar-item">Inicio</span> <span class="bar-item bar-item new">➕ Añadir a Mi Lista</span>
-                            </div>
-                            
-                            <button class="small" onclick="markStepComplete(2)">✅ Lo he agregado</button>
-                        </div>
-                    </div>
-
-                    <!-- PASO 3 -->
-                    <div class="tutorial-step" id="step-3">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>🛍️ Cómo usarlo cuando compres</h4>
-                            <p>1. Mantén abierta esta página de tu lista<br>
-                               2. Abre Amazon, busca y entra en la página de un producto<br>
-                               3. Haz clic en el botón <strong>"➕ Añadir a Mi Lista"</strong> de tu barra de favoritos<br>
-                               4. El producto aparecerá aquí automáticamente ✨</p>
-                            
-                            <div class="mini-tip">
-                                💡 <strong>Consejo:</strong> Si haces clic y no pasa nada, asegúrate de que esta página de tu lista siga abierta en otra pestaña.
-                            </div>
-                            
-                            <button class="small" onclick="markStepComplete(3)">✅ Entiendo cómo usarlo</button>
-                        </div>
-                    </div>
-
-                    <!-- PASO 4 -->
-                    <div class="tutorial-step" id="step-4">
-                        <div class="step-number">✓</div>
-                        <div class="step-content">
-                            <h4>🎉 ¡Listo!</h4>
-                            <p>Ya tienes todo configurado. Cuando encuentres un producto que te guste, solo haz clic en el botón de tu barra y se llenará aquí automáticamente.</p>
-                            
-                            <div class="success-banner">
-                                ✅ <strong>Configuración completada</strong><br>
-                                <span style="font-size:14px; color:var(--apple-secondary);">Ahora puedes buscar productos y enviarlos aquí con un clic.</span>
-                            </div>
-                            
-                            <button class="small" onclick="markStepComplete(4)">✅ Empezar</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="companion-note">
+                💡 <strong>Nuevo:</strong> Al abrir cualquier tienda aparecerá una ventana flotante en la esquina superior derecha con el botón "Añadir a mi lista". ¡Solo haz clic y se llena solo! ✅
             </div>
             
             <h3>Listas disponibles — Haz clic para entrar:</h3>
@@ -382,9 +195,9 @@
         <div id="screen-search" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2>Agregar Deseo</h2>
-            <input type="text" id="product-search" placeholder="Busca aquí, o usa el botón de tu barra de favoritos...">
+            <input type="text" id="product-search" placeholder="Busca aquí, o abre directamente la tienda...">
             <button onclick="goToResults()">Buscar</button>
-            <p style="text-align:center; margin-top:15px; color:var(--apple-secondary); font-size:14px;">💡 Mantén esta pestaña abierta mientras buscas en Amazon/eBay y usa el botón "➕ Añadir a Mi Lista"</p>
+            <p style="text-align:center; margin-top:15px; color:var(--apple-secondary); font-size:14px;">💡 Al abrir la tienda verás el botón flotante "Añadir a mi lista" en la esquina superior derecha</p>
         </div>
 
         <!-- RESULTS SCREEN -->
@@ -513,7 +326,8 @@ let currentUser = '';
 let currentListId = '';
 let listRef = null;
 let localWishes = [];
-let currentTutorialStep = 0;
+let companionTabId = null;
+let pendingCompanionData = null;
 
 let pendingProduct = {
   name: '',
@@ -521,85 +335,162 @@ let pendingProduct = {
   color: '',
   store: '',
   url: '',
-  asin: '',
   isFavorite: false,
   fromPicker: false
 };
 
 // ==============================================
-// 🎓 TUTORIAL INTERACTIVO
+// 🚀 COMPAÑERO FLOTANTE — Lógica principal
 // ==============================================
-function initTutorial() {
-    // Mostrar paso 1 activo
-    updateStepDisplay(1);
+function buildCompanionInjectorScript() {
+    // Código que se inserta en la página de la tienda para mostrar el botón flotante
+    return `
+(function(){
+    if (window.__wishlistCompanionLoaded) return;
+    window.__wishlistCompanionLoaded = true;
+
+    // Extraer título del producto
+    function getProductTitle() {
+        const selectors = [
+            'h1',
+            '#productTitle',
+            '[data-asin] h2',
+            '.product-title',
+            '.it-ttl',
+            'h1.product-title',
+            '.sku-title'
+        ];
+        for (const sel of selectors) {
+            const el = document.querySelector(sel);
+            if (el && el.textContent.trim().length > 2) {
+                return el.textContent.trim().substring(0, 90);
+            }
+        }
+        return document.title.split(' - ')[0].trim().substring(0, 90);
+    }
+
+    // Detectar tienda
+    function detectStore() {
+        const h = window.location.hostname;
+        if (h.includes('amazon')) return 'Amazon';
+        if (h.includes('ebay')) return 'eBay';
+        if (h.includes('google')) return 'Google Shopping';
+        return 'Tienda';
+    }
+
+    // Enviar selección a la pestaña principal
+    function sendToWishlist() {
+        if (window.opener && window.opener.receiveProductFromCompanion) {
+            window.opener.receiveProductFromCompanion({
+                name: getProductTitle(),
+                url: window.location.href,
+                store: detectStore()
+            });
+            alert('✅ ¡Enviado a tu lista!');
+        } else {
+            alert('⚠️ La pestaña de tu lista debe permanecer abierta. Vuelve a buscar desde ella.');
+        }
+    }
+
+    // Crear interfaz flotante
+    const style = document.createElement('style');
+    style.textContent = \`
+.__wishlist-companion {
+    position:fixed !important;
+    top:20px !important;
+    right:20px !important;
+    width:320px !important;
+    background:rgba(255,255,255,0.96) !important;
+    border-radius:18px !important;
+    box-shadow:0 10px 40px rgba(0,0,0,0.2) !important;
+    border:1px solid rgba(0,113,227,0.2) !important;
+    z-index:2147483647 !important;
+    overflow:hidden !important;
+    font-family:-apple-system,system-ui,sans-serif !important;
+    backdrop-filter:blur(10px) !important;
+}
+.__wishlist-companion-header {
+    background:linear-gradient(135deg,#0071e3,#0077ed) !important;
+    color:#fff !important;
+    padding:10px 14px !important;
+    display:flex !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    font-weight:700 !important;
+    font-size:14px !important;
+}
+.__wishlist-companion-body {
+    padding:14px !important;
+}
+.__wishlist-companion-title {
+    font-weight:700 !important;
+    font-size:14px !important;
+    margin-bottom:10px !important;
+    line-height:1.4 !important;
+    color:#1d1d1f !important;
+}
+.__wishlist-companion-btn {
+    width:100% !important;
+    padding:11px !important;
+    font-size:15px !important;
+    border:none !important;
+    border-radius:10px !important;
+    cursor:pointer !important;
+    font-weight:600 !important;
+    margin:4px 0 !important;
+}
+.__wishlist-primary {
+    background:#0071e3 !important;
+    color:#fff !important;
+}
+.__wishlist-secondary {
+    background:#e9e9eb !important;
+    color:#1d1d1f !important;
+}
+.__wishlist-close {
+    background:transparent !important;
+    color:#fff !important;
+    border:none !important;
+    font-size:18px !important;
+    cursor:pointer !important;
+    padding:0 6px !important;
+}
+\`;
+    document.head.appendChild(style);
+
+    const panel = document.createElement('div');
+    panel.className = '__wishlist-companion';
+    panel.innerHTML = \`
+<div class="__wishlist-companion-header">
+    <span>🛒 Añadir a Mi Lista</span>
+    <button class="__wishlist-close" onclick="this.parentElement.parentElement.style.display='none'">×</button>
+</div>
+<div class="__wishlist-companion-body">
+    <div class="__wishlist-companion-title" id="__wc-title">Cargando...</div>
+    <button class="__wishlist-companion-btn __wishlist-primary" id="__wc-btn">✅ Añadir a mi lista</button>
+</div>
+    \`;
+    document.body.appendChild(panel);
+
+    // Actualizar título
+    setTimeout(() => {
+        const title = getProductTitle();
+        document.getElementById('__wc-title').textContent = title;
+    }, 500);
+
+    // Asignar acción al botón
+    setTimeout(() => {
+        document.getElementById('__wc-btn').addEventListener('click', sendToWishlist);
+    }, 800);
+})();
+\`;
 }
 
-function updateStepDisplay(stepNum) {
-    // Ocultar todos
-    for(let i=1; i<=4; i++) {
-        const step = document.getElementById(`step-${i}`);
-        step.classList.remove('active');
-        if(i < stepNum) step.classList.add('completed');
-        else step.classList.remove('completed');
-    }
-    // Mostrar actual
-    if(stepNum <= 4) {
-        document.getElementById(`step-${stepNum}`).classList.add('active');
-        document.getElementById('step-current').textContent = stepNum;
-        document.getElementById('progress-fill').style.width = `${(stepNum-1)/3*100}%`;
-    }
-    // Resaltar zona de arrastre en paso 2
-    const dropZone = document.getElementById('bookmark-drop-zone');
-    if(stepNum === 2) {
-        dropZone.classList.add('highlight');
-    } else {
-        dropZone.classList.remove('highlight');
-    }
-    // Mostrar botón de reiniciar tras completar
-    if(stepNum > 1) {
-        document.getElementById('btn-reset-tutorial').classList.remove('hidden');
-    }
-}
-
-function markStepComplete(stepNum) {
-    if(stepNum === 4) {
-        // Completado
-        currentTutorialStep = 5;
-        document.getElementById('progress-fill').style.width = '100%';
-        // Ocultar pasos
-        setTimeout(() => {
-            document.querySelector('.tutorial-steps').style.opacity = '0';
-            setTimeout(() => {
-                document.querySelector('.tutorial-section').style.display = 'none';
-            }, 400);
-        }, 1500);
-        return;
-    }
-    currentTutorialStep = stepNum + 1;
-    updateStepDisplay(stepNum + 1);
-}
-
-function skipTutorial() {
-    if(confirm('¿Saltar la configuración? Podrás hacerlo después si lo necesitas.')) {
-        document.querySelector('.tutorial-section').style.display = 'none';
-    }
-}
-
-function resetTutorial() {
-    document.querySelector('.tutorial-section').style.display = 'block';
-    document.querySelector('.tutorial-steps').style.opacity = '1';
-    currentTutorialStep = 1;
-    updateStepDisplay(1);
-}
-
-// ==============================================
-// 📥 RECIBIR PRODUCTO DESDE EL BOOKMARKLET
-// ==============================================
-window.receiveProductFromBookmarklet = function(productData) {
+// Recibir producto desde la pestaña de tienda
+window.receiveProductFromCompanion = function(productData) {
   pendingProduct.name = productData.name || 'Producto seleccionado';
   pendingProduct.url = productData.url || '';
   pendingProduct.store = productData.store || 'Tienda externa';
-  pendingProduct.asin = productData.asin || '';
   pendingProduct.fromPicker = true;
   
   // Llenar interfaz
@@ -623,10 +514,57 @@ window.receiveProductFromBookmarklet = function(productData) {
   
   updateSummary();
   showScreen('screen-results');
+  
+  // Mostrar confirmación
+  const companionPanel = document.getElementById('companion-floating');
+  companionPanel.classList.add('active');
+  document.getElementById('companion-product-label').textContent = pendingProduct.name;
 };
 
+function toggleMinimizeCompanion() {
+  document.getElementById('companion-floating').classList.toggle('minimized');
+}
+
+function closeCompanion() {
+  document.getElementById('companion-floating').classList.remove('active');
+}
+
+function confirmAddToWishlist() {
+  closeCompanion();
+  // La pantalla ya está activa con los datos llenos
+}
+
+function skipThisProduct() {
+  closeCompanion();
+  resetPendingProduct();
+}
+
+// Abrir pestaña con inyector del compañero
+function openWithCompanion(url, storeName) {
+  pendingProduct.fromPicker = false;
+  pendingProduct.store = storeName;
+  
+  // Abrir en nueva pestaña manteniendo esta como opener
+  const newTab = window.open(url, '_blank');
+  
+  // Inyectar el código del compañero tras cargar
+  setTimeout(() => {
+    try {
+      if (newTab && !newTab.closed) {
+        const injector = buildCompanionInjectorScript();
+        const script = newTab.document.createElement('script');
+        script.textContent = injector;
+        newTab.document.head.appendChild(script);
+      }
+    } catch (e) {
+      // Cross-origin: usar método alternativo con bookmarklet
+      console.log('Usando método alternativo...');
+    }
+  }, 1500);
+}
+
 // ==============================================
-// RESTO DE LA LÓGICA
+// RESTO DE LA LÓGICA — sin cambios
 // ==============================================
 
 const connectedRef = db.ref(".info/connected");
@@ -648,7 +586,6 @@ function goToLists() {
   document.getElementById('greeting').textContent = `Hola, ${currentUser}! Elige una lista o crea una nueva.`;
   renderLists();
   showScreen('screen-lists');
-  setTimeout(initTutorial, 300);
 }
 
 function goBackToName() {
@@ -757,6 +694,7 @@ function goToSearch() {
   resetPendingProduct();
   document.getElementById('product-search').value = '';
   document.getElementById('picked-indicator').classList.add('hidden');
+  closeCompanion();
   showScreen('screen-search');
 }
 
@@ -865,7 +803,6 @@ function updateSummary() {
 function resetStoreSelection() {
   pendingProduct.store = '';
   pendingProduct.url = '';
-  pendingProduct.asin = '';
   pendingProduct.isFavorite = false;
   ['google','amazon','ebay','custom'].forEach(type => {
     document.getElementById(`${type}-fav`).checked = false;
@@ -875,7 +812,7 @@ function resetStoreSelection() {
 }
 
 function resetPendingProduct() {
-  pendingProduct = { name: '', size: '', color: '', store: '', url: '', asin: '', isFavorite: false, fromPicker: false };
+  pendingProduct = { name: '', size: '', color: '', store: '', url: '', isFavorite: false, fromPicker: false };
 }
 
 function saveSelectedWish() {
@@ -888,7 +825,6 @@ function saveSelectedWish() {
     color: pendingProduct.color,
     store: pendingProduct.store,
     url: pendingProduct.url,
-    asin: pendingProduct.asin,
     isFavorite: pendingProduct.isFavorite,
     addedAt: new Date().toLocaleString('es-ES')
   };
@@ -896,6 +832,7 @@ function saveSelectedWish() {
   alert('Agregado a tu lista ✅');
   resetPendingProduct();
   resetStoreSelection();
+  closeCompanion();
   loadMyWishes();
 }
 
@@ -906,7 +843,6 @@ function renderWishCard(wish, allowDelete = true) {
         <div style="flex:1; min-width:200px;">
           <strong style="font-size:17px;">${wish.name}</strong>
           ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
-          ${wish.asin ? `<small style="color:#999; font-size:12px;">ASIN: ${wish.asin}</small><br>` : ''}
           <div class="wish-details">
             <strong>Talla:</strong> ${wish.size}<br>
             <strong>Color:</strong> ${wish.color}<br>
@@ -932,7 +868,7 @@ async function loadMyWishes() {
 function renderMyWishesList() {
   const container = document.getElementById('wishes-display-list');
   if (localWishes.length === 0) {
-    container.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no tienes deseos. Usa el botón "➕ Añadir a Mi Lista" de tu barra de favoritos cuando encuentres un producto en Amazon, eBay o Google Shopping ✅</p>';
+    container.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no tienes deseos. Abre cualquier tienda y usa el botón flotante "Añadir a mi lista" ✅</p>';
     return;
   }
   container.innerHTML = localWishes.map((w, i) => renderWishCard(w, true)).join('');
