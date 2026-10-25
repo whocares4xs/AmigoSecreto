@@ -30,7 +30,7 @@
             padding: 18px;
         }
         .container {
-            max-width: 960px;
+            max-width: 1100px;
             margin: 0 auto;
             background: var(--apple-card);
             border-radius: var(--apple-radius);
@@ -105,18 +105,90 @@
             transition: all 0.2s;
         }
         .list-card:hover { border-color: var(--apple-accent); background: #f8fafc; transform: translateY(-2px); }
-        .wish-item {
-            padding: 18px;
-            border-bottom: 1px solid var(--apple-border);
-            background: #fafafa;
-            border-radius: 12px;
-            margin: 10px 0;
-            transition: all 0.2s;
+        /* === TABLERO DE DESEOS EN COLUMNAS === */
+        .board-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--apple-border);
+            margin-top: 15px;
         }
-        .wish-item:hover { background: #f5f5f7; transform: translateX(3px); }
-        .wish-item a { color: var(--apple-accent); text-decoration: none; font-weight: 600; }
-        .wish-item a:hover { text-decoration: underline; }
-        .del-btn { background: #ef4444; width: auto; padding: 8px 14px; font-size: 14px; }
+        .board-table th {
+            background: linear-gradient(135deg, #f5f5f7, #e8e8ed);
+            padding: 16px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--apple-text);
+            border-bottom: 2px solid var(--apple-border);
+        }
+        .board-table th:nth-child(1) { width: 22%; }
+        .board-table th:nth-child(2) { width: 48%; }
+        .board-table th:nth-child(3) { width: 30%; }
+        .board-table td {
+            padding: 16px 14px;
+            border-bottom: 1px solid var(--apple-border);
+            vertical-align: top;
+            background: #fafafa;
+            transition: background 0.2s ease;
+        }
+        .board-table tr:hover td {
+            background: #f5f5f7;
+        }
+        .board-table tr:last-child td {
+            border-bottom: none;
+        }
+        .col-person strong {
+            display: block;
+            font-size: 15px;
+            color: var(--apple-text);
+        }
+        .col-wish .product-name {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: var(--apple-text);
+        }
+        .col-wish .detail-row {
+            font-size: 14px;
+            color: var(--apple-secondary);
+            margin: 3px 0;
+        }
+        .col-wish .detail-row strong {
+            color: #6e6e73;
+        }
+        .col-store .store-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: var(--apple-text);
+        }
+        .col-store a {
+            color: var(--apple-accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .col-store a:hover {
+            text-decoration: underline;
+        }
+        .del-btn {
+            background: #ef4444;
+            padding: 6px 12px;
+            font-size: 13px;
+            width: auto;
+            border-radius: 8px;
+            margin: 0;
+        }
+        .empty-row td {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--apple-secondary);
+            background: #fafafa;
+        }
         .back-link {
             color: var(--apple-accent);
             cursor: pointer;
@@ -139,13 +211,6 @@
             margin: 15px 0;
             font-size: 14px;
         }
-        .added-by {
-            font-size: 13px;
-            color: var(--apple-secondary);
-            margin-top: 5px;
-        }
-        .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
-        .btn-row button { flex: 1; min-width: 140px; }
         .custom-store {
             margin-top: 20px;
             padding: 18px;
@@ -155,6 +220,30 @@
         }
         .custom-store h4 { margin-bottom: 12px; color: #0071e3; font-size: 1.1rem; font-weight: 700; }
         .required { color: #ef4444; }
+        @media (max-width: 768px) {
+            .board-table, .board-table thead, .board-table tbody, .board-table th, .board-table td, .board-table tr {
+                display: block;
+            }
+            .board-table thead { display: none; }
+            .board-table tr {
+                margin-bottom: 16px;
+                border: 1px solid var(--apple-border);
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            .board-table td {
+                display: flex;
+                padding: 10px 14px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .board-table td:before {
+                content: attr(data-label);
+                font-weight: 700;
+                min-width: 100px;
+                color: var(--apple-secondary);
+                flex-shrink: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -181,7 +270,7 @@
             <button onclick="crearLista()">Crear Lista</button>
         </div>
 
-        <!-- PANTALLA GRUPO — LISTA COMPARTIDA EN TIEMPO REAL -->
+        <!-- PANTALLA GRUPO — TABLERO EN COLUMNAS -->
         <div id="screen-group" class="screen">
             <span class="back-link" onclick="volverAListas()">← Volver</span>
             <h2 id="group-name"></h2>
@@ -192,7 +281,7 @@
 
             <button onclick="irAgregarDeseos()">➕ Agregar nuevo producto</button>
             
-            <h3>Todos los deseos del grupo:</h3>
+            <h3>Tablero de Deseos</h3>
             <div id="all-wishes-realtime"></div>
         </div>
 
@@ -256,7 +345,6 @@ const db = firebase.database();
 
 let usuarioActual = '';
 let listaActualId = '';
-let listaRef = null;
 let escuchaTiempoReal = null;
 let tiendaSeleccionada = '';
 
@@ -340,7 +428,7 @@ function volverAListas() {
 }
 
 // ==============================================
-// TIEMPO REAL — TODOS VEN LO MISMO
+// TABLERO EN COLUMNAS — MUESTRA EN FORMA DE TABLA
 // ==============================================
 function activarEscuchaTiempoReal() {
   document.getElementById('group-name').textContent = 'Cargando...';
@@ -357,24 +445,57 @@ function activarEscuchaTiempoReal() {
     const deseos = datos.todosLosDeseos || [];
     
     if (deseos.length === 0) {
-      contenedor.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no hay productos. ¡Sé el primero en agregar uno!</p>';
+      contenedor.innerHTML = `
+        <table class="board-table">
+          <thead>
+            <tr>
+              <th>Quien lo agregó</th>
+              <th>Producto / Detalles</th>
+              <th>Tienda y Enlace</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="empty-row">
+              <td colspan="3">Aún no hay productos. ¡Sé el primero en agregar uno!</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
       return;
     }
     
-    contenedor.innerHTML = deseos.map((d, indice) => `
-      <div class="wish-item">
-        <strong style="font-size:17px;">${d.nombre}</strong>
-        <div class="added-by">Agregado por: ${d.agregadoPor}</div>
-        <div style="margin-top:8px;">
-          ${d.talla && d.talla !== '—' ? `<strong>Talla:</strong> ${d.talla} | ` : ''}
-          ${d.color && d.color !== '—' ? `<strong>Color:</strong> ${d.color} | ` : ''}
-          <strong>Tienda:</strong> ${d.tienda || 'No especificada'}
-        </div>
-        <a href="${d.url}" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px;">🔗 Ir a comprar →</a>
-        ${d.agregadoPor === usuarioActual ? 
-          `<button class="del-btn small" onclick="eliminarDeseo(${indice})" style="margin-left:10px;">Eliminar</button>` : ''}
-      </div>
-    `).join('');
+    // Renderizar en forma de tablero de 3 columnas
+    contenedor.innerHTML = `
+      <table class="board-table">
+        <thead>
+          <tr>
+            <th>Quien lo agregó</th>
+            <th>Producto / Detalles</th>
+            <th>Tienda y Enlace</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${deseos.map((d, indice) => `
+            <tr>
+              <td class="col-person" data-label="Agregado por">
+                <strong>${d.agregadoPor}</strong>
+              </td>
+              <td class="col-wish" data-label="Producto">
+                <div class="product-name">${d.nombre}</div>
+                ${d.talla && d.talla !== '—' ? `<div class="detail-row"><strong>Talla:</strong> ${d.talla}</div>` : ''}
+                ${d.color && d.color !== '—' ? `<div class="detail-row"><strong>Color:</strong> ${d.color}</div>` : ''}
+              </td>
+              <td class="col-store" data-label="Tienda">
+                <div class="store-name">${d.tienda || 'Tienda externa'}</div>
+                <a href="${d.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a>
+                ${d.agregadoPor === usuarioActual ? 
+                  `<button class="del-btn" onclick="eliminarDeseo(${indice})">Eliminar</button>` : ''}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
   });
 }
 
@@ -431,7 +552,7 @@ function usarTienda() {
 }
 
 // ==============================================
-// GUARDAR EN LA NUBE — VALIDADO
+// GUARDAR EN LA NUBE — SIN CAMBIOS
 // ==============================================
 async function guardarDeseo() {
   const nombre = document.getElementById('prod-nombre').value.trim();
