@@ -4,25 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Deseos Compartida</title>
-    <!-- Firebase (versión gratuita) -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: linear-gradient(135deg, #6366f1, #8b5cf6); min-height: 100vh; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
         
         h1, h2, h3 { color: #4f46e5; text-align: center; margin-bottom: 25px; }
-        input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; border: 2px solid #e5e7eb; font-size: 16px; }
+        input, button, select { padding: 14px; margin: 8px 0; border-radius: 10px; border: 2px solid #e5e7eb; font-size: 16px; }
+        input, select { width: 100%; }
         button { background: #6366f1; color: white; border: none; cursor: pointer; font-weight: 600; transition: transform 0.2s, background 0.2s; }
         button:hover { background: #4f46e5; transform: translateY(-2px); }
         button.secondary { background: #e5e7eb; color: #374151; }
         button.secondary:hover { background: #d1d5db; }
+        button.small { padding: 8px 12px; font-size: 14px; width: 100%; margin-top: 6px; }
         
+        .status { text-align: center; padding: 8px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+        .status.ok { background: #dcfce7; color: #166534; }
+        .status.wait { background: #fef3c7; color: #92400e; }
+
         .list-card { padding: 18px; background: #f3f4f6; border-radius: 10px; margin: 10px 0; cursor: pointer; transition: background 0.2s; }
         .list-card:hover { background: #e5e7eb; }
         
@@ -34,14 +40,26 @@
         .wish-item:last-child { border-bottom: none; }
         .wish-item a { color: #6366f1; text-decoration: none; font-weight: 500; }
         .wish-item a:hover { text-decoration: underline; }
+
+        .search-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+        @media (max-width: 768px) { .search-grid { grid-template-columns: 1fr; } }
         
-        .search-results { margin-top: 15px; }
-        .result-item { padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 6px 0; cursor: pointer; }
-        .result-item:hover { background: #f9fafb; }
-        .hidden { display: none !important; }
-        .status { text-align: center; padding: 8px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
-        .status.ok { background: #dcfce7; color: #166534; }
-        .status.wait { background: #fef3c7; color: #92400e; }
+        .store-column { background: #f9fafb; border-radius: 12px; padding: 15px; }
+        .store-header { font-weight: bold; text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 18px; }
+        .amazon { background: #ff9900; color: #111; }
+        .google { background: #4285f4; color: white; }
+        .ebay { background: #0064d2; color: white; }
+
+        .product-card { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; margin-bottom: 12px; transition: box-shadow 0.2s; }
+        .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .product-img { width: 100%; height: 120px; object-fit: contain; background: #f3f4f6; border-radius: 6px; margin-bottom: 8px; }
+        .product-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1f2937; }
+        .product-price { font-size: 16px; font-weight: bold; color: #16a34a; margin-bottom: 8px; }
+        .product-link { font-size: 12px; color: #6b7280; margin-bottom: 6px; display: block; }
+        
+        .loading { text-align: center; padding: 20px; color: #6b7280; }
+        .info-note { font-size: 12px; color: #6b7280; margin-top: 10px; text-align: center; }
+        .region-selector { background: #f0fdf4; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbf7d0; }
     </style>
 </head>
 <body>
@@ -52,8 +70,17 @@
         <div id="screen-welcome" class="screen active">
             <h1>✨ Lista de Deseos Compartida ✨</h1>
             <h2>¡Bienvenido!</h2>
-            <p style="text-align:center; margin-bottom:20px;">Ingresa tu nombre para empezar</p>
+            <p style="text-align:center; margin-bottom:20px;">Ingresa tu nombre y selecciona tu tienda de Amazon</p>
             <input type="text" id="user-name" placeholder="Escribe tu nombre aquí...">
+            
+            <div class="region-selector">
+                <label style="font-weight:600;">🛒 Tienda de Amazon:</label>
+                <select id="amazon-region">
+                    <option value="mx">🇲🇽 Amazon México — Recomendado para Sudamérica</option>
+                    <option value="us">🇺🇸 Amazon EE.UU. — En Español</option>
+                </select>
+            </div>
+            
             <button onclick="goToLists()">Continuar</button>
         </div>
 
@@ -66,13 +93,35 @@
             <button onclick="createNewList()">Crear Lista Nueva</button>
         </div>
 
-        <!-- PANTALLA 3: Búsqueda y agregar deseo -->
+        <!-- PANTALLA 3: Búsqueda con TRES COLUMNAS -->
         <div id="screen-add" class="screen">
-            <h2>Agregar un Deseo</h2>
-            <input type="text" id="search-query" placeholder="¿Qué deseas buscar? Ej: zapatillas deportivas...">
-            <button onclick="searchProducts()">Buscar en tiendas</button>
-            <div class="search-results" id="search-results"></div>
-            <button class="secondary" onclick="goToView()">← Volver a la lista</button>
+            <h2>🔍 Buscar y Agregar un Deseo</h2>
+            <input type="text" id="search-query" placeholder="Escribe el producto que buscas...">
+            <button onclick="searchProducts()">🔍 Buscar en las 3 tiendas</button>
+            
+            <div class="search-grid" id="search-results">
+                <div class="store-column">
+                    <div class="store-header amazon" id="amazon-header">🛒 Amazon</div>
+                    <div id="amazon-results" class="results-container">
+                        <p class="loading">Escribe un producto y pulsa Buscar</p>
+                    </div>
+                </div>
+                <div class="store-column">
+                    <div class="store-header google">🔍 Google Shopping</div>
+                    <div id="google-results" class="results-container">
+                        <p class="loading">Escribe un producto y pulsa Buscar</p>
+                    </div>
+                </div>
+                <div class="store-column">
+                    <div class="store-header ebay">🏷️ eBay</div>
+                    <div id="ebay-results" class="results-container">
+                        <p class="loading">Escribe un producto y pulsa Buscar</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="info-note">💡 Pulsa "Ver producto" para detalles reales, luego "Agregar a mi lista"</p>
+            <button class="secondary" onclick="goToView()" style="margin-top:20px;">← Volver a mi lista</button>
         </div>
 
         <!-- PANTALLA 4: Ver lista completa -->
@@ -86,8 +135,7 @@
 
 <script>
 // ==============================================
-// PASO 1: CONFIGURA TU FIREBASE AQUÍ
-// Crea tu cuenta gratuita y pega tus datos abajo
+// CONFIGURA TUS DATOS DE FIREBASE AQUÍ
 // ==============================================
 const firebaseConfig = {
   apiKey: "AIzaSyCQU0h_E8TuiQpqhBTA9zWF4Jd4vA7MDSA",
@@ -99,29 +147,35 @@ const firebaseConfig = {
   appId: "1:433310996619:web:1f1c511b923929e5ff9c8e"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Estado
 let currentUser = '';
 let currentListId = '';
 let listRef = null;
+let amazonRegion = 'mx'; // Predeterminado: Amazon México
+
+// Dominios de Amazon
+const AMAZON_DOMAINS = {
+  mx: 'https://www.amazon.com.mx/s?k=',
+  us: 'https://www.amazon.com/s?k=&language=es'
+};
+
+const AMAZON_NAMES = {
+  mx: 'Amazon México',
+  us: 'Amazon EE.UU. (Español)'
+};
 
 // Conexión en tiempo real
 const connectedRef = db.ref(".info/connected");
 connectedRef.on("value", (snap) => {
   const status = document.getElementById("status-bar");
-  if (snap.val() === true) {
-    status.textContent = "✅ Conectado — Sincronizado con todos";
-    status.className = "status ok";
-  } else {
-    status.textContent = "⏳ Conectando...";
-    status.className = "status wait";
-  }
+  status.textContent = snap.val() === true 
+    ? "✅ Conectado — Sincronizado con todos" 
+    : "⏳ Conectando...";
+  status.className = snap.val() === true ? "status ok" : "status wait";
 });
 
-// Escuchar cambios en la lista activa al instante
 function subscribeToList(listId) {
   if (listRef) listRef.off();
   listRef = db.ref("lists/" + listId);
@@ -130,7 +184,6 @@ function subscribeToList(listId) {
   });
 }
 
-// Navegación
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -140,7 +193,9 @@ function goToLists() {
   const name = document.getElementById('user-name').value.trim();
   if (!name) return alert('Por favor escribe tu nombre');
   currentUser = name;
-  document.getElementById('greeting').textContent = `Hola, ${currentUser}! Elige una lista o crea una nueva.`;
+  amazonRegion = document.getElementById('amazon-region').value;
+  document.getElementById('greeting').textContent = 
+    `Hola, ${currentUser}! — ${AMAZON_NAMES[amazonRegion]}`;
   renderLists();
   showScreen('screen-lists');
 }
@@ -149,9 +204,7 @@ async function renderLists() {
   const snap = await db.ref("lists").once("value");
   const container = document.getElementById('existing-lists');
   container.innerHTML = '';
-  
   if (!snap.exists()) return;
-  
   snap.forEach((child) => {
     const list = child.val();
     const card = document.createElement('div');
@@ -165,14 +218,13 @@ async function renderLists() {
 async function createNewList() {
   const name = document.getElementById('new-list-name').value.trim();
   if (!name) return alert('Escribe un nombre para la lista');
-  
   const newRef = db.ref("lists").push();
   currentListId = newRef.key;
   await newRef.set({
     name: name,
-    members: { [currentUser]: [] }
+    members: { [currentUser]: [] },
+    created: new Date().toISOString()
   });
-  
   subscribeToList(currentListId);
   showScreen('screen-view');
 }
@@ -181,65 +233,126 @@ async function joinList(id) {
   currentListId = id;
   const listSnap = await db.ref("lists/" + id).once("value");
   const listData = listSnap.val();
-  
   if (!listData.members[currentUser]) {
     await db.ref("lists/" + id + "/members/" + currentUser).set([]);
   }
-  
   subscribeToList(id);
   showScreen('screen-view');
 }
 
 function goToAdd() {
   showScreen('screen-add');
+  document.getElementById('amazon-header').textContent = `🛒 ${AMAZON_NAMES[amazonRegion]}`;
   document.getElementById('search-query').value = '';
-  document.getElementById('search-results').innerHTML = '';
+  document.getElementById('amazon-results').innerHTML = '<p class="loading">Escribe un producto y pulsa Buscar</p>';
+  document.getElementById('google-results').innerHTML = '<p class="loading">Escribe un producto y pulsa Buscar</p>';
+  document.getElementById('ebay-results').innerHTML = '<p class="loading">Escribe un producto y pulsa Buscar</p>';
 }
 
-function goToView() {
-  showScreen('screen-view');
-}
+function goToView() { showScreen('screen-view'); }
 
 function goBackToLists() {
   if (listRef) listRef.off();
-  currentListId = '';
-  listRef = null;
-  renderLists();
-  showScreen('screen-lists');
+  currentListId = ''; listRef = null;
+  renderLists(); showScreen('screen-lists');
 }
 
-// Búsqueda en tiendas
+// ==================================================
+// BÚSQUEDA — Solo Amazon MX y USA
+// ==================================================
 function searchProducts() {
-  const query = encodeURIComponent(document.getElementById('search-query').value.trim());
-  if (!query) return alert('Escribe algo para buscar');
-  
-  const resultsDiv = document.getElementById('search-results');
-  resultsDiv.innerHTML = `<p>Resultados para: <strong>${decodeURIComponent(query)}</strong></p>`;
-  
-  const stores = [
-    { name: 'Amazon', url: `https://www.amazon.es/s?k=${query}`, icon: '🛒' },
-    { name: 'Google Shopping', url: `https://www.google.com/search?q=${query}&tbm=shop`, icon: '🔍' },
-    { name: 'eBay', url: `https://www.ebay.es/sch/i.html?_nkw=${query}`, icon: '🏷️' }
-  ];
-  
-  stores.forEach(store => {
-    const div = document.createElement('div');
-    div.className = 'result-item';
-    div.innerHTML = `
-      <strong>${store.icon} ${store.name}</strong><br>
-      <a href="${store.url}" target="_blank">Ver resultados en ${store.name}</a>
-      <br><button style="width:auto; margin-top:8px;" onclick="saveWish('${store.url}', '${store.name}', '${query}')">✅ Guardar este deseo</button>
-    `;
-    resultsDiv.appendChild(div);
-  });
+  const query = document.getElementById('search-query').value.trim();
+  if (!query) return alert('Escribe algo para buscar 🎁');
+  const q = encodeURIComponent(query);
+
+  document.getElementById('amazon-results').innerHTML = '<p class="loading">🔎 Buscando...</p>';
+  document.getElementById('google-results').innerHTML = '<p class="loading">🔎 Buscando...</p>';
+  document.getElementById('ebay-results').innerHTML = '<p class="loading">🔎 Buscando...</p>';
+
+  setTimeout(() => {
+    renderAmazonResults(q, query);
+    renderGoogleResults(q, query);
+    renderEbayResults(q, query);
+  }, 600);
 }
 
-// Guardar deseo en la nube
-async function saveWish(url, storeName, itemName) {
+function renderAmazonResults(q, queryOriginal) {
+  const container = document.getElementById('amazon-results');
+  const baseUrl = AMAZON_DOMAINS[amazonRegion];
+  const storeName = AMAZON_NAMES[amazonRegion];
+  const searchUrl = `${baseUrl}${q}`;
+  
+  container.innerHTML = `
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/G/03/prime/brand-cards/Amazon_logo._CB660385561_.svg" class="product-img" alt="${storeName}">
+      <div class="product-name">${queryOriginal}</div>
+      <div class="product-price">Ver precios y disponibilidad</div>
+      <a href="${searchUrl}" target="_blank" class="product-link">🔗 Ver resultados en ${storeName}</a>
+      <button class="small" onclick="saveWish('${searchUrl}', '${storeName}', '${encodeURIComponent(queryOriginal)}', '🛒')">✅ Agregar a mi lista</button>
+    </div>
+    <div class="product-card">
+      <img src="https://m.media-amazon.com/images/G/03/prime/brand-cards/Amazon_logo._CB660385561_.svg" class="product-img" alt="${storeName}">
+      <div class="product-name">${queryOriginal} — Otras opciones</div>
+      <div class="product-price">Comparar modelos y precios</div>
+      <a href="${searchUrl}" target="_blank" class="product-link">🔗 Explorar en ${storeName}</a>
+      <button class="small" onclick="saveWish('${searchUrl}', '${storeName}', '${encodeURIComponent(queryOriginal)}', '🛒')">✅ Agregar a mi lista</button>
+    </div>
+  `;
+}
+
+function renderGoogleResults(q, queryOriginal) {
+  const container = document.getElementById('google-results');
+  const searchUrl = `https://www.google.com/search?q=${q}&tbm=shop`;
+  
+  container.innerHTML = `
+    <div class="product-card">
+      <img src="https://www.google.com/favicon.ico" class="product-img" alt="Google Shopping" style="padding:20px; background:#f8f9fa;">
+      <div class="product-name">${queryOriginal}</div>
+      <div class="product-price">Comparar precios en tiendas</div>
+      <a href="${searchUrl}" target="_blank" class="product-link">🔗 Ver en Google Shopping</a>
+      <button class="small" onclick="saveWish('${searchUrl}', 'Google Shopping', '${encodeURIComponent(queryOriginal)}', '🔍')">✅ Agregar a mi lista</button>
+    </div>
+    <div class="product-card">
+      <img src="https://www.google.com/favicon.ico" class="product-img" alt="Google Shopping" style="padding:20px; background:#f8f9fa;">
+      <div class="product-name">${queryOriginal} — Mejores ofertas</div>
+      <div class="product-price">Diferentes tiendas y precios</div>
+      <a href="${searchUrl}" target="_blank" class="product-link">🔗 Buscar en Google</a>
+      <button class="small" onclick="saveWish('${searchUrl}', 'Google Shopping', '${encodeURIComponent(queryOriginal)} (Ofertas)', '🔍')">✅ Agregar a mi lista</button>
+    </div>
+  `;
+}
+
+function renderEbayResults(q, queryOriginal) {
+  const container = document.getElementById('ebay-results');
+  const searchUrl = `https://www.ebay.com/sch/i.html?_nkw=${q}`;
+  
+  container.innerHTML = `
+    <div class="product-card">
+      <img src="https://ir.ebaystatic.com/rs/v/fmkd5d8k8byb2edc95h3vauzg7k.png" class="product-img" alt="eBay">
+      <div class="product-name">${queryOriginal}</div>
+      <div class="product-price">Nuevo, usado y subastas</div>
+      <a href="${searchUrl}" target="_blank" class="product-link">🔗 Ver en eBay</a>
+      <button class="small" onclick="saveWish('${searchUrl}', 'eBay', '${encodeURIComponent(queryOriginal)}', '🏷️')">✅ Agregar a mi lista</button>
+    </div>
+    <div class="product-card">
+      <img src="https://ir.ebaystatic.com/rs/v/fmkd5d8k8byb2edc95h3vauzg7k.png" class="product-img" alt="eBay">
+      <div class="product-name">${queryOriginal} — Oportunidades</div>
+      <div class="product-price">Envío internacional disponible</div>
+      <a href="${searchUrl}" target="_blank" class="product-link">🔗 Explorar en eBay</a>
+      <button class="small" onclick="saveWish('${searchUrl}', 'eBay', '${encodeURIComponent(queryOriginal)}', '🏷️')">✅ Agregar a mi lista</button>
+    </div>
+  `;
+}
+
+// ==================================================
+// GUARDAR DESEO EN LA NUBE
+// ==================================================
+async function saveWish(url, storeName, itemName, icon = '🎁') {
   const wish = {
     name: decodeURIComponent(itemName),
     store: storeName,
     url: url,
+    icon: icon,
     addedAt: new Date().toLocaleString('es-ES')
   };
   
@@ -249,11 +362,13 @@ async function saveWish(url, storeName, itemName) {
   wishes.push(wish);
   await memberRef.set(wishes);
   
-  alert('¡Deseo guardado con éxito! ✅');
+  alert('✅ ¡Deseo guardado con éxito!\nTodos verán la actualización al instante 🎉');
   goToView();
 }
 
-// Mostrar lista organizada
+// ==================================================
+// MOSTRAR LISTA DESEOS
+// ==================================================
 function renderWishListView(list) {
   if (!list) return;
   document.getElementById('current-list-title').textContent = `📋 ${list.name}`;
@@ -266,21 +381,22 @@ function renderWishListView(list) {
   Object.entries(members).forEach(([person, wishes]) => {
     const section = document.createElement('div');
     section.className = 'person-section';
+    const count = (wishes || []).length;
     
     section.innerHTML = `
       <div class="person-header" onclick="this.nextElementSibling.classList.toggle('open')">
-        <span>🎁 ${person} (${(wishes||[]).length} deseo(s))</span>
+        <span>🎁 ${person} (${count} deseo${count !== 1 ? 's' : ''})</span>
         <span>▼</span>
       </div>
       <div class="person-items">
-        ${!wishes || wishes.length === 0 
+        ${count === 0 
           ? '<p style="color:#666;">Aún no has agregado deseos. ¡Sé el primero! 🎉</p>'
           : wishes.map(w => `
             <div class="wish-item">
-              <strong>${w.name}</strong><br>
-              Tienda: ${w.store}<br>
-              <a href="${w.url}" target="_blank">🔗 Comprar enlace</a><br>
-              <small>Agregado: ${w.addedAt}</small>
+              <strong>${w.icon || '🎁'} ${w.name}</strong><br>
+              <small>Tienda: ${w.store}</small><br>
+              <a href="${w.url}" target="_blank" style="font-weight:bold;">🔗 Ir a comprar</a><br>
+              <small style="color:#999;">Agregado: ${w.addedAt}</small>
             </div>
           `).join('')
         }
