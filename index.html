@@ -103,6 +103,7 @@
             <h2 id="group-name"></h2>
             <h3>Participantes</h3>
             <div id="members-list"></div>
+            <!-- ✅ CORREGIDO: Faltaban los () en la función -->
             <button onclick="irAgregarDeseos()">➕ Agregar producto</button>
         </div>
 
@@ -166,7 +167,6 @@ const firebaseConfig = {
   messagingSenderId: "433310996619",
   appId: "1:433310996619:web:1f1c511b923929e5ff9c8e"
 };
-
 // Inicializar Firebase
 let db;
 try {
