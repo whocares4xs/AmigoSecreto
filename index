@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Deseos Compartida</title>
+    <!-- Firebase (versión gratuita) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, #6366f1, #8b5cf6); min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
+        
+        h1, h2, h3 { color: #4f46e5; text-align: center; margin-bottom: 25px; }
+        input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; border: 2px solid #e5e7eb; font-size: 16px; }
+        button { background: #6366f1; color: white; border: none; cursor: pointer; font-weight: 600; transition: transform 0.2s, background 0.2s; }
+        button:hover { background: #4f46e5; transform: translateY(-2px); }
+        button.secondary { background: #e5e7eb; color: #374151; }
+        button.secondary:hover { background: #d1d5db; }
+        
+        .list-card { padding: 18px; background: #f3f4f6; border-radius: 10px; margin: 10px 0; cursor: pointer; transition: background 0.2s; }
+        .list-card:hover { background: #e5e7eb; }
+        
+        .person-section { margin: 20px 0; border: 2px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+        .person-header { background: #eef2ff; padding: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .person-items { padding: 15px; display: none; }
+        .person-items.open { display: block; }
+        .wish-item { padding: 12px; border-bottom: 1px solid #eee; }
+        .wish-item:last-child { border-bottom: none; }
+        .wish-item a { color: #6366f1; text-decoration: none; font-weight: 500; }
+        .wish-item a:hover { text-decoration: underline; }
+        
+        .search-results { margin-top: 15px; }
+        .result-item { padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 6px 0; cursor: pointer; }
+        .result-item:hover { background: #f9fafb; }
+        .hidden { display: none !important; }
+        .status { text-align: center; padding: 8px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+        .status.ok { background: #dcfce7; color: #166534; }
+        .status.wait { background: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="status-bar" class="status wait">Conectando a la nube...</div>
+
+        <!-- PANTALLA 1: Bienvenida -->
+        <div id="screen-welcome" class="screen active">
+            <h1>✨ Lista de Deseos Compartida ✨</h1>
+            <h2>¡Bienvenido!</h2>
+            <p style="text-align:center; margin-bottom:20px;">Ingresa tu nombre para empezar</p>
+            <input type="text" id="user-name" placeholder="Escribe tu nombre aquí...">
+            <button onclick="goToLists()">Continuar</button>
+        </div>
+
+        <!-- PANTALLA 2: Listas existentes / Crear nueva -->
+        <div id="screen-lists" class="screen">
+            <h2>Mis Listas de Deseos</h2>
+            <p id="greeting" style="text-align:center; margin-bottom:15px;"></p>
+            <div id="existing-lists"></div>
+            <input type="text" id="new-list-name" placeholder="O crea una nueva lista...">
+            <button onclick="createNewList()">Crear Lista Nueva</button>
+        </div>
+
+        <!-- PANTALLA 3: Búsqueda y agregar deseo -->
+        <div id="screen-add" class="screen">
+            <h2>Agregar un Deseo</h2>
+            <input type="text" id="search-query" placeholder="¿Qué deseas buscar? Ej: zapatillas deportivas...">
+            <button onclick="searchProducts()">Buscar en tiendas</button>
+            <div class="search-results" id="search-results"></div>
+            <button class="secondary" onclick="goToView()">← Volver a la lista</button>
+        </div>
+
+        <!-- PANTALLA 4: Ver lista completa -->
+        <div id="screen-view" class="screen">
+            <h2 id="current-list-title"></h2>
+            <div id="all-wishes"></div>
+            <button onclick="goToAdd()">➕ Agregar nuevo deseo</button>
+            <button class="secondary" onclick="goBackToLists()">← Cambiar de lista</button>
+        </div>
+    </div>
+
+<script>
+// ==============================================
+// PASO 1: CONFIGURA TU FIREBASE AQUÍ
+// Crea tu cuenta gratuita y pega tus datos abajo
+// ==============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyCQU0h_E8TuiQpqhBTA9zWF4Jd4vA7MDSA",
+  authDomain: "lista-de-deseos-47add.firebaseapp.com",
+  databaseURL: "https://lista-de-deseos-47add-default-rtdb.firebaseio.com",
+  projectId: "lista-de-deseos-47add",
+  storageBucket: "lista-de-deseos-47add.firebasestorage.app",
+  messagingSenderId: "433310996619",
+  appId: "1:433310996619:web:1f1c511b923929e5ff9c8e"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Estado
+let currentUser = '';
+let currentListId = '';
+let listRef = null;
+
+// Conexión en tiempo real
+const connectedRef = db.ref(".info/connected");
+connectedRef.on("value", (snap) => {
+  const status = document.getElementById("status-bar");
+  if (snap.val() === true) {
+    status.textContent = "✅ Conectado — Sincronizado con todos";
+    status.className = "status ok";
+  } else {
+    status.textContent = "⏳ Conectando...";
+    status.className = "status wait";
+  }
+});
+
+// Escuchar cambios en la lista activa al instante
+function subscribeToList(listId) {
+  if (listRef) listRef.off();
+  listRef = db.ref("lists/" + listId);
+  listRef.on("value", (snapshot) => {
+    if (snapshot.exists()) renderWishListView(snapshot.val());
+  });
+}
+
+// Navegación
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goToLists() {
+  const name = document.getElementById('user-name').value.trim();
+  if (!name) return alert('Por favor escribe tu nombre');
+  currentUser = name;
+  document.getElementById('greeting').textContent = `Hola, ${currentUser}! Elige una lista o crea una nueva.`;
+  renderLists();
+  showScreen('screen-lists');
+}
+
+async function renderLists() {
+  const snap = await db.ref("lists").once("value");
+  const container = document.getElementById('existing-lists');
+  container.innerHTML = '';
+  
+  if (!snap.exists()) return;
+  
+  snap.forEach((child) => {
+    const list = child.val();
+    const card = document.createElement('div');
+    card.className = 'list-card';
+    card.innerHTML = `<strong>${list.name}</strong><br><small>${Object.keys(list.members || {}).length} participante(s)</small>`;
+    card.onclick = () => joinList(child.key);
+    container.appendChild(card);
+  });
+}
+
+async function createNewList() {
+  const name = document.getElementById('new-list-name').value.trim();
+  if (!name) return alert('Escribe un nombre para la lista');
+  
+  const newRef = db.ref("lists").push();
+  currentListId = newRef.key;
+  await newRef.set({
+    name: name,
+    members: { [currentUser]: [] }
+  });
+  
+  subscribeToList(currentListId);
+  showScreen('screen-view');
+}
+
+async function joinList(id) {
+  currentListId = id;
+  const listSnap = await db.ref("lists/" + id).once("value");
+  const listData = listSnap.val();
+  
+  if (!listData.members[currentUser]) {
+    await db.ref("lists/" + id + "/members/" + currentUser).set([]);
+  }
+  
+  subscribeToList(id);
+  showScreen('screen-view');
+}
+
+function goToAdd() {
+  showScreen('screen-add');
+  document.getElementById('search-query').value = '';
+  document.getElementById('search-results').innerHTML = '';
+}
+
+function goToView() {
+  showScreen('screen-view');
+}
+
+function goBackToLists() {
+  if (listRef) listRef.off();
+  currentListId = '';
+  listRef = null;
+  renderLists();
+  showScreen('screen-lists');
+}
+
+// Búsqueda en tiendas
+function searchProducts() {
+  const query = encodeURIComponent(document.getElementById('search-query').value.trim());
+  if (!query) return alert('Escribe algo para buscar');
+  
+  const resultsDiv = document.getElementById('search-results');
+  resultsDiv.innerHTML = `<p>Resultados para: <strong>${decodeURIComponent(query)}</strong></p>`;
+  
+  const stores = [
+    { name: 'Amazon', url: `https://www.amazon.es/s?k=${query}`, icon: '🛒' },
+    { name: 'Google Shopping', url: `https://www.google.com/search?q=${query}&tbm=shop`, icon: '🔍' },
+    { name: 'eBay', url: `https://www.ebay.es/sch/i.html?_nkw=${query}`, icon: '🏷️' }
+  ];
+  
+  stores.forEach(store => {
+    const div = document.createElement('div');
+    div.className = 'result-item';
+    div.innerHTML = `
+      <strong>${store.icon} ${store.name}</strong><br>
+      <a href="${store.url}" target="_blank">Ver resultados en ${store.name}</a>
+      <br><button style="width:auto; margin-top:8px;" onclick="saveWish('${store.url}', '${store.name}', '${query}')">✅ Guardar este deseo</button>
+    `;
+    resultsDiv.appendChild(div);
+  });
+}
+
+// Guardar deseo en la nube
+async function saveWish(url, storeName, itemName) {
+  const wish = {
+    name: decodeURIComponent(itemName),
+    store: storeName,
+    url: url,
+    addedAt: new Date().toLocaleString('es-ES')
+  };
+  
+  const memberRef = db.ref("lists/" + currentListId + "/members/" + currentUser);
+  const snap = await memberRef.once("value");
+  const wishes = snap.exists() ? snap.val() : [];
+  wishes.push(wish);
+  await memberRef.set(wishes);
+  
+  alert('¡Deseo guardado con éxito! ✅');
+  goToView();
+}
+
+// Mostrar lista organizada
+function renderWishListView(list) {
+  if (!list) return;
+  document.getElementById('current-list-title').textContent = `📋 ${list.name}`;
+  const container = document.getElementById('all-wishes');
+  container.innerHTML = '';
+  
+  const members = list.members || {};
+  document.title = `${list.name} — Lista de Deseos`;
+  
+  Object.entries(members).forEach(([person, wishes]) => {
+    const section = document.createElement('div');
+    section.className = 'person-section';
+    
+    section.innerHTML = `
+      <div class="person-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span>🎁 ${person} (${(wishes||[]).length} deseo(s))</span>
+        <span>▼</span>
+      </div>
+      <div class="person-items">
+        ${!wishes || wishes.length === 0 
+          ? '<p style="color:#666;">Aún no has agregado deseos. ¡Sé el primero! 🎉</p>'
+          : wishes.map(w => `
+            <div class="wish-item">
+              <strong>${w.name}</strong><br>
+              Tienda: ${w.store}<br>
+              <a href="${w.url}" target="_blank">🔗 Comprar enlace</a><br>
+              <small>Agregado: ${w.addedAt}</small>
+            </div>
+          `).join('')
+        }
+      </div>
+    `;
+    container.appendChild(section);
+  });
+}
+</script>
+</body>
+</html>
