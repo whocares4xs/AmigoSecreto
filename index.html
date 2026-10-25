@@ -105,64 +105,103 @@
             transition: all 0.2s;
         }
         .list-card:hover { border-color: var(--apple-accent); background: #f8fafc; transform: translateY(-2px); }
-        /* === TABLERO DE DESEOS EN COLUMNAS === */
+        /* === LISTA DE PARTICIPANTES === */
+        .participant-item {
+            border: 1px solid var(--apple-border);
+            border-radius: 12px;
+            margin: 8px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .participant-header {
+            padding: 16px 20px;
+            background: #fafafa;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background 0.2s ease;
+        }
+        .participant-header:hover {
+            background: #f0f0f0;
+        }
+        .participant-header.you {
+            background: #eaf5ff;
+            border-left: 4px solid var(--apple-accent);
+        }
+        .participant-toggle {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        .participant-item.open .participant-toggle {
+            transform: rotate(180deg);
+        }
+        .participant-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .participant-item.open .participant-content {
+            max-height: 2000px;
+        }
+        .participant-inner {
+            padding: 18px 20px;
+            border-top: 1px solid var(--apple-border);
+        }
+        /* === TABLERO DE DESEOS — SIN COLUMNA DE NOMBRE === */
         .board-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--apple-border);
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .board-table th {
             background: linear-gradient(135deg, #f5f5f7, #e8e8ed);
-            padding: 16px 14px;
+            padding: 14px 16px;
             text-align: left;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--apple-text);
             border-bottom: 2px solid var(--apple-border);
         }
-        .board-table th:nth-child(1) { width: 22%; }
-        .board-table th:nth-child(2) { width: 48%; }
-        .board-table th:nth-child(3) { width: 30%; }
+        .board-table th:nth-child(1) { width: 60%; }
+        .board-table th:nth-child(2) { width: 40%; }
         .board-table td {
-            padding: 16px 14px;
+            padding: 14px 16px;
             border-bottom: 1px solid var(--apple-border);
             vertical-align: top;
-            background: #fafafa;
+            background: #ffffff;
             transition: background 0.2s ease;
         }
         .board-table tr:hover td {
-            background: #f5f5f7;
+            background: #f8fafc;
         }
         .board-table tr:last-child td {
             border-bottom: none;
         }
-        .col-person strong {
-            display: block;
-            font-size: 15px;
-            color: var(--apple-text);
-        }
         .col-wish .product-name {
             font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 6px;
+            font-size: 15px;
+            margin-bottom: 4px;
             color: var(--apple-text);
         }
         .col-wish .detail-row {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--apple-secondary);
-            margin: 3px 0;
+            margin: 2px 0;
         }
         .col-wish .detail-row strong {
             color: #6e6e73;
         }
         .col-store .store-name {
             font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 8px;
+            font-size: 14px;
+            margin-bottom: 6px;
             color: var(--apple-text);
         }
         .col-store a {
@@ -170,24 +209,31 @@
             text-decoration: none;
             font-weight: 600;
             display: inline-block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-size: 14px;
         }
         .col-store a:hover {
             text-decoration: underline;
         }
         .del-btn {
             background: #ef4444;
-            padding: 6px 12px;
-            font-size: 13px;
+            padding: 5px 10px;
+            font-size: 12px;
             width: auto;
             border-radius: 8px;
-            margin: 0;
+            margin: 4px 0 0 0;
         }
         .empty-row td {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             color: var(--apple-secondary);
             background: #fafafa;
+        }
+        .empty-wishes {
+            text-align: center;
+            padding: 25px;
+            color: var(--apple-secondary);
+            font-size: 14px;
         }
         .back-link {
             color: var(--apple-accent);
@@ -226,9 +272,9 @@
             }
             .board-table thead { display: none; }
             .board-table tr {
-                margin-bottom: 16px;
+                margin-bottom: 12px;
                 border: 1px solid var(--apple-border);
-                border-radius: 12px;
+                border-radius: 10px;
                 overflow: hidden;
             }
             .board-table td {
@@ -239,7 +285,7 @@
             .board-table td:before {
                 content: attr(data-label);
                 font-weight: 700;
-                min-width: 100px;
+                min-width: 90px;
                 color: var(--apple-secondary);
                 flex-shrink: 0;
             }
@@ -270,19 +316,19 @@
             <button onclick="crearLista()">Crear Lista</button>
         </div>
 
-        <!-- PANTALLA GRUPO — TABLERO EN COLUMNAS -->
+        <!-- PANTALLA GRUPO — LISTA DE PARTICIPANTES CON DESPLEGABLES -->
         <div id="screen-group" class="screen">
             <span class="back-link" onclick="volverAListas()">← Volver</span>
             <h2 id="group-name"></h2>
             
             <div class="real-time-note">
-                🔄 <strong>Actualización en tiempo real:</strong> Lo que agregues aparecerá al instante para todos los participantes.
+                🔄 <strong>Actualización en tiempo real:</strong> Los participantes y sus listas se actualizan automáticamente.
             </div>
 
-            <button onclick="irAgregarDeseos()">➕ Agregar nuevo producto</button>
+            <button onclick="irAgregarDeseos()">➕ Agregar mis deseos</button>
             
-            <h3>Tablero de Deseos</h3>
-            <div id="all-wishes-realtime"></div>
+            <h3>Participantes</h3>
+            <div id="participants-list"></div>
         </div>
 
         <!-- AGREGAR DESEO -->
@@ -322,7 +368,7 @@
                 <button class="secondary small" onclick="usarTienda()">Usar esta tienda</button>
             </div>
 
-            <button class="save-btn" onclick="guardarDeseo()">💾 Agregar y Guardar en la lista</button>
+            <button class="save-btn" onclick="guardarDeseo()">💾 Agregar y Guardar en mi lista</button>
         </div>
     </div>
 
@@ -347,6 +393,7 @@ let usuarioActual = '';
 let listaActualId = '';
 let escuchaTiempoReal = null;
 let tiendaSeleccionada = '';
+let participanteAbierto = null;
 
 // Estado de conexión
 db.ref(".info/connected").on("value", (snap) => {
@@ -391,10 +438,11 @@ async function cargarListas() {
   }
   snap.forEach(fila => {
     const lista = fila.val();
-    const cantidad = lista.todosLosDeseos ? lista.todosLosDeseos.length : 0;
+    const miembros = lista.members || {};
+    const cantidad = Object.keys(miembros).length;
     const tarjeta = document.createElement('div');
     tarjeta.className = 'list-card';
-    tarjeta.innerHTML = `<strong>${lista.name}</strong><br>${cantidad} producto${cantidad!==1?'s':''} en la lista`;
+    tarjeta.innerHTML = `<strong>${lista.name}</strong><br>${cantidad} participante${cantidad!==1?'s':''}`;
     tarjeta.onclick = () => abrirLista(fila.key);
     contenedor.appendChild(tarjeta);
   });
@@ -407,28 +455,37 @@ async function crearLista() {
   listaActualId = nuevaRef.key;
   await nuevaRef.set({ 
     name: nombre,
-    todosLosDeseos: []
+    members: {}
   });
+  await asegurarPertenencia();
   mostrarPantalla('screen-group');
   activarEscuchaTiempoReal();
 }
 
 async function abrirLista(id) {
   listaActualId = id;
+  await asegurarPertenencia();
   mostrarPantalla('screen-group');
   activarEscuchaTiempoReal();
+}
+
+async function asegurarPertenencia() {
+  const miembroRef = db.ref(`lists/${listaActualId}/members/${usuarioActual}`);
+  const snap = await miembroRef.once("value");
+  if (!snap.exists()) await miembroRef.set([]);
 }
 
 function volverAListas() {
   if (escuchaTiempoReal) escuchaTiempoReal.off();
   listaActualId = '';
+  participanteAbierto = null;
   tiendaSeleccionada = '';
   cargarListas();
   mostrarPantalla('screen-lists');
 }
 
 // ==============================================
-// TABLERO EN COLUMNAS — MUESTRA EN FORMA DE TABLA
+// LISTA DE PARTICIPANTES + DESPLEGABLES EN TIEMPO REAL
 // ==============================================
 function activarEscuchaTiempoReal() {
   document.getElementById('group-name').textContent = 'Cargando...';
@@ -441,62 +498,73 @@ function activarEscuchaTiempoReal() {
     
     document.getElementById('group-name').textContent = datos.name;
     
-    const contenedor = document.getElementById('all-wishes-realtime');
-    const deseos = datos.todosLosDeseos || [];
+    const contenedor = document.getElementById('participants-list');
+    const miembros = datos.members || {};
+    const nombres = Object.keys(miembros);
     
-    if (deseos.length === 0) {
-      contenedor.innerHTML = `
-        <table class="board-table">
-          <thead>
-            <tr>
-              <th>Quien lo agregó</th>
-              <th>Producto / Detalles</th>
-              <th>Tienda y Enlace</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="empty-row">
-              <td colspan="3">Aún no hay productos. ¡Sé el primero en agregar uno!</td>
-            </tr>
-          </tbody>
-        </table>
-      `;
+    if (nombres.length === 0) {
+      contenedor.innerHTML = '<p style="text-align:center; padding:30px; color:var(--apple-secondary);">Aún no hay participantes. ¡Sé el primero en agregar deseos!</p>';
       return;
     }
     
-    // Renderizar en forma de tablero de 3 columnas
-    contenedor.innerHTML = `
-      <table class="board-table">
-        <thead>
-          <tr>
-            <th>Quien lo agregó</th>
-            <th>Producto / Detalles</th>
-            <th>Tienda y Enlace</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${deseos.map((d, indice) => `
-            <tr>
-              <td class="col-person" data-label="Agregado por">
-                <strong>${d.agregadoPor}</strong>
-              </td>
-              <td class="col-wish" data-label="Producto">
-                <div class="product-name">${d.nombre}</div>
-                ${d.talla && d.talla !== '—' ? `<div class="detail-row"><strong>Talla:</strong> ${d.talla}</div>` : ''}
-                ${d.color && d.color !== '—' ? `<div class="detail-row"><strong>Color:</strong> ${d.color}</div>` : ''}
-              </td>
-              <td class="col-store" data-label="Tienda">
-                <div class="store-name">${d.tienda || 'Tienda externa'}</div>
-                <a href="${d.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a>
-                ${d.agregadoPor === usuarioActual ? 
-                  `<button class="del-btn" onclick="eliminarDeseo(${indice})">Eliminar</button>` : ''}
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
+    contenedor.innerHTML = nombres.map(nombre => {
+      const deseos = miembros[nombre] || [];
+      const estaAbierto = participanteAbierto === nombre;
+      const esYo = nombre === usuarioActual;
+      
+      return `
+        <div class="participant-item ${estaAbierto ? 'open' : ''}">
+          <div class="participant-header ${esYo ? 'you' : ''}" onclick="alternarParticipante('${nombre.replace(/'/g, "\\'")}')">
+            <span>${nombre} ${esYo ? '(Tú)' : ''}</span>
+            <span>${deseos.length} deseo${deseos.length !== 1 ? 's' : ''} <span class="participant-toggle">▼</span></span>
+          </div>
+          <div class="participant-content">
+            <div class="participant-inner">
+              ${renderTableroDeseos(deseos, esYo)}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
   });
+}
+
+function alternarParticipante(nombre) {
+  participanteAbierto = participanteAbierto === nombre ? null : nombre;
+}
+
+function renderTableroDeseos(deseos, puedeEliminar) {
+  if (deseos.length === 0) {
+    return '<p class="empty-wishes">Aún no ha agregado deseos.</p>';
+  }
+  
+  return `
+    <table class="board-table">
+      <thead>
+        <tr>
+          <th>Producto / Detalles</th>
+          <th>Tienda y Enlace</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${deseos.map((d, indice) => `
+          <tr>
+            <td class="col-wish" data-label="Producto">
+              <div class="product-name">${d.nombre}</div>
+              ${d.talla && d.talla !== '—' ? `<div class="detail-row"><strong>Talla:</strong> ${d.talla}</div>` : ''}
+              ${d.color && d.color !== '—' ? `<div class="detail-row"><strong>Color:</strong> ${d.color}</div>` : ''}
+            </td>
+            <td class="col-store" data-label="Tienda">
+              <div class="store-name">${d.tienda || 'Tienda externa'}</div>
+              <a href="${d.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a>
+              ${puedeEliminar ? 
+                `<button class="del-btn" onclick="eliminarDeseo(${indice})">Eliminar</button>` : ''}
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
 }
 
 function irAgregarDeseos() {
@@ -563,23 +631,22 @@ async function guardarDeseo() {
   if (!nombre) return alert('⚠️ Escribe el nombre del producto');
   if (!url) return alert('⚠️ Pega el enlace de compra del producto');
   
-  const snap = await db.ref(`lists/${listaActualId}`).once("value");
-  const datos = snap.val();
-  const listaDeseos = datos.todosLosDeseos || [];
+  const snap = await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).once("value");
+  const misDeseos = snap.exists() ? snap.val() : [];
   
-  listaDeseos.push({
+  misDeseos.push({
     nombre: nombre,
     talla: talla,
     color: color,
     url: url,
     tienda: tiendaSeleccionada || detectarTiendaDesdeUrl(url),
-    agregadoPor: usuarioActual,
     fecha: new Date().toLocaleString('es-MX')
   });
   
-  await db.ref(`lists/${listaActualId}/todosLosDeseos`).set(listaDeseos);
+  await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).set(misDeseos);
   
   alert('✅ ¡Guardado con éxito!\n\nAparece al instante para todos los participantes.');
+  participanteAbierto = usuarioActual;
   irGrupo();
 }
 
@@ -593,15 +660,14 @@ function detectarTiendaDesdeUrl(url) {
 }
 
 async function eliminarDeseo(indice) {
-  if (!confirm('¿Eliminar este producto de la lista?')) return;
+  if (!confirm('¿Eliminar este producto de tu lista?')) return;
   
-  const snap = await db.ref(`lists/${listaActualId}`).once("value");
-  const datos = snap.val();
-  const listaDeseos = datos.todosLosDeseos || [];
+  const snap = await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).once("value");
+  const misDeseos = snap.val() || [];
   
-  listaDeseos.splice(indice, 1);
+  misDeseos.splice(indice, 1);
   
-  await db.ref(`lists/${listaActualId}/todosLosDeseos`).set(listaDeseos);
+  await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).set(misDeseos);
 }
 </script>
 </body>
