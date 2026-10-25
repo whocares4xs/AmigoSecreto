@@ -51,7 +51,7 @@
         .favorite-tag { display: inline-block; background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-left: 8px; }
         
         .product-preview { text-align: center; margin: 20px 0; padding: 20px; background: #f9fafb; border-radius: 12px; }
-        .product-preview img { max-width: 250px; max-height: 250px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; }
+        .product-preview img { max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: #fff; padding: 10px; }
         .product-preview h3 { margin-bottom: 5px; }
         .form-group { margin: 15px 0; }
         .form-group label { font-weight: 600; display: block; margin-bottom: 5px; color: #374151; }
@@ -74,6 +74,7 @@
         .back-link { color: #6366f1; cursor: pointer; display: inline-block; margin-bottom: 15px; }
         .back-link:hover { text-decoration: underline; }
         .hidden { display: none !important; }
+        .img-placeholder { display: flex; align-items: center; justify-content: center; height: 250px; color: #9ca3af; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -109,7 +110,7 @@
             <button onclick="goToAddWishes()">➕ Agregar mis deseos</button>
         </div>
 
-        <!-- PANTALLA 4: BUSCAR PRODUCTO (SOLO CAJA Y BOTÓN) -->
+        <!-- PANTALLA 4: BUSCAR PRODUCTO -->
         <div id="screen-search" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2>🔍 Agregar Deseo</h2>
@@ -122,19 +123,19 @@
             <span class="back-link" onclick="goBackToSearch()">← Nueva búsqueda</span>
             
             <div class="product-preview">
-                <img id="product-image" src="" alt="Producto">
+                <img id="product-image" src="" alt="Imagen del producto" onerror="handleImageError()">
                 <h3 id="product-name-display"></h3>
                 <p style="color:#6b7280;">Especifica los detalles de tu producto</p>
             </div>
 
             <div class="form-group">
                 <label for="product-size">📏 Talla / Medida</label>
-                <input type="text" id="product-size" placeholder="Ej: 42, M, 10 US, Pequeña...">
+                <input type="text" id="product-size" placeholder="Ej: 42, M, 10 US, Pequeña..." oninput="updateSummary()">
             </div>
 
             <div class="form-group">
                 <label for="product-color">🎨 Color</label>
-                <input type="text" id="product-color" placeholder="Ej: Negro, Rojo, Azul marino, Blanco...">
+                <input type="text" id="product-color" placeholder="Ej: Negro, Rojo, Azul marino, Blanco..." oninput="updateSummary()">
             </div>
 
             <h3 style="margin-top:30px;">🛒 Selecciona dónde buscar</h3>
@@ -142,81 +143,80 @@
             <!-- Google Shop -->
             <div class="store-option">
                 <div class="store-buttons">
-                    <button onclick="selectGoogleShop()">🔍 Google Shop</button>
+                    <button onclick="openGoogleShop()">🔍 Google Shop</button>
                 </div>
                 <div class="switch-area">
                     <label class="switch">
-                        <input type="checkbox" id="google-fav">
+                        <input type="checkbox" id="google-fav" onchange="setFavorite('google')">
                         <span class="slider"></span>
                     </label>
-                    <span>Activar como tienda favorita</span>
+                    <span>Tienda favorita</span>
                 </div>
             </div>
 
-            <!-- Amazon Shop → dos botones al activar -->
+            <!-- Amazon Shop -->
             <div class="store-option">
-                <div class="store-buttons" id="amazon-buttons">
+                <div class="store-buttons">
                     <button onclick="toggleAmazonOptions()">🛒 Amazon Shop ▼</button>
                 </div>
                 <div class="switch-area">
                     <label class="switch">
-                        <input type="checkbox" id="amazon-fav">
+                        <input type="checkbox" id="amazon-fav" onchange="setFavorite('amazon')">
                         <span class="slider"></span>
                     </label>
-                    <span>Activar como tienda favorita</span>
+                    <span>Tienda favorita</span>
                 </div>
             </div>
             <div id="amazon-sub-options" class="hidden">
                 <div class="btn-row">
-                    <button class="amazon-mx" onclick="selectAmazonMX()">🇲🇽 Amazon México</button>
-                    <button class="amazon-us" onclick="selectAmazonUS()">🇺🇸 Amazon EE.UU.</button>
+                    <button class="amazon-mx" onclick="openAmazonMX()">🇲🇽 Amazon México</button>
+                    <button class="amazon-us" onclick="openAmazonUS()">🇺🇸 Amazon EE.UU.</button>
                 </div>
             </div>
 
             <!-- eBay Shop -->
             <div class="store-option">
                 <div class="store-buttons">
-                    <button onclick="selectEbayShop()">🏷️ eBay Shop</button>
+                    <button onclick="openEbayShop()">🏷️ eBay Shop</button>
                 </div>
                 <div class="switch-area">
                     <label class="switch">
-                        <input type="checkbox" id="ebay-fav">
+                        <input type="checkbox" id="ebay-fav" onchange="setFavorite('ebay')">
                         <span class="slider"></span>
                     </label>
-                    <span>Activar como tienda favorita</span>
+                    <span>Tienda favorita</span>
                 </div>
             </div>
 
             <!-- Tienda personalizada -->
             <div class="custom-store">
                 <h4>🌐 Tienda no listada</h4>
-                <input type="text" id="custom-store-name" placeholder="Nombre de la tienda">
-                <input type="url" id="custom-store-url" placeholder="Enlace / URL de compra">
+                <input type="text" id="custom-store-name" placeholder="Nombre de la tienda" oninput="updateSummary()">
+                <input type="url" id="custom-store-url" placeholder="Enlace / URL de compra" oninput="updateSummary()">
                 <div class="switch-area" style="justify-content:flex-start; margin-top:5px;">
                     <label class="switch">
-                        <input type="checkbox" id="custom-fav">
+                        <input type="checkbox" id="custom-fav" onchange="setFavorite('custom')">
                         <span class="slider"></span>
                     </label>
-                    <span>Activar como tienda favorita</span>
+                    <span>Tienda favorita</span>
                 </div>
-                <button class="secondary small" onclick="selectCustomStore()">➕ Usar esta tienda</button>
+                <button class="secondary small" onclick="setCustomStore()">✅ Seleccionar esta tienda</button>
             </div>
 
-            <!-- Resumen y Guardar -->
+            <!-- Resumen -->
             <div style="margin-top:25px; padding:15px; background:#eef2ff; border-radius:10px;">
                 <h4 style="text-align:center; margin-bottom:10px;">Tu selección</h4>
                 <p><strong>Producto:</strong> <span id="sel-name"></span></p>
                 <p><strong>Talla:</strong> <span id="sel-size"></span></p>
                 <p><strong>Color:</strong> <span id="sel-color"></span></p>
-                <p><strong>Tienda:</strong> <span id="sel-store"></span></p>
-                <p><strong>Enlace:</strong> <span id="sel-link"></span></p>
-                <p id="sel-fav" style="color:#92400e; font-weight:bold; display:none;">⭐ Tienda favorita marcada</p>
+                <p><strong>Tienda elegida:</strong> <span id="sel-store">—</span></p>
+                <p id="sel-fav" style="color:#92400e; font-weight:bold; display:none;">⭐ Esta es tu tienda favorita</p>
             </div>
 
             <button class="save-btn" onclick="saveSelectedWish()">💾 Agregar y Guardar en mi lista</button>
         </div>
 
-        <!-- PANTALLA 6: Mis deseos agregados / Vista de participante -->
+        <!-- PANTALLA 6: Mis deseos / Vista participante -->
         <div id="screen-my-wishes" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2 id="my-wishes-title"></h2>
@@ -243,13 +243,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Estado global
 let currentUser = '';
 let currentListId = '';
 let listRef = null;
 let localWishes = [];
 
-// Datos del producto en proceso
 let pendingProduct = {
   name: '',
   image: '',
@@ -260,7 +258,6 @@ let pendingProduct = {
   isFavorite: false
 };
 
-// Conexión
 const connectedRef = db.ref(".info/connected");
 connectedRef.on("value", (snap) => {
   const status = document.getElementById("status-bar");
@@ -399,7 +396,7 @@ function viewParticipant(name) {
   });
 }
 
-// ========== PANTALLA 4: BÚSQUEDA INICIAL ==========
+// ========== PANTALLA 4: BÚSQUEDA ==========
 function goToSearch() {
   resetPendingProduct();
   document.getElementById('product-search').value = '';
@@ -410,90 +407,104 @@ function goBackToSearch() {
   goToSearch();
 }
 
-// ========== PANTALLA 5: RESULTADOS Y DETALLES ==========
+// ========== PANTALLA 5: RESULTADOS ==========
 function goToResults() {
   const query = document.getElementById('product-search').value.trim();
-  if (!query) return alert('Escribe el nombre del producto que buscas');
+  if (!query) return alert('Escribe el nombre del producto');
   
   pendingProduct.name = query;
-  pendingProduct.image = `https://loremflickr.com/400/400/${encodeURIComponent(query)}`;
   
-  // Mostrar vista previa
+  // Imagen con múltiples fuentes de respaldo
+  const encoded = encodeURIComponent(query);
+  pendingProduct.image = `https://loremflickr.com/400/400/${encoded}`;
+  
+  const imgEl = document.getElementById('product-image');
+  imgEl.src = pendingProduct.image;
+  imgEl.alt = `Imagen: ${query}`;
+  
   document.getElementById('product-name-display').textContent = query;
-  document.getElementById('product-image').src = pendingProduct.image;
-  
-  // Limpiar campos
   document.getElementById('product-size').value = '';
   document.getElementById('product-color').value = '';
   document.getElementById('amazon-sub-options').classList.add('hidden');
   
-  // Resetear selección
   resetStoreSelection();
   updateSummary();
-  
   showScreen('screen-results');
+}
+
+function handleImageError() {
+  const query = encodeURIComponent(pendingProduct.name);
+  document.getElementById('product-image').src = `https://source.unsplash.com/400x400/?${query}`;
 }
 
 function toggleAmazonOptions() {
   document.getElementById('amazon-sub-options').classList.toggle('hidden');
 }
 
-// Construir URL con talla y color
-function buildSearchUrl(baseUrl, query) {
+// Construye URL con talla y color
+function buildSearchUrl(base, query) {
   const size = document.getElementById('product-size').value.trim();
   const color = document.getElementById('product-color').value.trim();
-  let enhancedQuery = query;
-  if (size) enhancedQuery += ` ${size}`;
-  if (color) enhancedQuery += ` ${color}`;
-  return baseUrl + encodeURIComponent(enhancedQuery);
+  let enhanced = query;
+  if (size) enhanced += ` ${size}`;
+  if (color) enhanced += ` ${color}`;
+  return base + encodeURIComponent(enhanced);
 }
 
-function selectGoogleShop() {
-  const q = pendingProduct.name;
-  const url = buildSearchUrl('https://www.google.com/search?q=', q + '&tbm=shop');
+// === ABRIR EN TIENDA + ACTUALIZAR SELECCIÓN ===
+function openGoogleShop() {
+  const url = buildSearchUrl('https://www.google.com/search?q=', pendingProduct.name + '&tbm=shop');
+  window.open(url, '_blank');
   pendingProduct.store = 'Google Shopping';
   pendingProduct.url = url;
-  pendingProduct.isFavorite = document.getElementById('google-fav').checked;
   updateSummary();
 }
 
-function selectAmazonMX() {
-  const q = pendingProduct.name;
-  const url = buildSearchUrl('https://www.amazon.com.mx/s?k=', q);
+function openAmazonMX() {
+  const url = buildSearchUrl('https://www.amazon.com.mx/s?k=', pendingProduct.name);
+  window.open(url, '_blank');
   pendingProduct.store = 'Amazon México';
   pendingProduct.url = url;
-  pendingProduct.isFavorite = document.getElementById('amazon-fav').checked;
   updateSummary();
 }
 
-function selectAmazonUS() {
-  const q = pendingProduct.name;
-  const url = buildSearchUrl('https://www.amazon.com/s?k=', q + '&language=es');
+function openAmazonUS() {
+  const url = buildSearchUrl('https://www.amazon.com/s?k=', pendingProduct.name + '&language=es');
+  window.open(url, '_blank');
   pendingProduct.store = 'Amazon EE.UU. (Español)';
   pendingProduct.url = url;
-  pendingProduct.isFavorite = document.getElementById('amazon-fav').checked;
   updateSummary();
 }
 
-function selectEbayShop() {
-  const q = pendingProduct.name;
-  const url = buildSearchUrl('https://www.ebay.com/sch/i.html?_nkw=', q);
+function openEbayShop() {
+  const url = buildSearchUrl('https://www.ebay.com/sch/i.html?_nkw=', pendingProduct.name);
+  window.open(url, '_blank');
   pendingProduct.store = 'eBay';
   pendingProduct.url = url;
-  pendingProduct.isFavorite = document.getElementById('ebay-fav').checked;
   updateSummary();
 }
 
-function selectCustomStore() {
+function setCustomStore() {
   const name = document.getElementById('custom-store-name').value.trim();
   const url = document.getElementById('custom-store-url').value.trim();
   if (!name || !url) return alert('Escribe el nombre y el enlace de la tienda');
   
   pendingProduct.store = name;
   pendingProduct.url = url;
-  pendingProduct.isFavorite = document.getElementById('custom-fav').checked;
+  window.open(url, '_blank');
   updateSummary();
-  alert('Tienda personalizada seleccionada ✅');
+  alert('✅ Tienda seleccionada');
+}
+
+// === SWITCH FAVORITA ===
+function setFavorite(storeType) {
+  // Desactivar todos
+  ['google','amazon','ebay','custom'].forEach(type => {
+    if (type !== storeType) document.getElementById(`${type}-fav`).checked = false;
+  });
+  
+  pendingProduct.isFavorite = document.getElementById(`${storeType}-fav`).checked;
+  updateSummary();
 }
 
 function updateSummary() {
@@ -504,24 +515,18 @@ function updateSummary() {
   document.getElementById('sel-size').textContent = pendingProduct.size;
   document.getElementById('sel-color').textContent = pendingProduct.color;
   document.getElementById('sel-store').textContent = pendingProduct.store || '—';
-  document.getElementById('sel-link').textContent = pendingProduct.url ? 'Ver enlace arriba' : '—';
   
   const favTag = document.getElementById('sel-fav');
-  if (pendingProduct.isFavorite && pendingProduct.store) {
-    favTag.style.display = 'block';
-  } else {
-    favTag.style.display = 'none';
-  }
+  favTag.style.display = pendingProduct.isFavorite && pendingProduct.store ? 'block' : 'none';
 }
 
 function resetStoreSelection() {
   pendingProduct.store = '';
   pendingProduct.url = '';
   pendingProduct.isFavorite = false;
-  document.getElementById('google-fav').checked = false;
-  document.getElementById('amazon-fav').checked = false;
-  document.getElementById('ebay-fav').checked = false;
-  document.getElementById('custom-fav').checked = false;
+  ['google','amazon','ebay','custom'].forEach(type => {
+    document.getElementById(`${type}-fav`).checked = false;
+  });
   document.getElementById('custom-store-name').value = '';
   document.getElementById('custom-store-url').value = '';
 }
@@ -530,15 +535,11 @@ function resetPendingProduct() {
   pendingProduct = { name: '', image: '', size: '', color: '', store: '', url: '', isFavorite: false };
 }
 
-// ========== GUARDAR DESEO ==========
+// ========== GUARDAR ==========
 function saveSelectedWish() {
   if (!pendingProduct.store || !pendingProduct.url) {
-    return alert('Selecciona una tienda para continuar 🛒');
+    return alert('Primero selecciona una tienda para continuar 🛒');
   }
-  
-  // Actualizar detalles finales
-  pendingProduct.size = document.getElementById('product-size').value.trim() || 'No especificada';
-  pendingProduct.color = document.getElementById('product-color').value.trim() || 'No especificado';
   
   const wish = {
     name: pendingProduct.name,
@@ -552,28 +553,26 @@ function saveSelectedWish() {
   };
   
   localWishes.push(wish);
-  alert('✅ Agregado a tu lista local — presiona "Guardar todo en la nube" para compartirlo');
+  alert('✅ Agregado a tu lista local');
   
-  // Preparar para otro deseo
   resetPendingProduct();
   resetStoreSelection();
   loadMyWishes();
-  showScreen('screen-my-wishes');
 }
 
 function renderWishCard(wish, allowDelete = true) {
   return `
     <div class="wish-item" style="background:white; border-radius:10px; padding:15px; border:1px solid #e5e7eb;">
-      <div style="display:flex; gap:15px; flex-wrap:wrap;">
-        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:6px; background:#f3f4f6;">
+      <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:flex-start;">
+        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:6px; background:#f3f4f6;" onerror="this.src='https://loremflickr.com/100/100/gift'">
         <div style="flex:1; min-width:200px;">
           <strong style="font-size:16px;">${wish.name}</strong>
-          ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
+          ${wish.isFavorite ? '<span class="favorite-tag">⭐ Tienda favorita</span>' : ''}
           <div class="wish-details">
             <strong>Talla:</strong> ${wish.size}<br>
             <strong>Color:</strong> ${wish.color}<br>
             <strong>Tienda:</strong> ${wish.store}<br>
-            <a href="${wish.url}" target="_blank">🔗 Ir a comprar</a><br>
+            <a href="${wish.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a><br>
             <small style="color:#999;">Agregado: ${wish.addedAt}</small>
           </div>
         </div>
