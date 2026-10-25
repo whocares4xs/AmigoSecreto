@@ -475,9 +475,8 @@
             <button onclick="crearLista()">Crear Lista</button>
         </div>
 
-        <!-- PANTALLA GRUPO -->
+        <!-- PANTALLA GRUPO — SIN BOTÓN "VOLVER" -->
         <div id="screen-group" class="screen">
-            
             <h2 id="group-name"></h2>
             
             <div class="real-time-note">
@@ -507,7 +506,11 @@
                 <label>Color</label>
                 <input type="text" id="prod-color" placeholder="Ej: Negro, Rojo, Azul...">
             </div>
-        
+            <div class="form-group">
+                <label>Enlace de compra <span class="required">*</span></label>
+                <input type="url" id="prod-url" placeholder="Pega el enlace completo del producto">
+            </div>
+
             <h3>Buscar en tienda</h3>
             <div class="store-buttons">
                 <button class="amazon" onclick="abrirTienda('amazon-mx')">Amazon México</button>
@@ -516,15 +519,10 @@
                 <button onclick="abrirTienda('ebay')">eBay</button>
             </div>
 
-                    <div class="form-group">
-                <label>Enlace de compra <span class="required">*</span></label>
-                <input type="url" id="prod-url" placeholder="Pega el enlace http del producto">
-            </div>
-            
             <div class="custom-store">
-                <h4>Quieres otra tienda?</h4>
+                <h4>Tienda personalizada</h4>
                 <input type="text" id="tienda-nombre" placeholder="Nombre de la tienda">
-                <input type="url" id="tienda-enlace" placeholder="Enlace http... del producto">
+                <input type="url" id="tienda-enlace" placeholder="Enlace del producto">
                 <button class="secondary small" onclick="usarTienda()">Usar esta tienda</button>
             </div>
 
@@ -607,34 +605,46 @@ async function borrarMiNombre() {
   mostrarPantalla('screen-welcome');
 }
 
+// ==============================================
+// FUNCIÓN "VOLVER AL INICIO" — REFORZADA
+// ==============================================
 function irAlInicio() {
+  // 1. Cerrar el menú primero
   cerrarMenu();
   
-  // Detener escucha activa
+  // 2. Detener la escucha en tiempo real si existe
   if (escuchaTiempoReal) {
     escuchaTiempoReal.off();
     escuchaTiempoReal = null;
   }
   
-  // Limpiar todo el estado
+  // 3. Reiniciar TODAS las variables de estado
   usuarioActual = '';
   listaActualId = '';
   participanteAbierto = null;
   tiendaSeleccionada = '';
   ultimosMiembros = {};
   
-  // Limpiar campo de nombre
+  // 4. Limpiar campos de entrada
   document.getElementById('user-name').value = '';
+  document.getElementById('existing-lists').innerHTML = '';
+  document.getElementById('greeting').textContent = '';
+  document.getElementById('group-name').textContent = '';
+  document.getElementById('participants-list').innerHTML = '';
   
-  // Volver al inicio
+  // 5. Volver a la pantalla de inicio
   mostrarPantalla('screen-welcome');
 }
 
 // ==============================================
-// NAVEGACIÓN — CORREGIDO
+// NAVEGACIÓN
 // ==============================================
 function mostrarPantalla(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Quitar clase activa de todas las pantallas
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+  // Activar la pantalla solicitada
   document.getElementById(id).classList.add('active');
 }
 
@@ -643,23 +653,6 @@ function goToLists() {
   if (!nombre) return alert('Escribe tu nombre');
   usuarioActual = nombre;
   document.getElementById('greeting').textContent = `Hola, ${usuarioActual}! Elige una lista`;
-  cargarListas();
-  mostrarPantalla('screen-lists');
-}
-
-function volverAListas() {
-  // Detener escucha
-  if (escuchaTiempoReal) {
-    escuchaTiempoReal.off();
-    escuchaTiempoReal = null;
-  }
-  
-  // Limpiar estado de la pantalla de grupo
-  participanteAbierto = null;
-  tiendaSeleccionada = '';
-  ultimosMiembros = {};
-  
-  // Cargar listas y mostrar pantalla
   cargarListas();
   mostrarPantalla('screen-lists');
 }
