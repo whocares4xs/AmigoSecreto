@@ -14,9 +14,11 @@
             --apple-secondary: #86868b;
             --apple-accent: #0071e3;
             --apple-success: #34c759;
+            --apple-danger: #ef4444;
             --apple-border: #d2d2d7;
             --apple-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
             --apple-radius: 22px;
+            --menu-width: 260px;
         }
         * {
             margin: 0;
@@ -28,7 +30,114 @@
             background: var(--apple-bg);
             min-height: 100vh;
             padding: 18px;
+            position: relative;
         }
+
+        /* === MENÚ HAMBURGUESA === */
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            width: 44px;
+            height: 44px;
+            background: var(--apple-card);
+            border-radius: 12px;
+            border: 1px solid var(--apple-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+        .menu-toggle:hover {
+            background: #f0f0f0;
+        }
+        .menu-toggle span {
+            width: 22px;
+            height: 2px;
+            background: var(--apple-text);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 900;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .menu-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--menu-width);
+            height: 100vh;
+            background: var(--apple-card);
+            z-index: 950;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            padding: 60px 20px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        .menu-panel.open {
+            transform: translateX(0);
+        }
+        .menu-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--apple-border);
+        }
+        .menu-option {
+            padding: 14px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 8px;
+            transition: background 0.2s ease;
+        }
+        .menu-option:hover {
+            background: #f5f5f7;
+        }
+        .menu-option.danger {
+            color: var(--apple-danger);
+        }
+        .menu-option.danger:hover {
+            background: #fef2f2;
+        }
+        .menu-divider {
+            height: 1px;
+            background: var(--apple-border);
+            margin: 10px 0;
+        }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -37,6 +146,7 @@
             padding: 24px;
             box-shadow: var(--apple-shadow);
             border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: 50px;
         }
         .screen { display: none; }
         .screen.active {
@@ -144,7 +254,7 @@
         .participant-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.3s ease;
+            transition: max-height 0.4s ease;
         }
         .participant-item.open .participant-content {
             max-height: 3000px;
@@ -154,7 +264,7 @@
             border-top: 1px solid var(--apple-border);
         }
         
-        /* === TABLERO DE DESEOS === */
+        /* === TABLERO DE DESEOS — RESPONSIVO MEJORADO === */
         .board-table {
             width: 100%;
             border-collapse: separate;
@@ -173,10 +283,10 @@
             color: var(--apple-text);
             border-bottom: 2px solid var(--apple-border);
         }
-        .board-table th:nth-child(1) { width: 60%; }
-        .board-table th:nth-child(2) { width: 40%; }
+        .board-table th:nth-child(1) { width: 55%; }
+        .board-table th:nth-child(2) { width: 45%; }
         .board-table td {
-            padding: 14px 16px;
+            padding: 16px;
             border-bottom: 1px solid var(--apple-border);
             vertical-align: top;
             background: #ffffff;
@@ -191,29 +301,32 @@
         .col-wish .product-name {
             font-weight: 700;
             font-size: 15px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             color: var(--apple-text);
+            line-height: 1.4;
         }
         .col-wish .detail-row {
             font-size: 13px;
             color: var(--apple-secondary);
-            margin: 2px 0;
+            margin: 4px 0;
         }
         .col-wish .detail-row strong {
             color: #6e6e73;
         }
+        .col-store {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
         .col-store .store-name {
             font-weight: 600;
             font-size: 14px;
-            margin-bottom: 6px;
             color: var(--apple-text);
         }
         .col-store a {
             color: var(--apple-accent);
             text-decoration: none;
             font-weight: 600;
-            display: inline-block;
-            margin-bottom: 6px;
             font-size: 14px;
         }
         .col-store a:hover {
@@ -221,11 +334,12 @@
         }
         .del-btn {
             background: #ef4444;
-            padding: 5px 10px;
+            padding: 6px 12px;
             font-size: 12px;
             width: auto;
             border-radius: 8px;
-            margin: 4px 0 0 0;
+            margin-top: 4px;
+            align-self: flex-start;
         }
         .empty-wishes {
             text-align: center;
@@ -263,33 +377,64 @@
         }
         .custom-store h4 { margin-bottom: 12px; color: #0071e3; font-size: 1.1rem; font-weight: 700; }
         .required { color: #ef4444; }
+
+        /* === MÓVIL — COLUMNAS DISTRIBUIDAS EQUITATIVAMENTE === */
         @media (max-width: 768px) {
-            .board-table, .board-table thead, .board-table tbody, .board-table th, .board-table td, .board-table tr {
-                display: block;
-            }
+            .container { padding: 16px; margin-top: 45px; }
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.3rem; }
+            
+            .board-table { border: none; }
             .board-table thead { display: none; }
+            .board-table tbody, .board-table tr, .board-table td {
+                display: block;
+                width: 100%;
+            }
             .board-table tr {
-                margin-bottom: 12px;
                 border: 1px solid var(--apple-border);
-                border-radius: 10px;
+                border-radius: 12px;
+                margin-bottom: 12px;
                 overflow: hidden;
             }
             .board-table td {
-                display: flex;
-                padding: 10px 14px;
+                padding: 14px 16px;
                 border-bottom: 1px solid #f0f0f0;
             }
+            .board-table td:last-child { border-bottom: none; }
             .board-table td:before {
                 content: attr(data-label);
+                display: block;
                 font-weight: 700;
-                min-width: 90px;
                 color: var(--apple-secondary);
-                flex-shrink: 0;
+                font-size: 12px;
+                margin-bottom: 6px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
+            .col-store { gap: 8px; }
+            .del-btn { width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
+    <!-- MENÚ HAMBURGUESA -->
+    <div class="menu-toggle" id="menu-btn" onclick="alternarMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="menu-overlay" id="menu-overlay" onclick="alternarMenu()"></div>
+    <div class="menu-panel" id="menu-panel">
+        <div class="menu-title">Opciones</div>
+        <div class="menu-option danger" onclick="borrarMiNombre()">
+            🗑️ Borrar mi nombre del grupo
+        </div>
+        <div class="menu-divider"></div>
+        <div class="menu-option" onclick="irAlInicio()">
+            🏠 Volver al inicio
+        </div>
+    </div>
+
     <div class="container">
         <div id="status-bar" class="status wait">Conectando...</div>
 
@@ -303,7 +448,7 @@
 
         <!-- PANTALLA DE LISTAS -->
         <div id="screen-lists" class="screen">
-            <span class="back-link" onclick="goBackToName()">← Cambiar mi nombre</span>
+            <span class="back-link" onclick="irAlInicio()">← Volver al inicio</span>
             <h2>Mis Listas</h2>
             <p id="greeting" style="text-align:center; margin-bottom:15px;"></p>
 
@@ -345,7 +490,7 @@
                 <label>Color</label>
                 <input type="text" id="prod-color" placeholder="Ej: Negro, Rojo, Azul...">
             </div>
-          
+         
             <h3>Buscar en tienda</h3>
             <div class="store-buttons">
                 <button class="amazon" onclick="abrirTienda('amazon-mx')">Amazon México</button>
@@ -354,7 +499,7 @@
                 <button onclick="abrirTienda('ebay')">eBay</button>
             </div>
 
-  <div class="form-group">
+   <div class="form-group">
                 <label>Enlace de compra <span class="required">*</span></label>
                 <input type="url" id="prod-url" placeholder="Pega el enlace http... del producto">
             </div>
@@ -392,6 +537,7 @@ let listaActualId = '';
 let escuchaTiempoReal = null;
 let tiendaSeleccionada = '';
 let participanteAbierto = null;
+let ultimosMiembros = {};
 
 // Estado de conexión
 db.ref(".info/connected").on("value", (snap) => {
@@ -406,7 +552,56 @@ db.ref(".info/connected").on("value", (snap) => {
 });
 
 // ==============================================
-// NAVEGACIÓN
+// MENÚ HAMBURGUESA
+// ==============================================
+function alternarMenu() {
+  const btn = document.getElementById('menu-btn');
+  const overlay = document.getElementById('menu-overlay');
+  const panel = document.getElementById('menu-panel');
+  
+  btn.classList.toggle('open');
+  overlay.classList.toggle('visible');
+  panel.classList.toggle('open');
+}
+
+function cerrarMenu() {
+  document.getElementById('menu-btn').classList.remove('open');
+  document.getElementById('menu-overlay').classList.remove('visible');
+  document.getElementById('menu-panel').classList.remove('open');
+}
+
+async function borrarMiNombre() {
+  if (!usuarioActual || !listaActualId) {
+    alert('No estás en ninguna lista.');
+    cerrarMenu();
+    return;
+  }
+  
+  if (!confirm(`¿Eliminar tu nombre "${usuarioActual}" del grupo?\n\nSe borrarán todos tus deseos y no podrás recuperarlos.`)) {
+    cerrarMenu();
+    return;
+  }
+  
+  await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).remove();
+  alert(`✅ "${usuarioActual}" ha sido eliminado del grupo.`);
+  
+  cerrarMenu();
+  listaActualId = '';
+  participanteAbierto = null;
+  mostrarPantalla('screen-welcome');
+}
+
+function irAlInicio() {
+  cerrarMenu();
+  if (escuchaTiempoReal) escuchaTiempoReal.off();
+  usuarioActual = '';
+  listaActualId = '';
+  participanteAbierto = null;
+  mostrarPantalla('screen-welcome');
+}
+
+// ==============================================
+// NAVEGACIÓN — CORREGIDO BOTÓN VOLVER
 // ==============================================
 function mostrarPantalla(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -422,8 +617,12 @@ function goToLists() {
   mostrarPantalla('screen-lists');
 }
 
-function goBackToName() {
-  mostrarPantalla('screen-welcome');
+function volverAListas() {
+  if (escuchaTiempoReal) escuchaTiempoReal.off();
+  participanteAbierto = null;
+  tiendaSeleccionada = '';
+  cargarListas();
+  mostrarPantalla('screen-lists');
 }
 
 async function cargarListas() {
@@ -473,31 +672,13 @@ async function asegurarPertenencia() {
   if (!snap.exists()) await miembroRef.set([]);
 }
 
-function volverAListas() {
-  if (escuchaTiempoReal) escuchaTiempoReal.off();
-  listaActualId = '';
-  participanteAbierto = null;
-  tiendaSeleccionada = '';
-  cargarListas();
-  mostrarPantalla('screen-lists');
-}
-
 // ==============================================
-// ✅ FUNCIÓN CORREGIDA: ABRIR/CERRAR PARTICIPANTE
+// ABRIR/CERRAR PARTICIPANTE
 // ==============================================
 function alternarParticipante(nombre) {
-  // Cambiar estado: si ya está abierto → cerrar, si no → abrir
   participanteAbierto = participanteAbierto === nombre ? null : nombre;
-  
-  // Re-renderizar inmediatamente para que se vea el cambio
-  const contenedor = document.getElementById('participants-list');
-  const miembros = obtenerUltimosMiembros() || {};
-  renderizarParticipantes(miembros, contenedor);
+  renderizarParticipantes(ultimosMiembros, document.getElementById('participants-list'));
 }
-
-// Guardamos la última copia para re-renderizar al instante
-let ultimosMiembros = {};
-function obtenerUltimosMiembros() { return ultimosMiembros; }
 
 function renderizarParticipantes(miembros, contenedor) {
   ultimosMiembros = miembros;
@@ -513,7 +694,6 @@ function renderizarParticipantes(miembros, contenedor) {
     const estaAbierto = participanteAbierto === nombre;
     const esYo = nombre === usuarioActual;
     
-    // Usamos data-nombre en lugar de onclick directo para evitar problemas de escape
     return `
       <div class="participant-item ${estaAbierto ? 'open' : ''}">
         <div class="participant-header ${esYo ? 'you' : ''}" data-nombre="${nombre}">
@@ -529,7 +709,6 @@ function renderizarParticipantes(miembros, contenedor) {
     `;
   }).join('');
   
-  // Asignar eventos de clic después de crear el HTML
   document.querySelectorAll('.participant-header').forEach(header => {
     header.addEventListener('click', function() {
       const nombre = this.getAttribute('data-nombre');
