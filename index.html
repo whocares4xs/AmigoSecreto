@@ -6,7 +6,6 @@
     <title>Lista de Deseos Compartida</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
     <style>
         :root {
             --apple-bg: #f5f5f7;
@@ -15,25 +14,22 @@
             --apple-secondary: #86868b;
             --apple-accent: #0071e3;
             --apple-success: #34c759;
+            --apple-warning: #ff9500;
             --apple-border: #d2d2d7;
             --apple-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
             --apple-radius: 22px;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
-            color: var(--apple-text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
         }
-
         body {
             background: var(--apple-bg);
             min-height: 100vh;
             padding: 18px;
         }
-
         .container {
             max-width: 960px;
             margin: 0 auto;
@@ -41,30 +37,25 @@
             border-radius: var(--apple-radius);
             padding: 24px;
             box-shadow: var(--apple-shadow);
-            border: 1px solid rgba(0, 0, 0, 0.04);
         }
-
         .screen { display: none; }
         .screen.active {
             display: block;
-            animation: appleFadeIn 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+            animation: fadeIn 0.4s ease;
         }
-        @keyframes appleFadeIn {
-            from { opacity: 0; transform: translateY(18px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         h1, h2, h3 {
             text-align: center;
             margin-bottom: 24px;
             font-weight: 700;
-            letter-spacing: 0.5px;
         }
-        h1 { font-size: 2.4rem; }
-        h2 { font-size: 1.9rem; }
-        h3 { font-size: 1.35rem; color: var(--apple-secondary); }
-
-        input, select, textarea {
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.6rem; }
+        h3 { font-size: 1.2rem; color: var(--apple-secondary); }
+        input {
             padding: 14px 16px;
             margin: 10px 0;
             border-radius: 12px;
@@ -72,412 +63,222 @@
             font-size: 16px;
             width: 100%;
             background: #fafafa;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: var(--apple-accent);
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.14);
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
         }
-
         button {
             background: var(--apple-accent);
-            color: #ffffff !important;
+            color: #fff;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.22s cubic-bezier(0.25, 0.1, 0.25, 1);
             padding: 14px 20px;
             font-size: 16px;
             border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-        button:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.08);
-        }
-        button:active {
-            transform: translateY(1px);
-            filter: brightness(0.96);
-        }
-        button::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.24), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        button:hover::after { opacity: 1; }
-
-        button.secondary {
-            background: #e9e9eb;
-            color: var(--apple-text) !important;
-        }
-        button.secondary:hover { background: #dcdce0; }
-
-        button.small { padding: 10px 14px; font-size: 14px; width: auto; margin: 5px; }
-        button.save-btn {
-            background: var(--apple-success);
-            margin-top: 22px;
-            font-size: 18px;
-            padding: 18px;
             width: 100%;
+            margin: 8px 0;
         }
-        button.save-btn:hover { filter: brightness(1.12); }
-
-        button.amazon-mx, button.amazon-us {
-            background: #f59e0b;
-            color: #1f2937 !important;
-        }
-        button.amazon-mx:hover, button.amazon-us:hover { background: #d97706; }
-
-        .btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; align-items: center; }
-        .btn-row button { flex: 1; min-width: 140px; }
-
+        button:hover { filter: brightness(1.08); }
+        button.secondary { background: #e9e9eb; color: var(--apple-text); }
+        button.save-btn { background: var(--apple-success); margin-top: 20px; font-size: 18px; padding: 16px; }
+        button.small { width: auto; padding: 10px 16px; font-size: 14px; }
+        button.amazon { background: #f59e0b; color: #1f2937; }
         .status {
             text-align: center;
-            padding: 12px 16px;
+            padding: 12px;
             border-radius: 12px;
             margin-bottom: 18px;
-            font-size: 15px;
             font-weight: 600;
         }
         .status.ok { background: #dcfce7; color: #166534; }
         .status.wait { background: #fef3c7; color: #92400e; }
-
         .list-card {
-            padding: 22px;
+            padding: 20px;
             background: var(--apple-card);
             border: 1px solid var(--apple-border);
-            border-radius: var(--apple-radius);
-            margin: 14px 0;
+            border-radius: 16px;
+            margin: 10px 0;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s;
         }
-        .list-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-            border-color: var(--apple-accent);
-        }
-        .list-card strong { font-size: 1.55rem; display: block; margin-bottom: 8px; }
-        .list-card small { font-size: 1rem; color: var(--apple-secondary); }
-        .list-card.empty { border-style: dashed; border-color: #f59e0b; }
-
+        .list-card:hover { border-color: var(--apple-accent); background: #f8fafc; transform: translateY(-2px); }
         .member-row {
-            padding: 16px;
+            padding: 14px;
             border-bottom: 1px solid var(--apple-border);
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-radius: 12px;
-            margin: 4px 0;
+            border-radius: 8px;
+            transition: background 0.2s;
         }
-        .member-row:hover { background: #f5f5f7; transform: translateX(4px); }
+        .member-row:hover { background: #f5f5f7; }
         .member-row.you {
             font-weight: 700;
             background: #eaf5ff;
-            border-left: 4px solid var(--apple-accent);
+            border-left: 3px solid var(--apple-accent);
         }
-
         .wish-item {
             padding: 18px;
             border-bottom: 1px solid var(--apple-border);
-            margin-bottom: 12px;
-            border-radius: 16px;
             background: #fafafa;
-            transition: background 0.2s ease, transform 0.2s ease;
+            border-radius: 12px;
+            margin: 10px 0;
+            transition: all 0.2s;
         }
-        .wish-item:hover { background: #f5f5f7; transform: translateX(2px); }
+        .wish-item:hover { background: #f0f0f0; transform: translateX(3px); }
         .wish-item a { color: var(--apple-accent); text-decoration: none; font-weight: 600; }
         .wish-item a:hover { text-decoration: underline; }
-        .wish-item .del-btn {
-            background: #ef4444;
-            padding: 8px 14px;
-            font-size: 14px;
-            width: auto;
-            border-radius: 10px;
-        }
-        .wish-item .del-btn:hover { background: #dc2626; }
-        .wish-details { margin: 8px 0; font-size: 15px; color: var(--apple-secondary); }
-        .wish-details strong { color: var(--apple-text); font-weight: 700; }
-        .favorite-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, #ffd60a, #ffcc00);
-            color: #7a4200 !important;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 800;
-            margin-left: 10px;
-        }
-
-        .product-preview {
-            text-align: center;
-            margin: 25px 0;
-            padding: 35px 25px;
-            background: linear-gradient(180deg, #fafafa, #f5f5f7);
-            border-radius: var(--apple-radius);
-            border: 1px solid var(--apple-border);
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .product-preview h3 { color: var(--apple-text); font-size: 1.45rem; margin-bottom: 8px; }
-        .product-placeholder {
-            color: var(--apple-secondary);
-            font-size: 15px;
-            padding: 15px;
-        }
-
-        .form-group { margin: 18px 0; }
-        .form-group label {
-            font-weight: 700;
-            display: block;
-            margin-bottom: 8px;
-            color: var(--apple-text);
-            font-size: 16px;
-        }
-
-        .store-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            background: #fafafa;
-            border-radius: 16px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-            gap: 12px;
-            border: 1px solid var(--apple-border);
-            transition: all 0.2s ease;
-        }
-        .store-option:hover { background: #f5f5f7; transform: translateX(3px); }
-        .store-option .store-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .store-option .switch-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--apple-secondary);
-        }
-
-        .switch { position: relative; display: inline-block; width: 51px; height: 30px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #d1d1d6;
-            border-radius: 30px;
-            transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px; width: 26px;
-            left: 2px; bottom: 2px;
-            background-color: white;
-            border-radius: 50%;
-            transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        }
-        input:checked + .slider { background-color: var(--apple-success); }
-        input:checked + .slider:before { transform: translateX(21px); }
-
-        .custom-store {
-            margin-top: 22px;
-            padding: 20px;
-            background: #eaf5ff;
-            border-radius: 16px;
-            border: 1px solid #b9dcff;
-        }
-        .custom-store h4 { margin-bottom: 12px; color: #0071e3; font-size: 1.1rem; font-weight: 700; }
-
+        .del-btn { background: #ef4444; width: auto; padding: 8px 14px; font-size: 14px; }
         .back-link {
             color: var(--apple-accent);
             cursor: pointer;
             display: inline-block;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             font-weight: 600;
             text-decoration: none;
-            transition: color 0.2s ease;
         }
-        .back-link:hover { color: #0077ed; text-decoration: underline; }
-
+        .back-link:hover { text-decoration: underline; }
         .hidden { display: none !important; }
-
-        .summary-box {
-            background: linear-gradient(180deg, #fafafa, #f5f5f7);
-            border-radius: var(--apple-radius);
-            padding: 20px;
-            border: 1px solid var(--apple-border);
-            margin-top: 25px;
+        .form-group { margin: 15px 0; }
+        .form-group label { font-weight: 600; display: block; margin-bottom: 6px; }
+        .store-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 15px 0; }
+        .store-buttons button { width: auto; }
+        .bookmarklet-box {
+            background: #fffbeb;
+            border: 2px dashed var(--apple-warning);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            margin: 20px 0;
         }
-        .summary-box h4 { color: var(--apple-text); text-align: center; margin-bottom: 15px; font-weight: 700; }
-        #sel-fav { color: #92400e; font-weight: 700; display: none; margin-top: 8px; }
+        .bookmarklet-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #0071e3, #0077ed);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: grab;
+            width: auto;
+        }
+        .picked {
+            background: #dcfce7;
+            color: #166534;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .real-time-note {
+            background: #eaf5ff;
+            border-left: 4px solid var(--apple-accent);
+            padding: 12px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .added-by {
+            font-size: 13px;
+            color: var(--apple-secondary);
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="status-bar" class="status wait">Conectando a la nube...</div>
+        <div id="status-bar" class="status wait">Conectando...</div>
 
-        <!-- WELCOME SCREEN -->
+        <!-- PANTALLA DE INICIO -->
         <div id="screen-welcome" class="screen active">
             <h1>Lista de Deseos Compartida</h1>
-            <h2>Bienvenido</h2>
-            <p style="text-align:center; margin-bottom:25px; font-size:1.1rem; color:var(--apple-secondary);">Ingresa tu nombre para empezar</p>
-            <input type="text" id="user-name" placeholder="Escribe tu nombre aquí...">
+            <p style="text-align:center; margin-bottom:20px; color:var(--apple-secondary);">Escribe tu nombre para empezar</p>
+            <input type="text" id="user-name" placeholder="Tu nombre">
             <button onclick="goToLists()">Continuar</button>
         </div>
 
-        <!-- LISTS SCREEN -->
+        <!-- PANTALLA DE LISTAS -->
         <div id="screen-lists" class="screen">
-            <h2>Mis Listas de Deseos</h2>
-            <p id="greeting" style="text-align:center; margin-bottom:20px; font-size:1.05rem; color:var(--apple-secondary);"></p>
-            <h3>Listas disponibles — Haz clic para entrar:</h3>
+            <span class="back-link" onclick="goBackToName()">← Cambiar mi nombre</span>
+            <h2>Mis Listas</h2>
+            <p id="greeting" style="text-align:center; margin-bottom:15px;"></p>
+
+            <div class="bookmarklet-box">
+                <strong>📌 Para agregar productos desde Amazon/eBay:</strong><br>
+                Arrastra este botón a tu barra de favoritos:<br>
+                <div style="margin:12px 0;">
+                    <a href="javascript:(function(){function getTitle(){const e=document.getElementById('productTitle')||document.querySelector('h1');return e?e.textContent.trim().substring(0,120):document.title.split(' - ')[0].trim().substring(0,120)}function detectStore(){const e=window.location.hostname;if(e.includes('amazon.com.mx'))return'Amazon México';if(e.includes('amazon'))return'Amazon USA';if(e.includes('ebay'))return'eBay';return'Tienda'}if(window.opener&&window.opener.recibirProducto){window.opener.recibirProducto({nombre:getTitle(),url:window.location.href,tienda:detectStore()});alert('✅ Enviado a tu lista')}else{alert('⚠️ Mantén abierta tu lista en otra pestaña primero')}})();" 
+                       class="bookmarklet-btn">➕ Añadir a Mi Lista</a>
+                </div>
+            </div>
+
+            <h3>Tus listas:</h3>
             <div id="existing-lists"></div>
-            <input type="text" id="new-list-name" placeholder="Nombre de la lista nueva...">
-            <button onclick="createNewList()">Crear Lista Nueva</button>
-            <button class="secondary" onclick="goBackToName()" style="margin-top:8px;">← Cambiar mi nombre</button>
+            <input type="text" id="new-list-name" placeholder="Nombre de lista nueva">
+            <button onclick="crearLista()">Crear Lista</button>
         </div>
 
-        <!-- GROUP SCREEN -->
+        <!-- PANTALLA DEL GRUPO / VER TODOS LOS DESEOS EN TIEMPO REAL -->
         <div id="screen-group" class="screen">
-            <span class="back-link" onclick="goBackToLists()">← Volver a listas</span>
-            <h2 id="group-title"></h2>
-            <h3>Participantes:</h3>
-            <div id="members-list"></div>
-            <button onclick="goToAddWishes()">➕ Agregar mis deseos</button>
-        </div>
-
-        <!-- SEARCH SCREEN -->
-        <div id="screen-search" class="screen">
-            <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
-            <h2>Agregar Deseo</h2>
-            <input type="text" id="product-search" placeholder="¿Qué deseas buscar? Ej: zapatillas deportivas, cámara, audífonos...">
-            <button onclick="goToResults()">Buscar</button>
-        </div>
-
-        <!-- RESULTS SCREEN -->
-        <div id="screen-results" class="screen">
-            <span class="back-link" onclick="goBackToSearch()">← Nueva búsqueda</span>
+            <span class="back-link" onclick="volverAListas()">← Volver</span>
+            <h2 id="group-name"></h2>
             
-            <div class="product-preview">
-                <h3 id="product-name-display"></h3>
-                <p class="product-placeholder">Detalles del producto</p>
-                <p style="color:var(--apple-secondary); font-weight:600; margin-top:5px;">Especifica talla, color y tienda abajo</p>
+            <div class="real-time-note">
+                🔄 <strong>Actualización en tiempo real:</strong> Lo que agregues aparecerá al instante para todos los participantes.
             </div>
 
-            <div class="form-group">
-                <label for="product-size">Talla / Medida</label>
-                <input type="text" id="product-size" placeholder="Ej: 42, M, 10 US..." oninput="updateSummary()">
-            </div>
-
-            <div class="form-group">
-                <label for="product-color">Color</label>
-                <input type="text" id="product-color" placeholder="Ej: Negro, Rojo, Azul..." oninput="updateSummary()">
-            </div>
-
-            <h3 style="margin-top:35px;">Selecciona dónde buscar</h3>
-
-            <!-- Google Shop -->
-            <div class="store-option">
-                <div class="store-buttons">
-                    <button onclick="openGoogleShop()">Google Shopping</button>
-                </div>
-                <div class="switch-area">
-                    <label class="switch">
-                        <input type="checkbox" id="google-fav" onchange="setFavorite('google')">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Tienda favorita</span>
-                </div>
-            </div>
-
-            <!-- Amazon Shop -->
-            <div class="store-option">
-                <div class="store-buttons">
-                    <button onclick="toggleAmazonOptions()">Amazon Shop ▼</button>
-                </div>
-                <div class="switch-area">
-                    <label class="switch">
-                        <input type="checkbox" id="amazon-fav" onchange="setFavorite('amazon')">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Tienda favorita</span>
-                </div>
-            </div>
-            <div id="amazon-sub-options" class="hidden">
-                <div class="btn-row">
-                    <button class="amazon-mx" onclick="openAmazonMX()">Amazon México</button>
-                    <button class="amazon-us" onclick="openAmazonUS()">Amazon USA</button>
-                </div>
-            </div>
-
-            <!-- eBay Shop -->
-            <div class="store-option">
-                <div class="store-buttons">
-                    <button onclick="openEbayShop()">eBay Shop</button>
-                </div>
-                <div class="switch-area">
-                    <label class="switch">
-                        <input type="checkbox" id="ebay-fav" onchange="setFavorite('ebay')">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Tienda favorita</span>
-                </div>
-            </div>
-
-            <!-- Custom Store -->
-            <div class="custom-store">
-                <h4>Tienda no listada — Agrega la tuya</h4>
-                <input type="text" id="custom-store-name" placeholder="Nombre de la tienda" oninput="updateSummary()">
-                <input type="url" id="custom-store-url" placeholder="Enlace / URL de compra" oninput="updateSummary()">
-                <div class="switch-area" style="justify-content:flex-start; margin-top:8px;">
-                    <label class="switch">
-                        <input type="checkbox" id="custom-fav" onchange="setFavorite('custom')">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Tienda favorita</span>
-                </div>
-                <button class="secondary small" onclick="setCustomStore()">Seleccionar esta tienda</button>
-            </div>
-
-            <!-- Summary -->
-            <div class="summary-box">
-                <h4>Tu selección</h4>
-                <p><strong>Producto:</strong> <span id="sel-name"></span></p>
-                <p><strong>Talla:</strong> <span id="sel-size"></span></p>
-                <p><strong>Color:</strong> <span id="sel-color"></span></p>
-                <p><strong>Tienda elegida:</strong> <span id="sel-store">—</span></p>
-                <p id="sel-fav">⭐ Esta es tu tienda favorita</p>
-            </div>
-
-            <button class="save-btn" onclick="saveSelectedWish()">Agregar y Guardar en mi lista</button>
+            <button onclick="irAgregarDeseos()">➕ Agregar nuevo producto</button>
+            
+            <h3 style="margin-top:30px;">Todos los deseos del grupo:</h3>
+            <div id="all-wishes-realtime"></div>
         </div>
 
-        <!-- MY WISHES SCREEN -->
-        <div id="screen-my-wishes" class="screen">
-            <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
-            <h2 id="my-wishes-title"></h2>
-            <div id="wishes-display-list"></div>
-            <button class="secondary" onclick="goToSearch()">➕ Agregar otro deseo</button>
-            <button class="save-btn" onclick="saveAllToCloud()">Guardar todo en la nube</button>
+        <!-- AGREGAR DESEO -->
+        <div id="screen-add" class="screen">
+            <span class="back-link" onclick="irGrupo()">← Volver a la lista</span>
+            <h2>Agregar Producto</h2>
+
+            <div id="picked-msg" class="picked hidden">
+                ✅ Producto recibido automáticamente
+            </div>
+
+            <div class="form-group">
+                <label>Nombre del producto *</label>
+                <input type="text" id="prod-nombre" placeholder="Ej: Zapatillas deportivas, Cámara, Audífonos...">
+            </div>
+            <div class="form-group">
+                <label>Talla / Medida</label>
+                <input type="text" id="prod-talla" placeholder="Ej: M, 42, 10 US...">
+            </div>
+            <div class="form-group">
+                <label>Color</label>
+                <input type="text" id="prod-color" placeholder="Ej: Negro, Rojo, Azul...">
+            </div>
+            <div class="form-group">
+                <label>Enlace de compra *</label>
+                <input type="url" id="prod-url" placeholder="Pega el enlace completo del producto">
+            </div>
+
+            <h3>Buscar en tienda</h3>
+            <div class="store-buttons">
+                <button class="amazon" onclick="abrirTienda('amazon-mx')">Amazon México</button>
+                <button class="amazon" onclick="abrirTienda('amazon-us')">Amazon USA</button>
+                <button onclick="abrirTienda('google')">Google Shopping</button>
+                <button onclick="abrirTienda('ebay')">eBay</button>
+            </div>
+
+            <button class="save-btn" onclick="guardarDeseo()">💾 Agregar y Guardar en la lista</button>
         </div>
     </div>
 
 <script>
 // ==============================================
-// FIREBASE — PEGA TUS DATOS AQUÍ
+// FIREBASE — TU CONFIGURACIÓN
 // ==============================================
 const firebaseConfig = {
   apiKey: "AIzaSyCQU0h_E8TuiQpqhBTA9zWF4Jd4vA7MDSA",
@@ -492,355 +293,254 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let currentUser = '';
-let currentListId = '';
-let listRef = null;
-let localWishes = [];
+let usuarioActual = '';
+let listaActualId = '';
+let listaRef = null;
+let todosLosDeseosListener = null;
 
-let pendingProduct = {
-  name: '',
-  size: '',
-  color: '',
-  store: '',
-  url: '',
-  isFavorite: false
-};
-
-const connectedRef = db.ref(".info/connected");
-connectedRef.on("value", (snap) => {
-  const status = document.getElementById("status-bar");
-  status.textContent = snap.val() === true ? "Conectado — Sincronizado" : "Conectando...";
-  status.className = snap.val() === true ? "status ok" : "status wait";
+// Estado de conexión
+db.ref(".info/connected").on("value", (snap) => {
+  const status = document.getElementById('status-bar');
+  if (snap.val() === true) {
+    status.textContent = "✅ Conectado — Sincronizado en tiempo real";
+    status.className = "status ok";
+  } else {
+    status.textContent = "Conectando...";
+    status.className = "status wait";
+  }
 });
 
-function showScreen(id) {
+// ==============================================
+// RECIBIR PRODUCTO DEL BOTÓN DE FAVORITOS
+// ==============================================
+window.recibirProducto = function(datos) {
+  document.getElementById('prod-nombre').value = datos.nombre || '';
+  document.getElementById('prod-url').value = datos.url || '';
+  document.getElementById('picked-msg').classList.remove('hidden');
+  setTimeout(() => {
+    document.getElementById('picked-msg').classList.add('hidden');
+  }, 5000);
+  mostrarPantalla('screen-add');
+};
+
+// ==============================================
+// NAVEGACIÓN
+// ==============================================
+function mostrarPantalla(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// ========== WELCOME ==========
 function goToLists() {
-  const name = document.getElementById('user-name').value.trim();
-  if (!name) return alert('Por favor escribe tu nombre');
-  currentUser = name;
-  document.getElementById('greeting').textContent = `Hola, ${currentUser}! Elige una lista o crea una nueva.`;
-  renderLists();
-  showScreen('screen-lists');
+  const nombre = document.getElementById('user-name').value.trim();
+  if (!nombre) return alert('Escribe tu nombre');
+  usuarioActual = nombre;
+  document.getElementById('greeting').textContent = `Hola, ${usuarioActual}! Elige una lista`;
+  cargarListas();
+  mostrarPantalla('screen-lists');
 }
 
 function goBackToName() {
-  showScreen('screen-welcome');
+  mostrarPantalla('screen-welcome');
 }
 
-// ========== LISTS ==========
-async function renderLists() {
+async function cargarListas() {
   const snap = await db.ref("lists").once("value");
-  const container = document.getElementById('existing-lists');
-  container.innerHTML = '';
-  
+  const contenedor = document.getElementById('existing-lists');
+  contenedor.innerHTML = '';
   if (!snap.exists()) {
-    container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--apple-secondary);">Aún no hay listas. ¡Crea la primera!</p>';
+    contenedor.innerHTML = '<p style="text-align:center; padding:15px; color:var(--apple-secondary);">Crea la primera lista abajo</p>';
     return;
   }
-  
-  snap.forEach(child => {
-    const list = child.val();
-    const count = Object.keys(list.members || {}).length;
-    const card = document.createElement('div');
-    card.className = `list-card ${count === 0 ? 'empty' : ''}`;
-    card.innerHTML = `
-      <strong>${list.name}</strong>
-      <span>${count} participante${count !== 1 ? 's' : ''}</span>
-      ${count === 0 ? '<br><small>Sé el primero en participar</small>' : ''}
-    `;
-    card.onclick = () => openList(child.key);
-    container.appendChild(card);
+  snap.forEach(fila => {
+    const lista = fila.val();
+    const cantidad = Object.keys(lista.members || {}).length;
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'list-card';
+    tarjeta.innerHTML = `<strong>${lista.name}</strong><br>${cantidad} participante${cantidad!==1?'s':''}`;
+    tarjeta.onclick = () => abrirLista(fila.key);
+    contenedor.appendChild(tarjeta);
   });
 }
 
-async function createNewList() {
-  const name = document.getElementById('new-list-name').value.trim();
-  if (!name) return alert('Escribe un nombre para la lista');
-  const newRef = db.ref("lists").push();
-  currentListId = newRef.key;
-  await newRef.set({ name: name, members: {} });
-  await ensureMembership();
-  showScreen('screen-group');
-  renderGroupView();
-}
-
-async function openList(listId) {
-  currentListId = listId;
-  await ensureMembership();
-  showScreen('screen-group');
-  renderGroupView();
-}
-
-async function ensureMembership() {
-  const memberRef = db.ref(`lists/${currentListId}/members/${currentUser}`);
-  const snap = await memberRef.once("value");
-  if (!snap.exists()) await memberRef.set([]);
-  if (listRef) listRef.off();
-  listRef = db.ref(`lists/${currentListId}`);
-}
-
-function goBackToLists() {
-  if (listRef) listRef.off();
-  currentListId = '';
-  localWishes = [];
-  renderLists();
-  showScreen('screen-lists');
-}
-
-// ========== GROUP ==========
-function renderGroupView(data = null) {
-  if (!data) {
-    db.ref(`lists/${currentListId}`).once("value").then(snap => {
-      if (snap.exists()) renderGroupView(snap.val());
-    });
-    return;
-  }
-  
-  document.getElementById('group-title').textContent = data.name;
-  const container = document.getElementById('members-list');
-  const members = data.members || {};
-  container.innerHTML = '';
-  
-  if (Object.keys(members).length === 0) {
-    container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--apple-secondary);">¡Sé el primero en agregar deseos!</p>';
-    return;
-  }
-  
-  Object.entries(members).forEach(([name, wishes]) => {
-    const count = (wishes || []).length;
-    const row = document.createElement('div');
-    row.className = `member-row ${name === currentUser ? 'you' : ''}`;
-    row.innerHTML = `
-      <span>${name} ${name === currentUser ? '(Tú)' : ''}</span>
-      <span>${count} deseo${count !== 1 ? 's' : ''} →</span>
-    `;
-    row.onclick = () => viewParticipant(name);
-    container.appendChild(row);
+async function crearLista() {
+  const nombre = document.getElementById('new-list-name').value.trim();
+  if (!nombre) return alert('Escribe un nombre para la lista');
+  const nuevaRef = db.ref("lists").push();
+  listaActualId = nuevaRef.key;
+  await nuevaRef.set({ 
+    name: nombre, 
+    members: {},
+    todosLosDeseos: [] // Lista compartida central
   });
+  await asegurarPertenencia();
+  mostrarPantalla('screen-group');
+  activarEscuchaTiempoReal();
 }
 
-function goToAddWishes() {
-  loadMyWishes();
-  goToSearch();
+async function abrirLista(id) {
+  listaActualId = id;
+  await asegurarPertenencia();
+  mostrarPantalla('screen-group');
+  activarEscuchaTiempoReal();
 }
 
-function viewParticipant(name) {
-  db.ref(`lists/${currentListId}`).once("value").then(snap => {
-    const data = snap.val();
-    const wishes = (data.members || {})[name] || [];
-    const container = document.getElementById('wishes-display-list');
-    document.getElementById('my-wishes-title').textContent = `Lista de ${name}`;
-    if (wishes.length === 0) {
-      container.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no ha agregado deseos.</p>';
-    } else {
-      container.innerHTML = wishes.map(wish => renderWishCard(wish, false)).join('');
+async function asegurarPertenencia() {
+  const miembroRef = db.ref(`lists/${listaActualId}/members/${usuarioActual}`);
+  const snap = await miembroRef.once("value");
+  if (!snap.exists()) await miembroRef.set(true);
+  if (listaRef) listaRef.off();
+  listaRef = db.ref(`lists/${listaActualId}`);
+}
+
+function volverAListas() {
+  if (todosLosDeseosListener) todosLosDeseosListener.off();
+  if (listaRef) listaRef.off();
+  listaActualId = '';
+  mostrarPantalla('screen-lists');
+}
+
+// ==============================================
+// TIEMPO REAL — TODOS VEN LO MISMO
+// ==============================================
+function activarEscuchaTiempoReal() {
+  document.getElementById('group-name').textContent = 'Cargando...';
+  
+  // Desconectar escucha anterior si existe
+  if (todosLosDeseosListener) todosLosDeseosListener.off();
+  
+  // Escuchar cambios EN TIEMPO REAL en la lista compartida
+  todosLosDeseosListener = db.ref(`lists/${listaActualId}`).on("value", (snap) => {
+    const datos = snap.val();
+    if (!datos) return;
+    
+    document.getElementById('group-name').textContent = datos.name;
+    
+    const contenedor = document.getElementById('all-wishes-realtime');
+    const deseos = datos.todosLosDeseos || [];
+    
+    if (deseos.length === 0) {
+      contenedor.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no hay productos. ¡Sé el primero en agregar uno!</p>';
+      return;
     }
-    showScreen('screen-my-wishes');
-  });
-}
-
-// ========== SEARCH ==========
-function goToSearch() {
-  resetPendingProduct();
-  document.getElementById('product-search').value = '';
-  showScreen('screen-search');
-}
-
-function goBackToSearch() {
-  goToSearch();
-}
-
-// ========== RESULTS ==========
-function goToResults() {
-  const query = document.getElementById('product-search').value.trim();
-  if (!query) return alert('Escribe el nombre del producto');
-  
-  pendingProduct.name = query;
-  
-  document.getElementById('product-name-display').textContent = query;
-  document.getElementById('product-size').value = '';
-  document.getElementById('product-color').value = '';
-  document.getElementById('amazon-sub-options').classList.add('hidden');
-  
-  resetStoreSelection();
-  updateSummary();
-  showScreen('screen-results');
-}
-
-function toggleAmazonOptions() {
-  document.getElementById('amazon-sub-options').classList.toggle('hidden');
-}
-
-function buildSearchUrl(base, query) {
-  const size = document.getElementById('product-size').value.trim();
-  const color = document.getElementById('product-color').value.trim();
-  let enhanced = query;
-  if (size) enhanced += ` ${size}`;
-  if (color) enhanced += ` ${color}`;
-  return base + encodeURIComponent(enhanced);
-}
-
-// === TIENDAS — ENLACES CORREGIDOS ===
-function openGoogleShop() {
-  // CORREGIDO: Usamos el parámetro que funciona para Google Shopping en 2026
-  const url = buildSearchUrl('https://www.google.com/search?q=', pendingProduct.name) + '&udm=28';
-  window.open(url, '_blank');
-  pendingProduct.store = 'Google Shopping';
-  pendingProduct.url = url;
-  updateSummary();
-}
-
-function openAmazonMX() {
-  const url = buildSearchUrl('https://www.amazon.com.mx/s?k=', pendingProduct.name);
-  window.open(url, '_blank');
-  pendingProduct.store = 'Amazon México';
-  pendingProduct.url = url;
-  updateSummary();
-}
-
-function openAmazonUS() {
-  const url = buildSearchUrl('https://www.amazon.com/s?k=', pendingProduct.name + '&language=es');
-  window.open(url, '_blank');
-  pendingProduct.store = 'Amazon USA';
-  pendingProduct.url = url;
-  updateSummary();
-}
-
-function openEbayShop() {
-  const url = buildSearchUrl('https://www.ebay.com/sch/i.html?_nkw=', pendingProduct.name);
-  window.open(url, '_blank');
-  pendingProduct.store = 'eBay';
-  pendingProduct.url = url;
-  updateSummary();
-}
-
-function setCustomStore() {
-  const name = document.getElementById('custom-store-name').value.trim();
-  const url = document.getElementById('custom-store-url').value.trim();
-  if (!name || !url) return alert('Escribe el nombre y el enlace de la tienda');
-  
-  pendingProduct.store = name;
-  pendingProduct.url = url;
-  window.open(url, '_blank');
-  updateSummary();
-  alert('Tienda seleccionada ✅');
-}
-
-// === FAVORITO ===
-function setFavorite(storeType) {
-  ['google','amazon','ebay','custom'].forEach(type => {
-    if (type !== storeType) document.getElementById(`${type}-fav`).checked = false;
-  });
-  pendingProduct.isFavorite = document.getElementById(`${storeType}-fav`).checked;
-  updateSummary();
-}
-
-function updateSummary() {
-  pendingProduct.size = document.getElementById('product-size').value.trim() || 'No especificada';
-  pendingProduct.color = document.getElementById('product-color').value.trim() || 'No especificado';
-  
-  document.getElementById('sel-name').textContent = pendingProduct.name;
-  document.getElementById('sel-size').textContent = pendingProduct.size;
-  document.getElementById('sel-color').textContent = pendingProduct.color;
-  document.getElementById('sel-store').textContent = pendingProduct.store || '—';
-  
-  const favTag = document.getElementById('sel-fav');
-  favTag.style.display = pendingProduct.isFavorite && pendingProduct.store ? 'block' : 'none';
-}
-
-function resetStoreSelection() {
-  pendingProduct.store = '';
-  pendingProduct.url = '';
-  pendingProduct.isFavorite = false;
-  ['google','amazon','ebay','custom'].forEach(type => {
-    document.getElementById(`${type}-fav`).checked = false;
-  });
-  document.getElementById('custom-store-name').value = '';
-  document.getElementById('custom-store-url').value = '';
-}
-
-function resetPendingProduct() {
-  pendingProduct = { name: '', size: '', color: '', store: '', url: '', isFavorite: false };
-}
-
-// ========== GUARDAR ==========
-function saveSelectedWish() {
-  if (!pendingProduct.store || !pendingProduct.url) {
-    return alert('Primero selecciona una tienda para continuar');
-  }
-  
-  const wish = {
-    name: pendingProduct.name,
-    size: pendingProduct.size,
-    color: pendingProduct.color,
-    store: pendingProduct.store,
-    url: pendingProduct.url,
-    isFavorite: pendingProduct.isFavorite,
-    addedAt: new Date().toLocaleString('es-ES')
-  };
-  
-  localWishes.push(wish);
-  alert('Agregado a tu lista ✅');
-  
-  resetPendingProduct();
-  resetStoreSelection();
-  loadMyWishes();
-}
-
-function renderWishCard(wish, allowDelete = true) {
-  return `
-    <div class="wish-item">
-      <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
-        <div style="flex:1; min-width:200px;">
-          <strong style="font-size:17px;">${wish.name}</strong>
-          ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
-          <div class="wish-details">
-            <strong>Talla:</strong> ${wish.size}<br>
-            <strong>Color:</strong> ${wish.color}<br>
-            <strong>Tienda:</strong> ${wish.store}<br>
-            <a href="${wish.url}" target="_blank" rel="noopener">Ir a comprar →</a><br>
-            <small style="color:#9ca3af;">Agregado: ${wish.addedAt}</small>
-          </div>
+    
+    // Mostrar todos los productos en orden, con quién los agregó
+    contenedor.innerHTML = deseos.map((d, indice) => `
+      <div class="wish-item">
+        <strong style="font-size:17px;">${d.nombre}</strong>
+        <div class="added-by">Agregado por: ${d.agregadoPor}</div>
+        <div style="margin-top:8px;">
+          ${d.talla && d.talla !== '—' ? `<strong>Talla:</strong> ${d.talla} | ` : ''}
+          ${d.color && d.color !== '—' ? `<strong>Color:</strong> ${d.color} | ` : ''}
+          <strong>Tienda:</strong> ${d.tienda || 'No especificada'}
         </div>
-        ${allowDelete ? `<button class="del-btn" onclick="removeWish(${localWishes.indexOf(wish)})">Eliminar</button>` : ''}
+        <a href="${d.url}" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px;">🔗 Ir a comprar →</a>
+        ${d.agregadoPor === usuarioActual ? 
+          `<button class="del-btn small" onclick="eliminarDeseo(${indice})" style="margin-left:10px;">Eliminar</button>` : ''}
       </div>
-    </div>
-  `;
+    `).join('');
+  });
 }
 
-async function loadMyWishes() {
-  document.getElementById('my-wishes-title').textContent = `Mis Deseos — ${currentUser}`;
-  const snap = await db.ref(`lists/${currentListId}/members/${currentUser}`).once("value");
-  localWishes = snap.exists() ? [...snap.val()] : [];
-  renderMyWishesList();
-  showScreen('screen-my-wishes');
+function irAgregarDeseos() {
+  // Limpiar formulario
+  document.getElementById('prod-nombre').value = '';
+  document.getElementById('prod-talla').value = '';
+  document.getElementById('prod-color').value = '';
+  document.getElementById('prod-url').value = '';
+  mostrarPantalla('screen-add');
 }
 
-function renderMyWishesList() {
-  const container = document.getElementById('wishes-display-list');
-  if (localWishes.length === 0) {
-    container.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no tienes deseos. ¡Busca tu primer producto!</p>';
-    return;
+function irGrupo() {
+  mostrarPantalla('screen-group');
+}
+
+function abrirTienda(tipo) {
+  const busqueda = encodeURIComponent(document.getElementById('prod-nombre').value.trim());
+  if (!busqueda) return alert('Escribe primero el nombre del producto que buscas');
+  
+  let url = '';
+  let nombreTienda = '';
+  switch(tipo) {
+    case 'amazon-mx': 
+      url = `https://www.amazon.com.mx/s?k=${busqueda}`;
+      nombreTienda = 'Amazon México';
+      break;
+    case 'amazon-us': 
+      url = `https://www.amazon.com/s?k=${busqueda}`;
+      nombreTienda = 'Amazon USA';
+      break;
+    case 'google': 
+      url = `https://www.google.com/search?q=${busqueda}&udm=28`;
+      nombreTienda = 'Google Shopping';
+      break;
+    case 'ebay': 
+      url = `https://www.ebay.com/sch/i.html?_nkw=${busqueda}`;
+      nombreTienda = 'eBay';
+      break;
   }
-  container.innerHTML = localWishes.map((w, i) => renderWishCard(w, true)).join('');
+  
+  window.open(url, '_blank');
+  alert(`✅ Se abrió ${nombreTienda}.\n\nBusca el producto → copia su enlace → pégalo en el campo "Enlace de compra" aquí abajo.`);
 }
 
-function removeWish(index) {
-  if (confirm('¿Eliminar este deseo?')) {
-    localWishes.splice(index, 1);
-    renderMyWishesList();
-  }
+// ==============================================
+// GUARDAR — AHORA SÍ EN LA NUBE
+// ==============================================
+async function guardarDeseo() {
+  const nombre = document.getElementById('prod-nombre').value.trim();
+  const url = document.getElementById('prod-url').value.trim();
+  const talla = document.getElementById('prod-talla').value.trim() || '—';
+  const color = document.getElementById('prod-color').value.trim() || '—';
+  
+  if (!nombre) return alert('⚠️ Escribe el nombre del producto');
+  if (!url) return alert('⚠️ Pega el enlace de compra del producto');
+  
+  // Obtener la lista actual y agregar el nuevo deseo
+  const snap = await db.ref(`lists/${listaActualId}`).once("value");
+  const datos = snap.val();
+  const listaDeseos = datos.todosLosDeseos || [];
+  
+  // Agregar el nuevo producto con todos los detalles
+  listaDeseos.push({
+    nombre: nombre,
+    talla: talla,
+    color: color,
+    url: url,
+    tienda: detectarTiendaDesdeUrl(url),
+    agregadoPor: usuarioActual,
+    fecha: new Date().toLocaleString('es-MX')
+  });
+  
+  // Guardar en Firebase — TODOS lo verán al instante
+  await db.ref(`lists/${listaActualId}/todosLosDeseos`).set(listaDeseos);
+  
+  alert('✅ ¡Guardado con éxito!\n\nAparece al instante para todos los participantes.');
+  
+  // Volver a la vista de la lista donde todos ven todo
+  irGrupo();
 }
 
-async function saveAllToCloud() {
-  await db.ref(`lists/${currentListId}/members/${currentUser}`).set(localWishes);
-  alert('¡Guardado en la nube! 🎉');
-  goToGroup();
+function detectarTiendaDesdeUrl(url) {
+  if (!url) return 'Tienda';
+  if (url.includes('amazon.com.mx')) return 'Amazon México';
+  if (url.includes('amazon.com')) return 'Amazon USA';
+  if (url.includes('ebay.com')) return 'eBay';
+  if (url.includes('google')) return 'Google Shopping';
+  return 'Tienda externa';
+}
+
+async function eliminarDeseo(indice) {
+  if (!confirm('¿Eliminar este producto de la lista?')) return;
+  
+  const snap = await db.ref(`lists/${listaActualId}`).once("value");
+  const datos = snap.val();
+  const listaDeseos = datos.todosLosDeseos || [];
+  
+  listaDeseos.splice(indice, 1);
+  
+  await db.ref(`lists/${listaActualId}/todosLosDeseos`).set(listaDeseos);
+  // La interfaz se actualiza sola por la escucha en tiempo real
 }
 </script>
 </body>
