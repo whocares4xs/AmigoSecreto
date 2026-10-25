@@ -15,315 +15,248 @@
             --apple-secondary: #86868b;
             --apple-accent: #0071e3;
             --apple-success: #34c759;
+            --apple-warning: #ff9500;
+            --apple-danger: #ef4444;
             --apple-border: #d2d2d7;
             --apple-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
             --apple-radius: 22px;
         }
+        * {margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;}
+        body {background:var(--apple-bg); min-height:100vh; padding:18px;}
+        .container {max-width:960px; margin:0 auto; background:var(--apple-card); border-radius:var(--apple-radius); padding:24px; box-shadow:var(--apple-shadow); border:1px solid rgba(0,0,0,0.04);}
+        .screen {display:none;}
+        .screen.active {display:block; animation:appleFadeIn 0.45s cubic-bezier(0.25,0.1,0.25,1);}
+        @keyframes appleFadeIn {from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
+        h1,h2,h3 {text-align:center; margin-bottom:24px; font-weight:700; letter-spacing:0.5px;}
+        h1 {font-size:2.4rem;} h2 {font-size:1.9rem;} h3 {font-size:1.35rem; color:var(--apple-secondary);}
+        input, select {padding:14px 16px; margin:10px 0; border-radius:12px; border:1px solid var(--apple-border); font-size:16px; width:100%; background:#fafafa; transition:border-color 0.2s;}
+        input:focus {outline:none; border-color:var(--apple-accent); background:#fff; box-shadow:0 0 0 4px rgba(0,113,227,0.14);}
+        button {background:var(--apple-accent); color:#fff !important; border:none; cursor:pointer; font-weight:600; transition:all 0.22s; padding:14px 20px; font-size:16px; border-radius:12px;}
+        button:hover {transform:translateY(-1px); filter:brightness(1.08);}
+        button.secondary {background:#e9e9eb; color:var(--apple-text) !important;}
+        button.secondary:hover {background:#dcdce0;}
+        button.small {padding:10px 14px; font-size:14px; width:auto; margin:5px;}
+        button.save-btn {background:var(--apple-success); margin-top:22px; font-size:18px; padding:18px; width:100%;}
+        button.amazon-mx, button.amazon-us {background:#f59e0b; color:#1f2937 !important;}
+        button.amazon-mx:hover, button.amazon-us:hover {background:#d97706;}
+        .status {text-align:center; padding:12px 16px; border-radius:12px; margin-bottom:18px; font-size:15px; font-weight:600;}
+        .status.ok {background:#dcfce7; color:#166534;}
+        .status.wait {background:#fef3c7; color:#92400e;}
+        .list-card {padding:22px; background:var(--apple-card); border:1px solid var(--apple-border); border-radius:var(--apple-radius); margin:14px 0; cursor:pointer; transition:all 0.25s;}
+        .list-card:hover {transform:translateY(-4px); box-shadow:0 12px 30px rgba(0,0,0,0.12); border-color:var(--apple-accent);}
+        .list-card strong {font-size:1.55rem; display:block; margin-bottom:8px;}
+        .member-row {padding:16px; border-bottom:1px solid var(--apple-border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; border-radius:12px; margin:4px 0; transition:background 0.2s;}
+        .member-row:hover {background:#f5f5f7; transform:translateX(4px);}
+        .member-row.you {font-weight:700; background:#eaf5ff; border-left:4px solid var(--apple-accent);}
+        .wish-item {padding:18px; border-bottom:1px solid var(--apple-border); margin-bottom:12px; border-radius:16px; background:#fafafa; transition:background 0.2s;}
+        .wish-item:hover {background:#f5f5f7; transform:translateX(2px);}
+        .wish-item a {color:var(--apple-accent); text-decoration:none; font-weight:600;}
+        .del-btn {background:#ef4444; padding:8px 14px; font-size:14px; width:auto; border-radius:10px;}
+        .del-btn:hover {background:#dc2626;}
+        .favorite-tag {display:inline-block; background:linear-gradient(135deg, #ffd60a, #ffcc00); color:#7a4200 !important; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:800; margin-left:10px;}
+        .product-preview {text-align:center; margin:25px 0; padding:25px; background:linear-gradient(180deg, #fafafa, #f5f5f7); border-radius:var(--apple-radius); border:1px solid var(--apple-border); min-height:180px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+        .product-preview h3 {font-size:1.45rem; margin-bottom:8px;}
+        .picked-badge {background:#dcfce7; color:#166534; padding:8px 16px; border-radius:20px; font-weight:600; margin-bottom:10px; display:inline-block; animation:badgePop 0.5s ease;}
+        @keyframes badgePop {
+            0% {transform:scale(0.8); opacity:0;}
+            50% {transform:scale(1.1);}
+            100% {transform:scale(1); opacity:1;}
+        }
+        .form-group {margin:18px 0;}
+        .form-group label {font-weight:700; display:block; margin-bottom:8px; font-size:16px;}
+        .store-option {display:flex; align-items:center; justify-content:space-between; padding:16px; background:#fafafa; border-radius:16px; margin:12px 0; flex-wrap:wrap; gap:12px; border:1px solid var(--apple-border); transition:all 0.2s;}
+        .store-option:hover {background:#f5f5f7; transform:translateX(3px);}
+        .btn-row {display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;}
+        .btn-row button {flex:1; min-width:140px;}
+        .switch {position:relative; display:inline-block; width:51px; height:30px;}
+        .switch input {opacity:0; width:0; height:0;}
+        .slider {position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#d1d1d6; border-radius:30px; transition:0.25s;}
+        .slider:before {position:absolute; content:""; height:26px; width:26px; left:2px; bottom:2px; background:#fff; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,0.12); transition:0.25s;}
+        input:checked + .slider {background:var(--apple-success);}
+        input:checked + .slider:before {transform:translateX(21px);}
+        .custom-store {margin-top:22px; padding:20px; background:#eaf5ff; border-radius:16px; border:1px solid #b9dcff;}
+        .back-link {color:var(--apple-accent); cursor:pointer; display:inline-block; margin-bottom:18px; font-weight:600; text-decoration:none;}
+        .back-link:hover {color:#0077ed; text-decoration:underline;}
+        .hidden {display:none !important;}
+        .summary-box {background:linear-gradient(180deg, #fafafa, #f5f5f7); border-radius:var(--apple-radius); padding:20px; border:1px solid var(--apple-border); margin-top:25px;}
+        #sel-fav {color:#92400e; font-weight:700; display:none; margin-top:8px;}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
-            color: var(--apple-text);
+        /* === TUTORIAL & BOOKMARKLET === */
+        .tutorial-section {
+            background:linear-gradient(135deg, #eaf5ff, #f0f7ff);
+            border-radius:20px;
+            padding:24px;
+            margin:24px 0;
+            border:2px solid #b9dcff;
         }
-
-        body {
-            background: var(--apple-bg);
-            min-height: 100vh;
-            padding: 18px;
+        .tutorial-steps {
+            position:relative;
+            margin-top:20px;
         }
-
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            background: var(--apple-card);
-            border-radius: var(--apple-radius);
-            padding: 24px;
-            box-shadow: var(--apple-shadow);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+        .tutorial-step {
+            display:flex;
+            align-items:flex-start;
+            gap:16px;
+            padding:18px;
+            margin:12px 0;
+            background:#fff;
+            border-radius:16px;
+            border:2px solid transparent;
+            transition:all 0.4s ease;
+            opacity:0.5;
+            transform:translateX(10px);
         }
-
-        .screen { display: none; }
-        .screen.active {
-            display: block;
-            animation: appleFadeIn 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
+        .tutorial-step.active {
+            border-color:var(--apple-accent);
+            background:linear-gradient(90deg, #f0f7ff, #fff);
+            opacity:1;
+            transform:translateX(0);
+            box-shadow:0 4px 20px rgba(0,113,227,0.15);
         }
-        @keyframes appleFadeIn {
-            from { opacity: 0; transform: translateY(18px); }
-            to { opacity: 1; transform: translateY(0); }
+        .tutorial-step.completed {
+            border-color:var(--apple-success);
+            opacity:1;
+            background:#f7fff9;
         }
-
-        h1, h2, h3 {
-            text-align: center;
-            margin-bottom: 24px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+        .step-number {
+            flex-shrink:0;
+            width:36px;
+            height:36px;
+            line-height:36px;
+            text-align:center;
+            border-radius:50%;
+            background:var(--apple-accent);
+            color:#fff;
+            font-weight:700;
+            font-size:18px;
+            transition:all 0.3s ease;
         }
-        h1 { font-size: 2.4rem; }
-        h2 { font-size: 1.9rem; }
-        h3 { font-size: 1.35rem; color: var(--apple-secondary); }
-
-        input, select, textarea {
-            padding: 14px 16px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border: 1px solid var(--apple-border);
-            font-size: 16px;
-            width: 100%;
-            background: #fafafa;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        .tutorial-step.completed .step-number {
+            background:var(--apple-success);
+            content:"✓";
         }
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--apple-accent);
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.14);
+        .step-content {flex:1;}
+        .step-content h4 {font-size:16px; margin-bottom:6px; color:var(--apple-text);}
+        .step-content p {font-size:14px; color:var(--apple-secondary); line-height:1.6;}
+        .bookmarklet-wrapper {
+            text-align:center;
+            padding:20px;
+            margin:16px 0;
+            background:#fff;
+            border-radius:16px;
+            border:2px dashed var(--apple-accent);
+            transition:all 0.3s ease;
         }
-
-        button {
-            background: var(--apple-accent);
-            color: #ffffff !important;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.22s cubic-bezier(0.25, 0.1, 0.25, 1);
-            padding: 14px 20px;
-            font-size: 16px;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
+        .bookmarklet-wrapper.highlight {
+            border-style:solid;
+            border-color:var(--apple-success);
+            background:linear-gradient(135deg, #f7fff9, #fff);
+            animation:pulseBorder 1.5s infinite;
         }
-        button:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.08);
+        @keyframes pulseBorder {
+            0% {box-shadow:0 0 0 0 rgba(52,199,89,0.4);}
+            70% {box-shadow:0 0 0 12px rgba(52,199,89,0);}
+            100% {box-shadow:0 0 0 0 rgba(52,199,89,0);}
         }
-        button:active {
-            transform: translateY(1px);
-            filter: brightness(0.96);
+        .bookmarklet-btn {
+            display:inline-block;
+            background:linear-gradient(135deg, #0071e3, #0077ed);
+            color:#fff !important;
+            padding:14px 24px;
+            border-radius:12px;
+            font-weight:700;
+            text-decoration:none;
+            cursor:grab;
+            font-size:16px;
+            box-shadow:0 4px 12px rgba(0,113,227,0.3);
+            transition:all 0.2s ease;
         }
-        button::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.24), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.2s ease;
+        .bookmarklet-btn:hover {
+            transform:scale(1.05);
+            box-shadow:0 6px 20px rgba(0,113,227,0.4);
         }
-        button:hover::after { opacity: 1; }
-
-        button.secondary {
-            background: #e9e9eb;
-            color: var(--apple-text) !important;
+        .drag-icon {
+            display:inline-block;
+            margin-right:8px;
+            animation:dragHint 1.5s infinite;
         }
-        button.secondary:hover { background: #dcdce0; }
-
-        button.small { padding: 10px 14px; font-size: 14px; width: auto; margin: 5px; }
-        button.save-btn {
-            background: var(--apple-success);
-            margin-top: 22px;
-            font-size: 18px;
-            padding: 18px;
-            width: 100%;
+        @keyframes dragHint {
+            0%,100% {transform:translateX(0);}
+            50% {transform:translateX(4px);}
         }
-        button.save-btn:hover { filter: brightness(1.12); }
-
-        button.amazon-mx, button.amazon-us {
-            background: #f59e0b;
-            color: #1f2937 !important;
+        .browser-bar-demo {
+            background:#f0f0f0;
+            border-radius:10px;
+            padding:10px 14px;
+            margin:12px auto;
+            max-width:400px;
+            font-size:13px;
+            color:#666;
+            text-align:left;
         }
-        button.amazon-mx:hover, button.amazon-us:hover { background: #d97706; }
-
-        .btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; align-items: center; }
-        .btn-row button { flex: 1; min-width: 140px; }
-
-        .status {
-            text-align: center;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 18px;
-            font-size: 15px;
-            font-weight: 600;
+        .browser-bar-demo .bar-item {
+            display:inline-block;
+            background:#e0e0e0;
+            padding:4px 10px;
+            border-radius:6px;
+            margin:2px;
         }
-        .status.ok { background: #dcfce7; color: #166534; }
-        .status.wait { background: #fef3c7; color: #92400e; }
-
-        .list-card {
-            padding: 22px;
-            background: var(--apple-card);
-            border: 1px solid var(--apple-border);
-            border-radius: var(--apple-radius);
-            margin: 14px 0;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        .browser-bar-demo .bar-item.new {
+            background:var(--apple-accent);
+            color:#fff;
+            animation:newItemPop 0.6s ease;
         }
-        .list-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-            border-color: var(--apple-accent);
+        @keyframes newItemPop {
+            0% {transform:scale(0); opacity:0;}
+            60% {transform:scale(1.2);}
+            100% {transform:scale(1); opacity:1;}
         }
-        .list-card strong { font-size: 1.55rem; display: block; margin-bottom: 8px; }
-        .list-card small { font-size: 1rem; color: var(--apple-secondary); }
-        .list-card.empty { border-style: dashed; border-color: #f59e0b; }
-
-        .member-row {
-            padding: 16px;
-            border-bottom: 1px solid var(--apple-border);
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 12px;
-            margin: 4px 0;
+        .tutorial-nav {
+            display:flex;
+            justify-content:space-between;
+            margin-top:20px;
         }
-        .member-row:hover { background: #f5f5f7; transform: translateX(4px); }
-        .member-row.you {
-            font-weight: 700;
-            background: #eaf5ff;
-            border-left: 4px solid var(--apple-accent);
+        .tutorial-status {
+            text-align:center;
+            margin-top:10px;
+            font-size:14px;
+            color:var(--apple-secondary);
         }
-
-        .wish-item {
-            padding: 18px;
-            border-bottom: 1px solid var(--apple-border);
-            margin-bottom: 12px;
-            border-radius: 16px;
-            background: #fafafa;
-            transition: background 0.2s ease, transform 0.2s ease;
+        .progress-bar {
+            height:6px;
+            background:#e9e9eb;
+            border-radius:3px;
+            margin-top:8px;
+            overflow:hidden;
         }
-        .wish-item:hover { background: #f5f5f7; transform: translateX(2px); }
-        .wish-item a { color: var(--apple-accent); text-decoration: none; font-weight: 600; }
-        .wish-item a:hover { text-decoration: underline; }
-        .wish-item .del-btn {
-            background: #ef4444;
-            padding: 8px 14px;
-            font-size: 14px;
-            width: auto;
-            border-radius: 10px;
+        .progress-fill {
+            height:100%;
+            background:var(--apple-success);
+            border-radius:3px;
+            width:0%;
+            transition:width 0.4s ease;
         }
-        .wish-item .del-btn:hover { background: #dc2626; }
-        .wish-details { margin: 8px 0; font-size: 15px; color: var(--apple-secondary); }
-        .wish-details strong { color: var(--apple-text); font-weight: 700; }
-        .favorite-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, #ffd60a, #ffcc00);
-            color: #7a4200 !important;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 800;
-            margin-left: 10px;
+        .success-banner {
+            background:linear-gradient(135deg, #dcfce7, #efffe8);
+            border:2px solid var(--apple-success);
+            border-radius:16px;
+            padding:20px;
+            text-align:center;
+            margin:20px 0;
+            animation:successFade 0.6s ease;
         }
-
-        .product-preview {
-            text-align: center;
-            margin: 25px 0;
-            padding: 35px 25px;
-            background: linear-gradient(180deg, #fafafa, #f5f5f7);
-            border-radius: var(--apple-radius);
-            border: 1px solid var(--apple-border);
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        @keyframes successFade {
+            0% {opacity:0; transform:translateY(10px);}
+            100% {opacity:1; transform:translateY(0);}
         }
-        .product-preview h3 { color: var(--apple-text); font-size: 1.45rem; margin-bottom: 8px; }
-        .product-placeholder {
-            color: var(--apple-secondary);
-            font-size: 15px;
-            padding: 15px;
+        .mini-tip {
+            background:#fffbeb;
+            border-left:3px solid var(--apple-warning);
+            padding:12px 16px;
+            border-radius:0 10px 10px 0;
+            margin:12px 0;
+            font-size:14px;
         }
-
-        .form-group { margin: 18px 0; }
-        .form-group label {
-            font-weight: 700;
-            display: block;
-            margin-bottom: 8px;
-            color: var(--apple-text);
-            font-size: 16px;
-        }
-
-        .store-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            background: #fafafa;
-            border-radius: 16px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-            gap: 12px;
-            border: 1px solid var(--apple-border);
-            transition: all 0.2s ease;
-        }
-        .store-option:hover { background: #f5f5f7; transform: translateX(3px); }
-        .store-option .store-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .store-option .switch-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--apple-secondary);
-        }
-
-        .switch { position: relative; display: inline-block; width: 51px; height: 30px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #d1d1d6;
-            border-radius: 30px;
-            transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px; width: 26px;
-            left: 2px; bottom: 2px;
-            background-color: white;
-            border-radius: 50%;
-            transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        }
-        input:checked + .slider { background-color: var(--apple-success); }
-        input:checked + .slider:before { transform: translateX(21px); }
-
-        .custom-store {
-            margin-top: 22px;
-            padding: 20px;
-            background: #eaf5ff;
-            border-radius: 16px;
-            border: 1px solid #b9dcff;
-        }
-        .custom-store h4 { margin-bottom: 12px; color: #0071e3; font-size: 1.1rem; font-weight: 700; }
-
-        .back-link {
-            color: var(--apple-accent);
-            cursor: pointer;
-            display: inline-block;
-            margin-bottom: 18px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        .back-link:hover { color: #0077ed; text-decoration: underline; }
-
-        .hidden { display: none !important; }
-
-        .summary-box {
-            background: linear-gradient(180deg, #fafafa, #f5f5f7);
-            border-radius: var(--apple-radius);
-            padding: 20px;
-            border: 1px solid var(--apple-border);
-            margin-top: 25px;
-        }
-        .summary-box h4 { color: var(--apple-text); text-align: center; margin-bottom: 15px; font-weight: 700; }
-        #sel-fav { color: #92400e; font-weight: 700; display: none; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -343,6 +276,92 @@
         <div id="screen-lists" class="screen">
             <h2>Mis Listas de Deseos</h2>
             <p id="greeting" style="text-align:center; margin-bottom:20px; font-size:1.05rem; color:var(--apple-secondary);"></p>
+            
+            <!-- 🎓 TUTORIAL INTERACTIVO DEL BOOKMARKLET -->
+            <div class="tutorial-section">
+                <h3 style="margin-top:0; text-align:left;">🛒 Configurar: Añadir productos automáticamente</h3>
+                <p style="color:var(--apple-secondary); margin-bottom:10px;">Configura una sola vez y podrás enviar productos de Amazon, eBay y Google a tu lista con un solo clic.</p>
+                
+                <div class="tutorial-nav">
+                    <button class="secondary small" id="btn-skip-tutorial" onclick="skipTutorial()">Saltar tutorial</button>
+                    <button class="small hidden" id="btn-reset-tutorial" onclick="resetTutorial()">Reiniciar tutorial</button>
+                </div>
+                
+                <div class="tutorial-status">
+                    Paso <span id="step-current">1</span> de <span id="step-total">4</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="tutorial-steps">
+                    <!-- PASO 1 -->
+                    <div class="tutorial-step" id="step-1">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>📌 Asegúrate de que la barra de favoritos sea visible</h4>
+                            <p>En tu navegador, presiona <kbd>Ctrl + Mayús + B</kbd> (Windows/Linux) o <kbd>⌘ + Mayús + B</kbd> (Mac) para mostrar la barra de favoritos. Deberías ver una fila de enlaces debajo de la dirección web.</p>
+                            <button class="small" onclick="markStepComplete(1)">✅ Ya la veo</button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 2 -->
+                    <div class="tutorial-step" id="step-2">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>↔️ Arrastra el botón a tu barra de favoritos</h4>
+                            <p>Coloca el ratón sobre el botón azul de abajo, mantén presionado el clic y arrástralo hacia tu barra de favoritos. Suelta cuando veas una línea o cursor que indica dónde se colocará.</p>
+                            
+                            <div class="bookmarklet-wrapper" id="bookmark-drop-zone">
+                                <span class="drag-icon">↔️</span>
+                                <a href="javascript:(function(){function getTitle(){const e=document.getElementById('productTitle')||document.querySelector('h1')||document.querySelector('.product-title');return e?e.textContent.trim().substring(0,120):document.title.split(' - ')[0].trim().substring(0,120)}function getASIN(){const e=window.location.pathname.match(/dp\/([A-Z0-9]+)/);return e?e[1]:''}function detectStore(){const e=window.location.hostname;if(e.includes('amazon.com.mx'))return'Amazon México';if(e.includes('amazon'))return e.includes('mx')?'Amazon México':'Amazon USA';if(e.includes('ebay'))return'eBay';if(e.includes('google'))return'Google Shopping';return'Tienda'}if(window.opener&&window.opener.receiveProductFromBookmarklet){window.opener.receiveProductFromBookmarklet({name:getTitle(),url:window.location.href,store:detectStore(),asin:getASIN()});alert('✅ ¡Enviado a tu lista!')}else{alert('⚠️ Abre tu lista de deseos primero en otra pestaña y manténla abierta.')}})();" 
+                                   class="bookmarklet-btn" id="bookmark-btn">➕ Añadir a Mi Lista</a>
+                            </div>
+                            
+                            <div class="browser-bar-demo">
+                                Ejemplo: ↦ <span class="bar-item">Inicio</span> <span class="bar-item bar-item new">➕ Añadir a Mi Lista</span>
+                            </div>
+                            
+                            <button class="small" onclick="markStepComplete(2)">✅ Lo he agregado</button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 3 -->
+                    <div class="tutorial-step" id="step-3">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>🛍️ Cómo usarlo cuando compres</h4>
+                            <p>1. Mantén abierta esta página de tu lista<br>
+                               2. Abre Amazon, busca y entra en la página de un producto<br>
+                               3. Haz clic en el botón <strong>"➕ Añadir a Mi Lista"</strong> de tu barra de favoritos<br>
+                               4. El producto aparecerá aquí automáticamente ✨</p>
+                            
+                            <div class="mini-tip">
+                                💡 <strong>Consejo:</strong> Si haces clic y no pasa nada, asegúrate de que esta página de tu lista siga abierta en otra pestaña.
+                            </div>
+                            
+                            <button class="small" onclick="markStepComplete(3)">✅ Entiendo cómo usarlo</button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 4 -->
+                    <div class="tutorial-step" id="step-4">
+                        <div class="step-number">✓</div>
+                        <div class="step-content">
+                            <h4>🎉 ¡Listo!</h4>
+                            <p>Ya tienes todo configurado. Cuando encuentres un producto que te guste, solo haz clic en el botón de tu barra y se llenará aquí automáticamente.</p>
+                            
+                            <div class="success-banner">
+                                ✅ <strong>Configuración completada</strong><br>
+                                <span style="font-size:14px; color:var(--apple-secondary);">Ahora puedes buscar productos y enviarlos aquí con un clic.</span>
+                            </div>
+                            
+                            <button class="small" onclick="markStepComplete(4)">✅ Empezar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <h3>Listas disponibles — Haz clic para entrar:</h3>
             <div id="existing-lists"></div>
             <input type="text" id="new-list-name" placeholder="Nombre de la lista nueva...">
@@ -363,8 +382,9 @@
         <div id="screen-search" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2>Agregar Deseo</h2>
-            <input type="text" id="product-search" placeholder="¿Qué deseas buscar? Ej: zapatillas deportivas, cámara, audífonos...">
+            <input type="text" id="product-search" placeholder="Busca aquí, o usa el botón de tu barra de favoritos...">
             <button onclick="goToResults()">Buscar</button>
+            <p style="text-align:center; margin-top:15px; color:var(--apple-secondary); font-size:14px;">💡 Mantén esta pestaña abierta mientras buscas en Amazon/eBay y usa el botón "➕ Añadir a Mi Lista"</p>
         </div>
 
         <!-- RESULTS SCREEN -->
@@ -372,9 +392,11 @@
             <span class="back-link" onclick="goBackToSearch()">← Nueva búsqueda</span>
             
             <div class="product-preview">
+                <div id="picked-indicator" class="hidden">
+                    <span class="picked-badge">✅ Seleccionado desde la tienda</span>
+                </div>
                 <h3 id="product-name-display"></h3>
-                <p class="product-placeholder">Detalles del producto</p>
-                <p style="color:var(--apple-secondary); font-weight:600; margin-top:5px;">Especifica talla, color y tienda abajo</p>
+                <p style="color:var(--apple-secondary); font-weight:600; margin-top:10px;">Completa los detalles abajo</p>
             </div>
 
             <div class="form-group">
@@ -389,7 +411,6 @@
 
             <h3 style="margin-top:35px;">Selecciona dónde buscar</h3>
 
-            <!-- Google Shop -->
             <div class="store-option">
                 <div class="store-buttons">
                     <button onclick="openGoogleShop()">Google Shopping</button>
@@ -403,7 +424,6 @@
                 </div>
             </div>
 
-            <!-- Amazon Shop -->
             <div class="store-option">
                 <div class="store-buttons">
                     <button onclick="toggleAmazonOptions()">Amazon Shop ▼</button>
@@ -423,7 +443,6 @@
                 </div>
             </div>
 
-            <!-- eBay Shop -->
             <div class="store-option">
                 <div class="store-buttons">
                     <button onclick="openEbayShop()">eBay Shop</button>
@@ -437,7 +456,6 @@
                 </div>
             </div>
 
-            <!-- Custom Store -->
             <div class="custom-store">
                 <h4>Tienda no listada — Agrega la tuya</h4>
                 <input type="text" id="custom-store-name" placeholder="Nombre de la tienda" oninput="updateSummary()">
@@ -452,7 +470,6 @@
                 <button class="secondary small" onclick="setCustomStore()">Seleccionar esta tienda</button>
             </div>
 
-            <!-- Summary -->
             <div class="summary-box">
                 <h4>Tu selección</h4>
                 <p><strong>Producto:</strong> <span id="sel-name"></span></p>
@@ -477,7 +494,7 @@
 
 <script>
 // ==============================================
-// FIREBASE — PEGA TUS DATOS AQUÍ
+// FIREBASE CONFIG — MANTÉN TUS DATOS
 // ==============================================
 const firebaseConfig = {
   apiKey: "AIzaSyCQU0h_E8TuiQpqhBTA9zWF4Jd4vA7MDSA",
@@ -496,6 +513,7 @@ let currentUser = '';
 let currentListId = '';
 let listRef = null;
 let localWishes = [];
+let currentTutorialStep = 0;
 
 let pendingProduct = {
   name: '',
@@ -503,8 +521,113 @@ let pendingProduct = {
   color: '',
   store: '',
   url: '',
-  isFavorite: false
+  asin: '',
+  isFavorite: false,
+  fromPicker: false
 };
+
+// ==============================================
+// 🎓 TUTORIAL INTERACTIVO
+// ==============================================
+function initTutorial() {
+    // Mostrar paso 1 activo
+    updateStepDisplay(1);
+}
+
+function updateStepDisplay(stepNum) {
+    // Ocultar todos
+    for(let i=1; i<=4; i++) {
+        const step = document.getElementById(`step-${i}`);
+        step.classList.remove('active');
+        if(i < stepNum) step.classList.add('completed');
+        else step.classList.remove('completed');
+    }
+    // Mostrar actual
+    if(stepNum <= 4) {
+        document.getElementById(`step-${stepNum}`).classList.add('active');
+        document.getElementById('step-current').textContent = stepNum;
+        document.getElementById('progress-fill').style.width = `${(stepNum-1)/3*100}%`;
+    }
+    // Resaltar zona de arrastre en paso 2
+    const dropZone = document.getElementById('bookmark-drop-zone');
+    if(stepNum === 2) {
+        dropZone.classList.add('highlight');
+    } else {
+        dropZone.classList.remove('highlight');
+    }
+    // Mostrar botón de reiniciar tras completar
+    if(stepNum > 1) {
+        document.getElementById('btn-reset-tutorial').classList.remove('hidden');
+    }
+}
+
+function markStepComplete(stepNum) {
+    if(stepNum === 4) {
+        // Completado
+        currentTutorialStep = 5;
+        document.getElementById('progress-fill').style.width = '100%';
+        // Ocultar pasos
+        setTimeout(() => {
+            document.querySelector('.tutorial-steps').style.opacity = '0';
+            setTimeout(() => {
+                document.querySelector('.tutorial-section').style.display = 'none';
+            }, 400);
+        }, 1500);
+        return;
+    }
+    currentTutorialStep = stepNum + 1;
+    updateStepDisplay(stepNum + 1);
+}
+
+function skipTutorial() {
+    if(confirm('¿Saltar la configuración? Podrás hacerlo después si lo necesitas.')) {
+        document.querySelector('.tutorial-section').style.display = 'none';
+    }
+}
+
+function resetTutorial() {
+    document.querySelector('.tutorial-section').style.display = 'block';
+    document.querySelector('.tutorial-steps').style.opacity = '1';
+    currentTutorialStep = 1;
+    updateStepDisplay(1);
+}
+
+// ==============================================
+// 📥 RECIBIR PRODUCTO DESDE EL BOOKMARKLET
+// ==============================================
+window.receiveProductFromBookmarklet = function(productData) {
+  pendingProduct.name = productData.name || 'Producto seleccionado';
+  pendingProduct.url = productData.url || '';
+  pendingProduct.store = productData.store || 'Tienda externa';
+  pendingProduct.asin = productData.asin || '';
+  pendingProduct.fromPicker = true;
+  
+  // Llenar interfaz
+  document.getElementById('product-name-display').textContent = pendingProduct.name;
+  document.getElementById('picked-indicator').classList.remove('hidden');
+  
+  // Auto-seleccionar tienda correspondiente
+  ['google','amazon','ebay','custom'].forEach(type => {
+    document.getElementById(`${type}-fav`).checked = false;
+  });
+  if (pendingProduct.store.includes('Amazon')) {
+    document.getElementById('amazon-fav').checked = true;
+  } else if (pendingProduct.store.includes('eBay')) {
+    document.getElementById('ebay-fav').checked = true;
+  } else if (pendingProduct.store.includes('Google')) {
+    document.getElementById('google-fav').checked = true;
+  } else {
+    document.getElementById('custom-store-name').value = pendingProduct.store;
+    document.getElementById('custom-store-url').value = pendingProduct.url;
+  }
+  
+  updateSummary();
+  showScreen('screen-results');
+};
+
+// ==============================================
+// RESTO DE LA LÓGICA
+// ==============================================
 
 const connectedRef = db.ref(".info/connected");
 connectedRef.on("value", (snap) => {
@@ -518,7 +641,6 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// ========== WELCOME ==========
 function goToLists() {
   const name = document.getElementById('user-name').value.trim();
   if (!name) return alert('Por favor escribe tu nombre');
@@ -526,33 +648,27 @@ function goToLists() {
   document.getElementById('greeting').textContent = `Hola, ${currentUser}! Elige una lista o crea una nueva.`;
   renderLists();
   showScreen('screen-lists');
+  setTimeout(initTutorial, 300);
 }
 
 function goBackToName() {
   showScreen('screen-welcome');
 }
 
-// ========== LISTS ==========
 async function renderLists() {
   const snap = await db.ref("lists").once("value");
   const container = document.getElementById('existing-lists');
   container.innerHTML = '';
-  
   if (!snap.exists()) {
     container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--apple-secondary);">Aún no hay listas. ¡Crea la primera!</p>';
     return;
   }
-  
   snap.forEach(child => {
     const list = child.val();
     const count = Object.keys(list.members || {}).length;
     const card = document.createElement('div');
     card.className = `list-card ${count === 0 ? 'empty' : ''}`;
-    card.innerHTML = `
-      <strong>${list.name}</strong>
-      <span>${count} participante${count !== 1 ? 's' : ''}</span>
-      ${count === 0 ? '<br><small>Sé el primero en participar</small>' : ''}
-    `;
+    card.innerHTML = `<strong>${list.name}</strong><span>${count} participante${count !== 1 ? 's' : ''}</span>`;
     card.onclick = () => openList(child.key);
     container.appendChild(card);
   });
@@ -592,7 +708,6 @@ function goBackToLists() {
   showScreen('screen-lists');
 }
 
-// ========== GROUP ==========
 function renderGroupView(data = null) {
   if (!data) {
     db.ref(`lists/${currentListId}`).once("value").then(snap => {
@@ -600,25 +715,19 @@ function renderGroupView(data = null) {
     });
     return;
   }
-  
   document.getElementById('group-title').textContent = data.name;
   const container = document.getElementById('members-list');
   const members = data.members || {};
   container.innerHTML = '';
-  
   if (Object.keys(members).length === 0) {
     container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--apple-secondary);">¡Sé el primero en agregar deseos!</p>';
     return;
   }
-  
   Object.entries(members).forEach(([name, wishes]) => {
     const count = (wishes || []).length;
     const row = document.createElement('div');
     row.className = `member-row ${name === currentUser ? 'you' : ''}`;
-    row.innerHTML = `
-      <span>${name} ${name === currentUser ? '(Tú)' : ''}</span>
-      <span>${count} deseo${count !== 1 ? 's' : ''} →</span>
-    `;
+    row.innerHTML = `<span>${name} ${name === currentUser ? '(Tú)' : ''}</span><span>${count} deseo${count !== 1 ? 's' : ''} →</span>`;
     row.onclick = () => viewParticipant(name);
     container.appendChild(row);
   });
@@ -644,10 +753,10 @@ function viewParticipant(name) {
   });
 }
 
-// ========== SEARCH ==========
 function goToSearch() {
   resetPendingProduct();
   document.getElementById('product-search').value = '';
+  document.getElementById('picked-indicator').classList.add('hidden');
   showScreen('screen-search');
 }
 
@@ -655,18 +764,16 @@ function goBackToSearch() {
   goToSearch();
 }
 
-// ========== RESULTS ==========
 function goToResults() {
   const query = document.getElementById('product-search').value.trim();
   if (!query) return alert('Escribe el nombre del producto');
-  
   pendingProduct.name = query;
-  
+  pendingProduct.fromPicker = false;
   document.getElementById('product-name-display').textContent = query;
+  document.getElementById('picked-indicator').classList.add('hidden');
   document.getElementById('product-size').value = '';
   document.getElementById('product-color').value = '';
   document.getElementById('amazon-sub-options').classList.add('hidden');
-  
   resetStoreSelection();
   updateSummary();
   showScreen('screen-results');
@@ -685,37 +792,43 @@ function buildSearchUrl(base, query) {
   return base + encodeURIComponent(enhanced);
 }
 
-// === TIENDAS — ENLACES CORREGIDOS ===
 function openGoogleShop() {
-  // CORREGIDO: Usamos el parámetro que funciona para Google Shopping en 2026
   const url = buildSearchUrl('https://www.google.com/search?q=', pendingProduct.name) + '&udm=28';
   window.open(url, '_blank');
-  pendingProduct.store = 'Google Shopping';
-  pendingProduct.url = url;
+  if (!pendingProduct.fromPicker) {
+    pendingProduct.store = 'Google Shopping';
+    pendingProduct.url = url;
+  }
   updateSummary();
 }
 
 function openAmazonMX() {
   const url = buildSearchUrl('https://www.amazon.com.mx/s?k=', pendingProduct.name);
   window.open(url, '_blank');
-  pendingProduct.store = 'Amazon México';
-  pendingProduct.url = url;
+  if (!pendingProduct.fromPicker) {
+    pendingProduct.store = 'Amazon México';
+    pendingProduct.url = url;
+  }
   updateSummary();
 }
 
 function openAmazonUS() {
   const url = buildSearchUrl('https://www.amazon.com/s?k=', pendingProduct.name + '&language=es');
   window.open(url, '_blank');
-  pendingProduct.store = 'Amazon USA';
-  pendingProduct.url = url;
+  if (!pendingProduct.fromPicker) {
+    pendingProduct.store = 'Amazon USA';
+    pendingProduct.url = url;
+  }
   updateSummary();
 }
 
 function openEbayShop() {
   const url = buildSearchUrl('https://www.ebay.com/sch/i.html?_nkw=', pendingProduct.name);
   window.open(url, '_blank');
-  pendingProduct.store = 'eBay';
-  pendingProduct.url = url;
+  if (!pendingProduct.fromPicker) {
+    pendingProduct.store = 'eBay';
+    pendingProduct.url = url;
+  }
   updateSummary();
 }
 
@@ -723,7 +836,6 @@ function setCustomStore() {
   const name = document.getElementById('custom-store-name').value.trim();
   const url = document.getElementById('custom-store-url').value.trim();
   if (!name || !url) return alert('Escribe el nombre y el enlace de la tienda');
-  
   pendingProduct.store = name;
   pendingProduct.url = url;
   window.open(url, '_blank');
@@ -731,7 +843,6 @@ function setCustomStore() {
   alert('Tienda seleccionada ✅');
 }
 
-// === FAVORITO ===
 function setFavorite(storeType) {
   ['google','amazon','ebay','custom'].forEach(type => {
     if (type !== storeType) document.getElementById(`${type}-fav`).checked = false;
@@ -743,12 +854,10 @@ function setFavorite(storeType) {
 function updateSummary() {
   pendingProduct.size = document.getElementById('product-size').value.trim() || 'No especificada';
   pendingProduct.color = document.getElementById('product-color').value.trim() || 'No especificado';
-  
   document.getElementById('sel-name').textContent = pendingProduct.name;
   document.getElementById('sel-size').textContent = pendingProduct.size;
   document.getElementById('sel-color').textContent = pendingProduct.color;
   document.getElementById('sel-store').textContent = pendingProduct.store || '—';
-  
   const favTag = document.getElementById('sel-fav');
   favTag.style.display = pendingProduct.isFavorite && pendingProduct.store ? 'block' : 'none';
 }
@@ -756,6 +865,7 @@ function updateSummary() {
 function resetStoreSelection() {
   pendingProduct.store = '';
   pendingProduct.url = '';
+  pendingProduct.asin = '';
   pendingProduct.isFavorite = false;
   ['google','amazon','ebay','custom'].forEach(type => {
     document.getElementById(`${type}-fav`).checked = false;
@@ -765,28 +875,25 @@ function resetStoreSelection() {
 }
 
 function resetPendingProduct() {
-  pendingProduct = { name: '', size: '', color: '', store: '', url: '', isFavorite: false };
+  pendingProduct = { name: '', size: '', color: '', store: '', url: '', asin: '', isFavorite: false, fromPicker: false };
 }
 
-// ========== GUARDAR ==========
 function saveSelectedWish() {
   if (!pendingProduct.store || !pendingProduct.url) {
     return alert('Primero selecciona una tienda para continuar');
   }
-  
   const wish = {
     name: pendingProduct.name,
     size: pendingProduct.size,
     color: pendingProduct.color,
     store: pendingProduct.store,
     url: pendingProduct.url,
+    asin: pendingProduct.asin,
     isFavorite: pendingProduct.isFavorite,
     addedAt: new Date().toLocaleString('es-ES')
   };
-  
   localWishes.push(wish);
   alert('Agregado a tu lista ✅');
-  
   resetPendingProduct();
   resetStoreSelection();
   loadMyWishes();
@@ -799,6 +906,7 @@ function renderWishCard(wish, allowDelete = true) {
         <div style="flex:1; min-width:200px;">
           <strong style="font-size:17px;">${wish.name}</strong>
           ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
+          ${wish.asin ? `<small style="color:#999; font-size:12px;">ASIN: ${wish.asin}</small><br>` : ''}
           <div class="wish-details">
             <strong>Talla:</strong> ${wish.size}<br>
             <strong>Color:</strong> ${wish.color}<br>
@@ -824,7 +932,7 @@ async function loadMyWishes() {
 function renderMyWishesList() {
   const container = document.getElementById('wishes-display-list');
   if (localWishes.length === 0) {
-    container.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no tienes deseos. ¡Busca tu primer producto!</p>';
+    container.innerHTML = '<p style="text-align:center; padding:25px; color:var(--apple-secondary);">Aún no tienes deseos. Usa el botón "➕ Añadir a Mi Lista" de tu barra de favoritos cuando encuentres un producto en Amazon, eBay o Google Shopping ✅</p>';
     return;
   }
   container.innerHTML = localWishes.map((w, i) => renderWishCard(w, true)).join('');
