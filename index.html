@@ -19,6 +19,7 @@
             --apple-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
             --apple-radius: 22px;
             --menu-width: 260px;
+            --safe-margin: 14px;
         }
         * {
             margin: 0;
@@ -264,7 +265,7 @@
             border-top: 1px solid var(--apple-border);
         }
         
-        /* === TABLERO DE DESEOS — RESPONSIVO MEJORADO === */
+        /* === TABLERO DE DESEOS === */
         .board-table {
             width: 100%;
             border-collapse: separate;
@@ -316,7 +317,14 @@
         .col-store {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 0;
+        }
+        .store-header {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: var(--safe-margin);
         }
         .col-store .store-name {
             font-weight: 600;
@@ -328,18 +336,20 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
+            white-space: nowrap;
         }
         .col-store a:hover {
             text-decoration: underline;
         }
         .del-btn {
             background: #ef4444;
-            padding: 6px 12px;
-            font-size: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
             width: auto;
             border-radius: 8px;
-            margin-top: 4px;
+            margin-top: calc(var(--safe-margin) * 1.5);
             align-self: flex-start;
+            min-width: 110px;
         }
         .empty-wishes {
             text-align: center;
@@ -378,7 +388,7 @@
         .custom-store h4 { margin-bottom: 12px; color: #0071e3; font-size: 1.1rem; font-weight: 700; }
         .required { color: #ef4444; }
 
-        /* === MÓVIL — COLUMNAS DISTRIBUIDAS EQUITATIVAMENTE === */
+        /* === MÓVIL === */
         @media (max-width: 768px) {
             .container { padding: 16px; margin-top: 45px; }
             h1 { font-size: 1.6rem; }
@@ -397,7 +407,7 @@
                 overflow: hidden;
             }
             .board-table td {
-                padding: 14px 16px;
+                padding: 16px;
                 border-bottom: 1px solid #f0f0f0;
             }
             .board-table td:last-child { border-bottom: none; }
@@ -407,12 +417,19 @@
                 font-weight: 700;
                 color: var(--apple-secondary);
                 font-size: 12px;
-                margin-bottom: 6px;
+                margin-bottom: 8px;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
             }
-            .col-store { gap: 8px; }
-            .del-btn { width: 100%; text-align: center; }
+            .store-header {
+                justify-content: space-between;
+            }
+            .del-btn { 
+                width: 100%; 
+                text-align: center;
+                margin-top: calc(var(--safe-margin) * 2);
+                padding: 12px;
+            }
         }
     </style>
 </head>
@@ -490,7 +507,11 @@
                 <label>Color</label>
                 <input type="text" id="prod-color" placeholder="Ej: Negro, Rojo, Azul...">
             </div>
-         
+            <div class="form-group">
+                <label>Enlace de compra <span class="required">*</span></label>
+                <input type="url" id="prod-url" placeholder="Pega el enlace completo del producto">
+            </div>
+
             <h3>Buscar en tienda</h3>
             <div class="store-buttons">
                 <button class="amazon" onclick="abrirTienda('amazon-mx')">Amazon México</button>
@@ -499,15 +520,10 @@
                 <button onclick="abrirTienda('ebay')">eBay</button>
             </div>
 
-   <div class="form-group">
-                <label>Enlace de compra <span class="required">*</span></label>
-                <input type="url" id="prod-url" placeholder="Pega el enlace http... del producto">
-            </div>
-            
             <div class="custom-store">
-                <h4>Quieres otra tienda?</h4>
+                <h4>Tienda personalizada</h4>
                 <input type="text" id="tienda-nombre" placeholder="Nombre de la tienda">
-                <input type="url" id="tienda-enlace" placeholder="Enlace http... del producto">
+                <input type="url" id="tienda-enlace" placeholder="Enlace del producto">
                 <button class="secondary small" onclick="usarTienda()">Usar esta tienda</button>
             </div>
 
@@ -601,7 +617,7 @@ function irAlInicio() {
 }
 
 // ==============================================
-// NAVEGACIÓN — CORREGIDO BOTÓN VOLVER
+// NAVEGACIÓN
 // ==============================================
 function mostrarPantalla(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -760,8 +776,10 @@ function renderTableroDeseos(deseos, puedeEliminar) {
               ${d.color && d.color !== '—' ? `<div class="detail-row"><strong>Color:</strong> ${d.color}</div>` : ''}
             </td>
             <td class="col-store" data-label="Tienda">
-              <div class="store-name">${d.tienda || 'Tienda externa'}</div>
-              <a href="${d.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a>
+              <div class="store-header">
+                <span class="store-name">${d.tienda || 'Tienda externa'}</span>
+                <a href="${d.url}" target="_blank" rel="noopener">🔗 Ir a comprar</a>
+              </div>
               ${puedeEliminar ? 
                 `<button class="del-btn" onclick="eliminarDeseo(${indice})">Eliminar</button>` : ''}
             </td>
