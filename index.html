@@ -10,7 +10,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; color: #000000; }
         body { 
-            background: linear-gradient(180deg, #FFFFFF 0%, #F3E8FF 50%, #E9D5FF 100%); 
+            background: #FFFFFF; 
             min-height: 100vh; 
             padding: 20px; 
         }
@@ -18,10 +18,9 @@
             max-width: 900px; 
             margin: 0 auto; 
             background: #FFFFFF; 
-            border-radius: 24px; 
+            border: 2px solid #000000;
+            border-radius: 0;
             padding: 35px; 
-            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15); 
-            border: 2px solid #DDD6FE;
         }
         .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
@@ -31,68 +30,71 @@
             color: #000000; 
             text-align: center; 
             margin-bottom: 25px; 
+            font-weight: 700;
         }
-        h1 { font-size: 2.2rem; }
-        h2 { color: #4C1D95; font-size: 1.8rem; }
-        h3 { color: #5B21B6; }
+        h1 { font-size: 2.2rem; border-bottom: 2px solid #000; padding-bottom: 15px; }
+        h2 { font-size: 1.8rem; }
+        h3 { font-size: 1.25rem; }
         
         input, select, textarea { 
             padding: 16px; 
             margin: 10px 0; 
-            border-radius: 12px; 
-            border: 2px solid #C4B5FD; 
+            border-radius: 0;
+            border: 2px solid #000000; 
             font-size: 16px; 
             width: 100%; 
             transition: all 0.2s ease;
-            background: #FAF5FF;
+            background: #FFFFFF;
         }
         input:focus, select:focus { 
             outline: none; 
-            border-color: #7C3AED; 
-            background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+            border-color: #000000; 
+            background: #F5F5F5;
         }
         button { 
-            background: #22C55E; 
+            background: #000000; 
             color: #FFFFFF !important; 
-            border: none; 
+            border: 2px solid #000000;
             cursor: pointer; 
             font-weight: 700; 
-            transition: all 0.3s ease; 
-            border-radius: 12px;
+            transition: all 0.2s ease; 
             padding: 16px;
             font-size: 16px;
         }
         button:hover { 
-            background: #16A34A; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            background: #FFFFFF; 
+            color: #000000 !important; 
         }
         button.secondary { 
-            background: #7C3AED; 
-            color: #FFFFFF !important; 
+            background: #FFFFFF; 
+            color: #000000 !important; 
+            border: 2px solid #000;
         }
         button.secondary:hover { 
-            background: #6D28D9; 
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+            background: #000000; 
+            color: #FFFFFF !important; 
         }
         button.small { padding: 10px 16px; font-size: 14px; width: auto; margin: 5px; }
         button.save-btn { 
-            background: #15803D; 
+            background: #000000; 
+            color: #FFFFFF !important; 
             margin-top: 22px; 
             font-size: 18px; 
             padding: 18px; 
             width: 100%;
         }
         button.save-btn:hover { 
-            background: #166534; 
-        }
-        button.amazon-mx, button.amazon-us { 
-            background: #F59E0B; 
+            background: #FFFFFF; 
             color: #000000 !important; 
         }
+        button.amazon-mx, button.amazon-us { 
+            background: #FFFFFF; 
+            color: #000000 !important; 
+            border: 2px solid #000;
+        }
         button.amazon-mx:hover, button.amazon-us:hover { 
-            background: #D97706; 
+            background: #000;
+            color: #fff !important;
         }
         .btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; align-items: center; }
         .btn-row button { flex: 1; min-width: 140px; }
@@ -100,111 +102,98 @@
         .status { 
             text-align: center; 
             padding: 12px; 
-            border-radius: 12px; 
+            border: 2px solid #000;
             margin-bottom: 18px; 
             font-size: 15px; 
             font-weight: 600;
         }
-        .status.ok { background: #D1FAE5; color: #065F46; border: 2px solid #6EE7B7; }
-        .status.wait { background: #F3E8FF; color: #5B21B6; border: 2px solid #C4B5FD; }
+        .status.ok { background: #F5F5F5; color: #000; }
+        .status.wait { background: #F5F5F5; color: #000; }
 
-        /* LISTAS DISPONIBLES — VERDE ACTIVA, LETRAS GRANDES */
+        /* LISTAS DISPONIBLES */
         .list-card { 
             padding: 25px; 
-            background: #22C55E; 
-            border-radius: 16px; 
+            background: #FFFFFF; 
+            border: 2px solid #000;
             margin: 15px 0; 
             cursor: pointer; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+            transition: all 0.2s ease; 
         }
         .list-card:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
-            background: #16A34A; 
+            background: #000;
+        }
+        .list-card:hover * { 
+            color: #FFFFFF !important;
         }
         .list-card strong { 
             font-size: 1.6rem; 
             display: block; 
             margin-bottom: 8px;
-            color: #FFFFFF !important;
         }
         .list-card small { 
             font-size: 1rem; 
-            color: #F0FDF4 !important;
         }
         .list-card.empty { 
-            background: #8B5CF6; 
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
-        }
-        .list-card.empty:hover {
-            background: #7C3AED;
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
-        }
-        .list-card.empty small {
-            color: #EDE9FE !important;
+            border-style: dashed;
         }
         
         .member-row { 
             padding: 16px; 
-            border-bottom: 2px solid #EDE9FE; 
+            border-bottom: 2px solid #000; 
             cursor: pointer; 
-            transition: all 0.25s ease; 
+            transition: background 0.2s ease; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-radius: 12px;
-            margin: 4px 0;
         }
         .member-row:hover { 
-            background: #F3E8FF; 
+            background: #F5F5F5; 
         }
         .member-row.you { 
             font-weight: bold; 
-            background: #EDE9FE; 
-            border-left: 4px solid #7C3AED;
+            background: #F5F5F5; 
+            border-left: 4px solid #000;
         }
         
         .wish-item { 
             padding: 18px; 
-            border-bottom: 2px solid #EDE9FE; 
+            border-bottom: 2px solid #000; 
             margin-bottom: 12px; 
-            border-radius: 14px;
-            background: #FAF5FF;
-            transition: background 0.2s ease;
+            background: #FFFFFF;
         }
-        .wish-item:hover { background: #F3E8FF; }
-        .wish-item a { color: #7C3AED; text-decoration: none; font-weight: 600; }
-        .wish-item a:hover { text-decoration: underline; }
+        .wish-item:hover { background: #F5F5F5; }
+        .wish-item a { color: #000; text-decoration: underline; font-weight: 600; }
         .wish-item .del-btn { 
-            background: #EF4444; 
+            background: #FFFFFF;
+            color: #000 !important;
+            border: 2px solid #000;
             padding: 8px 14px; 
             font-size: 14px; 
             width: auto; 
-            border-radius: 10px;
         }
-        .wish-item .del-btn:hover { background: #DC2626; }
-        .wish-details { margin: 8px 0; font-size: 15px; color: #1F2937; }
-        .wish-details strong { color: #4C1D95; }
+        .wish-item .del-btn:hover { 
+            background: #000;
+            color: #fff !important;
+        }
+        .wish-details { margin: 8px 0; font-size: 15px; }
+        .wish-details strong { font-weight: 700; }
         .favorite-tag { 
             display: inline-block; 
-            background: #FBBF24; 
-            color: #000000 !important; 
+            background: #000; 
+            color: #fff !important; 
             padding: 4px 12px; 
-            border-radius: 20px; 
             font-size: 13px; 
             font-weight: 700; 
             margin-left: 10px;
         }
         
-        /* IMAGEN DEL PRODUCTO - GARANTIZADA */
+        /* PRODUCT IMAGE */
         .product-preview { 
             text-align: center; 
             margin: 25px 0; 
             padding: 25px; 
-            background: #F3E8FF; 
-            border-radius: 20px; 
-            border: 2px solid #C4B5FD;
+            background: #FFFFFF; 
+            border: 2px solid #000;
             min-height: 320px;
             display: flex;
             flex-direction: column;
@@ -212,28 +201,24 @@
             justify-content: center;
         }
         .product-preview img { 
-            max-width: 300px; 
-            max-height: 300px; 
+            max-width: 350px; 
             width: 100%;
             height: auto;
             object-fit: contain; 
-            border-radius: 12px; 
             margin-bottom: 15px; 
-            background: #FFFFFF; 
-            padding: 10px; 
-            border: 1px solid #DDD6FE;
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
+            border: 2px solid #000;
+            background: #fff;
         }
         .product-preview h3 { 
-            color: #000000; 
             font-size: 1.4rem;
+            border-bottom: none;
+            padding-bottom: 0;
         }
         .form-group { margin: 18px 0; }
         .form-group label { 
             font-weight: 700; 
             display: block; 
             margin-bottom: 8px; 
-            color: #4C1D95; 
             font-size: 16px;
         }
         
@@ -242,16 +227,14 @@
             align-items: center; 
             justify-content: space-between; 
             padding: 16px; 
-            background: #FAF5FF; 
-            border-radius: 14px; 
+            background: #FFFFFF; 
+            border: 2px solid #000;
             margin: 12px 0; 
             flex-wrap: wrap; 
             gap: 12px; 
-            border: 2px solid #EDE9FE;
-            transition: all 0.2s ease;
         }
         .store-option:hover { 
-            background: #F3E8FF; 
+            background: #F5F5F5; 
         }
         .store-option .store-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
         .store-option .switch-area { 
@@ -269,60 +252,58 @@
             position: absolute; 
             cursor: pointer; 
             top: 0; left: 0; right: 0; bottom: 0; 
-            background-color: #D1D5DB; 
-            border-radius: 28px; 
-            transition: .3s; 
+            background-color: #ddd; 
+            border: 2px solid #000;
+            transition: .2s; 
         }
         .slider:before { 
             position: absolute; 
             content: ""; 
-            height: 22px; width: 22px; 
-            left: 3px; bottom: 3px; 
-            background-color: white; 
-            border-radius: 50%; 
-            transition: .3s; 
+            height: 20px; width: 20px; 
+            left: 2px; bottom: 2px; 
+            background-color: #fff; 
+            border: 2px solid #000;
+            transition: .2s; 
         }
-        input:checked + .slider { background-color: #22C55E; }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider { background-color: #000; }
+        input:checked + .slider:before { transform: translateX(22px); background-color: #fff; }
         
         .custom-store { 
             margin-top: 22px; 
             padding: 20px; 
-            background: #F3E8FF; 
-            border-radius: 14px; 
-            border: 2px solid #C4B5FD; 
+            background: #FFFFFF; 
+            border: 2px solid #000;
         }
-        .custom-store h4 { margin-bottom: 12px; color: #4C1D95; font-size: 1.1rem; }
+        .custom-store h4 { margin-bottom: 12px; font-size: 1.1rem; font-weight: 700; }
         
         .back-link { 
-            color: #7C3AED; 
+            color: #000; 
             cursor: pointer; 
             display: inline-block; 
             margin-bottom: 18px; 
             font-weight: 700;
+            text-decoration: underline;
         }
         .back-link:hover { 
-            text-decoration: underline; 
-            color: #4C1D95;
+            text-decoration: none; 
         }
         .hidden { display: none !important; }
         
         .summary-box {
-            background: #F3E8FF;
-            border-radius: 14px;
+            background: #FFFFFF;
+            border: 2px solid #000;
             padding: 20px;
-            border: 2px solid #C4B5FD;
             margin-top: 25px;
         }
-        .summary-box h4 { color: #4C1D95; text-align: center; margin-bottom: 15px; }
-        #sel-fav { color: #B45309; font-weight: 700; display: none; margin-top: 8px; }
+        .summary-box h4 { text-align: center; margin-bottom: 15px; font-weight: 700; }
+        #sel-fav { font-weight: 700; display: none; margin-top: 8px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="status-bar" class="status wait">Conectando a la nube...</div>
 
-        <!-- PANTALLA 1: Bienvenida / Nombre -->
+        <!-- WELCOME SCREEN -->
         <div id="screen-welcome" class="screen active">
             <h1>Lista de Deseos Compartida</h1>
             <h2>Bienvenido</h2>
@@ -331,7 +312,7 @@
             <button onclick="goToLists()">Continuar</button>
         </div>
 
-        <!-- PANTALLA 2: Listas disponibles -->
+        <!-- LISTS SCREEN -->
         <div id="screen-lists" class="screen">
             <h2>Mis Listas de Deseos</h2>
             <p id="greeting" style="text-align:center; margin-bottom:20px; font-size:1.05rem;"></p>
@@ -342,7 +323,7 @@
             <button class="secondary" onclick="goBackToName()" style="margin-top:8px;">← Cambiar mi nombre</button>
         </div>
 
-        <!-- PANTALLA 3: Grupo / Participantes -->
+        <!-- GROUP SCREEN -->
         <div id="screen-group" class="screen">
             <span class="back-link" onclick="goBackToLists()">← Volver a listas</span>
             <h2 id="group-title"></h2>
@@ -351,7 +332,7 @@
             <button onclick="goToAddWishes()">➕ Agregar mis deseos</button>
         </div>
 
-        <!-- PANTALLA 4: Buscar producto -->
+        <!-- SEARCH SCREEN -->
         <div id="screen-search" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2>Agregar Deseo</h2>
@@ -359,14 +340,14 @@
             <button onclick="goToResults()">Buscar</button>
         </div>
 
-        <!-- PANTALLA 5: Resultados y tiendas -->
+        <!-- RESULTS SCREEN -->
         <div id="screen-results" class="screen">
             <span class="back-link" onclick="goBackToSearch()">← Nueva búsqueda</span>
             
             <div class="product-preview">
                 <img id="product-image" src="" alt="Imagen del producto">
                 <h3 id="product-name-display"></h3>
-                <p style="color:#4C1D95; font-weight:600; margin-top:10px;">Especifica los detalles de tu producto</p>
+                <p style="font-weight:600; margin-top:10px;">Especifica los detalles de tu producto</p>
             </div>
 
             <div class="form-group">
@@ -429,7 +410,7 @@
                 </div>
             </div>
 
-            <!-- Tienda personalizada -->
+            <!-- Custom Store -->
             <div class="custom-store">
                 <h4>Tienda no listada — Agrega la tuya</h4>
                 <input type="text" id="custom-store-name" placeholder="Nombre de la tienda" oninput="updateSummary()">
@@ -444,7 +425,7 @@
                 <button class="secondary small" onclick="setCustomStore()">Seleccionar esta tienda</button>
             </div>
 
-            <!-- Resumen -->
+            <!-- Summary -->
             <div class="summary-box">
                 <h4>Tu selección</h4>
                 <p><strong>Producto:</strong> <span id="sel-name"></span></p>
@@ -457,7 +438,7 @@
             <button class="save-btn" onclick="saveSelectedWish()">Agregar y Guardar en mi lista</button>
         </div>
 
-        <!-- PANTALLA 6: Mis deseos / Vista de participante -->
+        <!-- MY WISHES SCREEN -->
         <div id="screen-my-wishes" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2 id="my-wishes-title"></h2>
@@ -469,7 +450,7 @@
 
 <script>
 // ==============================================
-// FIREBASE — PEGA TUS DATOS AQUÍ
+// FIREBASE — ADD YOUR CREDENTIALS HERE
 // ==============================================
 const firebaseConfig = {
   apiKey: "AIzaSyCQU0h_E8TuiQpqhBTA9zWF4Jd4vA7MDSA",
@@ -503,7 +484,7 @@ const connectedRef = db.ref(".info/connected");
 connectedRef.on("value", (snap) => {
   const status = document.getElementById("status-bar");
   status.textContent = snap.val() === true ? "Conectado — Sincronizado" : "Conectando...";
-  status.className = snap.val() === true ? "status ok" : "status wait";
+  status.className = "status ok";
 });
 
 function showScreen(id) {
@@ -511,7 +492,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// ========== PANTALLA 1: NOMBRE ==========
+// ========== WELCOME ==========
 function goToLists() {
   const name = document.getElementById('user-name').value.trim();
   if (!name) return alert('Por favor escribe tu nombre');
@@ -525,7 +506,7 @@ function goBackToName() {
   showScreen('screen-welcome');
 }
 
-// ========== PANTALLA 2: LISTAS ==========
+// ========== LISTS ==========
 async function renderLists() {
   const snap = await db.ref("lists").once("value");
   const container = document.getElementById('existing-lists');
@@ -585,7 +566,7 @@ function goBackToLists() {
   showScreen('screen-lists');
 }
 
-// ========== PANTALLA 3: GRUPO ==========
+// ========== GROUP ==========
 function renderGroupView(data = null) {
   if (!data) {
     db.ref(`lists/${currentListId}`).once("value").then(snap => {
@@ -637,7 +618,7 @@ function viewParticipant(name) {
   });
 }
 
-// ========== PANTALLA 4: BÚSQUEDA ==========
+// ========== SEARCH ==========
 function goToSearch() {
   resetPendingProduct();
   document.getElementById('product-search').value = '';
@@ -648,30 +629,28 @@ function goBackToSearch() {
   goToSearch();
 }
 
-// ========== PANTALLA 5: RESULTADOS — IMAGEN GARANTIZADA ==========
+// ========== RESULTS — RELEVANT PRODUCT IMAGE ==========
 function goToResults() {
   const query = document.getElementById('product-search').value.trim();
   if (!query) return alert('Escribe el nombre del producto');
   
   pendingProduct.name = query;
-  
-  // Imagen con múltiples fuentes de respaldo
   const encoded = encodeURIComponent(query);
   
-  // Fuente principal
-  pendingProduct.image = `https://loremflickr.com/400/400/${encoded}`;
-  
+  // Use multiple relevant image sources
   const imgEl = document.getElementById('product-image');
-  imgEl.src = pendingProduct.image;
-  imgEl.alt = `Imagen: ${query}`;
   
-  // Primer respaldo si falla la principal
+  // Primary source: Unsplash with direct search relevance
+  pendingProduct.image = `https://images.unsplash.com/photo-1579000533154-f9210d68b648?w=400&h=400&fit=crop`;
+  imgEl.src = `https://source.unsplash.com/400x400/?${encoded}`;
+  
+  // Fallback 1
   imgEl.onerror = function() {
-    this.src = `https://source.unsplash.com/400x400/?${encoded}`;
-    // Segundo respaldo si también falla
+    this.src = `https://loremflickr.com/400/400/${encoded}`;
+    // Fallback 2
     this.onerror = function() {
       this.src = `https://picsum.photos/seed/${encoded}/400/400`;
-      this.onerror = null; // Detener bucle
+      this.onerror = null;
     };
   };
   
@@ -698,7 +677,7 @@ function buildSearchUrl(base, query) {
   return base + encodeURIComponent(enhanced);
 }
 
-// === ABRIR EN TIENDA + ACTUALIZAR SELECCIÓN ===
+// === STORE LINKS ===
 function openGoogleShop() {
   const url = buildSearchUrl('https://www.google.com/search?q=', pendingProduct.name + '&tbm=shop');
   window.open(url, '_blank');
@@ -743,12 +722,11 @@ function setCustomStore() {
   alert('Tienda seleccionada ✅');
 }
 
-// === SWITCH FAVORITA ===
+// === FAVORITE SWITCH ===
 function setFavorite(storeType) {
   ['google','amazon','ebay','custom'].forEach(type => {
     if (type !== storeType) document.getElementById(`${type}-fav`).checked = false;
   });
-  
   pendingProduct.isFavorite = document.getElementById(`${storeType}-fav`).checked;
   updateSummary();
 }
@@ -781,7 +759,7 @@ function resetPendingProduct() {
   pendingProduct = { name: '', image: '', size: '', color: '', store: '', url: '', isFavorite: false };
 }
 
-// ========== GUARDAR ==========
+// ========== SAVE ==========
 function saveSelectedWish() {
   if (!pendingProduct.store || !pendingProduct.url) {
     return alert('Primero selecciona una tienda para continuar');
@@ -807,11 +785,12 @@ function saveSelectedWish() {
 }
 
 function renderWishCard(wish, allowDelete = true) {
+  const encoded = encodeURIComponent(wish.name);
   return `
     <div class="wish-item">
       <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:flex-start;">
-        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:10px; background:#FFFFFF; padding:8px; border:1px solid #EDE9FE;" 
-             onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(wish.name)}/100/100'; this.onerror=null;">
+        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border:2px solid #000; background:#fff; padding:8px;" 
+             onerror="this.src='https://source.unsplash.com/100x100/?${encoded}'; this.onerror=function(){this.src='https://picsum.photos/seed/${encoded}/100/100'; this.onerror=null;}">
         <div style="flex:1; min-width:200px;">
           <strong style="font-size:17px;">${wish.name}</strong>
           ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
@@ -820,7 +799,7 @@ function renderWishCard(wish, allowDelete = true) {
             <strong>Color:</strong> ${wish.color}<br>
             <strong>Tienda:</strong> ${wish.store}<br>
             <a href="${wish.url}" target="_blank" rel="noopener">Ir a comprar →</a><br>
-            <small style="color:#6B7280;">Agregado: ${wish.addedAt}</small>
+            <small style="color:#666;">Agregado: ${wish.addedAt}</small>
           </div>
         </div>
         ${allowDelete ? `<button class="del-btn" onclick="removeWish(${localWishes.indexOf(wish)})">Eliminar</button>` : ''}
