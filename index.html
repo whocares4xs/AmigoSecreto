@@ -44,24 +44,14 @@
             border: 1px solid rgba(0, 0, 0, 0.04);
         }
 
-        .screen {
-            display: none;
-        }
-
+        .screen { display: none; }
         .screen.active {
             display: block;
             animation: appleFadeIn 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-
         @keyframes appleFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1, h2, h3 {
@@ -70,19 +60,9 @@
             font-weight: 700;
             letter-spacing: 0.5px;
         }
-
-        h1 {
-            font-size: 2.4rem;
-        }
-
-        h2 {
-            font-size: 1.9rem;
-        }
-
-        h3 {
-            font-size: 1.35rem;
-            color: var(--apple-secondary);
-        }
+        h1 { font-size: 2.4rem; }
+        h2 { font-size: 1.9rem; }
+        h3 { font-size: 1.35rem; color: var(--apple-secondary); }
 
         input, select, textarea {
             padding: 14px 16px;
@@ -92,11 +72,9 @@
             font-size: 16px;
             width: 100%;
             background: #fafafa;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-
-        input:focus,
-        select:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--apple-accent);
             background: #ffffff;
@@ -116,46 +94,31 @@
             position: relative;
             overflow: hidden;
         }
-
         button:hover {
             transform: translateY(-1px);
             filter: brightness(1.08);
         }
-
         button:active {
             transform: translateY(1px);
             filter: brightness(0.96);
         }
-
         button::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.24), transparent 60%);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.24), transparent 60%);
             opacity: 0;
             transition: opacity 0.2s ease;
         }
-
-        button:hover::after {
-            opacity: 1;
-        }
+        button:hover::after { opacity: 1; }
 
         button.secondary {
             background: #e9e9eb;
             color: var(--apple-text) !important;
         }
+        button.secondary:hover { background: #dcdce0; }
 
-        button.secondary:hover {
-            background: #dcdce0;
-        }
-
-        button.small {
-            padding: 10px 14px;
-            font-size: 14px;
-            width: auto;
-            margin: 5px;
-        }
-
+        button.small { padding: 10px 14px; font-size: 14px; width: auto; margin: 5px; }
         button.save-btn {
             background: var(--apple-success);
             margin-top: 22px;
@@ -163,34 +126,16 @@
             padding: 18px;
             width: 100%;
         }
+        button.save-btn:hover { filter: brightness(1.12); }
 
-        button.save-btn:hover {
-            filter: brightness(1.12);
-        }
-
-        button.amazon-mx,
-        button.amazon-us {
+        button.amazon-mx, button.amazon-us {
             background: #f59e0b;
             color: #1f2937 !important;
         }
+        button.amazon-mx:hover, button.amazon-us:hover { background: #d97706; }
 
-        button.amazon-mx:hover,
-        button.amazon-us:hover {
-            background: #d97706;
-        }
-
-        .btn-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 12px 0;
-            align-items: center;
-        }
-
-        .btn-row button {
-            flex: 1;
-            min-width: 140px;
-        }
+        .btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; align-items: center; }
+        .btn-row button { flex: 1; min-width: 140px; }
 
         .status {
             text-align: center;
@@ -199,19 +144,10 @@
             margin-bottom: 18px;
             font-size: 15px;
             font-weight: 600;
-            background: #f5f5f7;
-            color: var(--apple-secondary);
         }
-
-        .status.ok {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .status.wait {
-            background: #fef3c7;
-            color: #92400e;
-        }
+        .status.ok { background: #dcfce7; color: #166534; }
+        .status.wait { background: #fef3c7; color: #92400e; }
+        .status.info { background: #eaf5ff; color: #0071e3; }
 
         .list-card {
             padding: 22px;
@@ -223,28 +159,14 @@
             transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
         }
-
         .list-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
             border-color: var(--apple-accent);
         }
-
-        .list-card strong {
-            font-size: 1.55rem;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .list-card small {
-            font-size: 1rem;
-            color: var(--apple-secondary);
-        }
-
-        .list-card.empty {
-            border-style: dashed;
-            border-color: #f59e0b;
-        }
+        .list-card strong { font-size: 1.55rem; display: block; margin-bottom: 8px; }
+        .list-card small { font-size: 1rem; color: var(--apple-secondary); }
+        .list-card.empty { border-style: dashed; border-color: #f59e0b; }
 
         .member-row {
             padding: 16px;
@@ -257,12 +179,7 @@
             border-radius: 12px;
             margin: 4px 0;
         }
-
-        .member-row:hover {
-            background: #f5f5f7;
-            transform: translateX(4px);
-        }
-
+        .member-row:hover { background: #f5f5f7; transform: translateX(4px); }
         .member-row.you {
             font-weight: 700;
             background: #eaf5ff;
@@ -277,22 +194,9 @@
             background: #fafafa;
             transition: background 0.2s ease, transform 0.2s ease;
         }
-
-        .wish-item:hover {
-            background: #f5f5f7;
-            transform: translateX(2px);
-        }
-
-        .wish-item a {
-            color: var(--apple-accent);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .wish-item a:hover {
-            text-decoration: underline;
-        }
-
+        .wish-item:hover { background: #f5f5f7; transform: translateX(2px); }
+        .wish-item a { color: var(--apple-accent); text-decoration: none; font-weight: 600; }
+        .wish-item a:hover { text-decoration: underline; }
         .wish-item .del-btn {
             background: #ef4444;
             padding: 8px 14px;
@@ -300,22 +204,9 @@
             width: auto;
             border-radius: 10px;
         }
-
-        .wish-item .del-btn:hover {
-            background: #dc2626;
-        }
-
-        .wish-details {
-            margin: 8px 0;
-            font-size: 15px;
-            color: var(--apple-secondary);
-        }
-
-        .wish-details strong {
-            color: var(--apple-text);
-            font-weight: 700;
-        }
-
+        .wish-item .del-btn:hover { background: #dc2626; }
+        .wish-details { margin: 8px 0; font-size: 15px; color: var(--apple-secondary); }
+        .wish-details strong { color: var(--apple-text); font-weight: 700; }
         .favorite-tag {
             display: inline-block;
             background: linear-gradient(135deg, #ffd60a, #ffcc00);
@@ -334,15 +225,14 @@
             background: linear-gradient(180deg, #fafafa, #f5f5f7);
             border-radius: var(--apple-radius);
             border: 1px solid var(--apple-border);
-            min-height: 340px;
+            min-height: 380px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
-
         .product-preview img {
-            max-width: 320px;
+            max-width: 340px;
             width: 100%;
             height: auto;
             object-fit: contain;
@@ -353,17 +243,19 @@
             border: 1px solid var(--apple-border);
             box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
         }
-
-        .product-preview h3 {
-            color: var(--apple-text);
-            font-size: 1.45rem;
-            margin-bottom: 8px;
+        .product-preview h3 { color: var(--apple-text); font-size: 1.45rem; margin-bottom: 8px; }
+        .loading-img {
+            padding: 40px;
+            color: var(--apple-secondary);
+            font-size: 15px;
+        }
+        .error-img {
+            padding: 20px;
+            color: #ef4444;
+            font-size: 14px;
         }
 
-        .form-group {
-            margin: 18px 0;
-        }
-
+        .form-group { margin: 18px 0; }
         .form-group label {
             font-weight: 700;
             display: block;
@@ -385,18 +277,8 @@
             border: 1px solid var(--apple-border);
             transition: all 0.2s ease;
         }
-
-        .store-option:hover {
-            background: #f5f5f7;
-            transform: translateX(3px);
-        }
-
-        .store-option .store-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
+        .store-option:hover { background: #f5f5f7; transform: translateX(3px); }
+        .store-option .store-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
         .store-option .switch-area {
             display: flex;
             align-items: center;
@@ -406,51 +288,28 @@
             color: var(--apple-secondary);
         }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 51px;
-            height: 30px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
+        .switch { position: relative; display: inline-block; width: 51px; height: 30px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: #d1d1d6;
             border-radius: 30px;
             transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-
         .slider:before {
             position: absolute;
             content: "";
-            height: 26px;
-            width: 26px;
-            left: 2px;
-            bottom: 2px;
+            height: 26px; width: 26px;
+            left: 2px; bottom: 2px;
             background-color: white;
             border-radius: 50%;
             transition: 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         }
-
-        input:checked + .slider {
-            background-color: var(--apple-success);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(21px);
-        }
+        input:checked + .slider { background-color: var(--apple-success); }
+        input:checked + .slider:before { transform: translateX(21px); }
 
         .custom-store {
             margin-top: 22px;
@@ -459,13 +318,7 @@
             border-radius: 16px;
             border: 1px solid #b9dcff;
         }
-
-        .custom-store h4 {
-            margin-bottom: 12px;
-            color: #0071e3;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
+        .custom-store h4 { margin-bottom: 12px; color: #0071e3; font-size: 1.1rem; font-weight: 700; }
 
         .back-link {
             color: var(--apple-accent);
@@ -476,15 +329,9 @@
             text-decoration: none;
             transition: color 0.2s ease;
         }
+        .back-link:hover { color: #0077ed; text-decoration: underline; }
 
-        .back-link:hover {
-            color: #0077ed;
-            text-decoration: underline;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .summary-box {
             background: linear-gradient(180deg, #fafafa, #f5f5f7);
@@ -493,20 +340,9 @@
             border: 1px solid var(--apple-border);
             margin-top: 25px;
         }
-
-        .summary-box h4 {
-            color: var(--apple-text);
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        #sel-fav {
-            color: #92400e;
-            font-weight: 700;
-            display: none;
-            margin-top: 8px;
-        }
+        .summary-box h4 { color: var(--apple-text); text-align: center; margin-bottom: 15px; font-weight: 700; }
+        #sel-fav { color: #92400e; font-weight: 700; display: none; margin-top: 8px; }
+        .api-note { font-size: 12px; color: var(--apple-secondary); margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -546,7 +382,7 @@
         <div id="screen-search" class="screen">
             <span class="back-link" onclick="goToGroup()">← Volver al grupo</span>
             <h2>Agregar Deseo</h2>
-            <input type="text" id="product-search" placeholder="¿Qué deseas buscar? Ej: zapatillas, cámara, audífonos...">
+            <input type="text" id="product-search" placeholder="¿Qué deseas buscar? Ej: zapatillas deportivas, cámara, audífonos...">
             <button onclick="goToResults()">Buscar</button>
         </div>
 
@@ -555,7 +391,9 @@
             <span class="back-link" onclick="goBackToSearch()">← Nueva búsqueda</span>
             
             <div class="product-preview">
-                <img id="product-image" src="" alt="Imagen del producto">
+                <div id="image-container">
+                    <div class="loading-img">🔍 Buscando imagen del producto...</div>
+                </div>
                 <h3 id="product-name-display"></h3>
                 <p style="color:var(--apple-secondary); font-weight:600; margin-top:10px;">Especifica los detalles de tu producto</p>
             </div>
@@ -660,16 +498,31 @@
 
 <script>
 // ==============================================
-// FIREBASE — ADD YOUR CREDENTIALS HERE
+// CONFIGURACIÓN DE API DE IMÁGENES
+// ==============================================
+// OPCIÓN 1: Bing Image Search API (Recomendada)
+// Obtén tu clave gratuita en: portal.azure.com → Crear recurso "Bing Search v7"
+// Límite gratuito: 1,000 consultas/mes (~33/día)
+const BING_API_KEY = ""; // Pega tu clave aquí
+const BING_ENDPOINT = "https://api.bing.microsoft.com/v7.0/images/search";
+
+// OPCIÓN 2: Google Custom Search JSON API
+// Obtén clave en: console.cloud.google.com
+// Motor de búsqueda: cse.google.com/cse → activar "Buscar solo en imágenes"
+const GOOGLE_API_KEY = "AIzaSyCtHcK8kN0xxUbIZHxPaXkzhxYMcSjd3jA";
+const GOOGLE_CX = "e2fd89d4644574b71"; // ID de tu motor de búsqueda
+
+// ==============================================
+// FIREBASE — PEGA TUS DATOS AQUÍ
 // ==============================================
 const firebaseConfig = {
-  apiKey: "AIzaSyCQU0h_E8TuiQpqhBTA9zWF4Jd4vA7MDSA",
-  authDomain: "lista-de-deseos-47add.firebaseapp.com",
-  databaseURL: "https://lista-de-deseos-47add-default-rtdb.firebaseio.com",
-  projectId: "lista-de-deseos-47add",
-  storageBucket: "lista-de-deseos-47add.firebasestorage.app",
-  messagingSenderId: "433310996619",
-  appId: "1:433310996619:web:1f1c511b923929e5ff9c8e"
+  apiKey: "AQUÍ-TU-CLAVE",
+  authDomain: "tu-proyecto.firebaseapp.com",
+  databaseURL: "https://tu-proyecto-default-rtdb.firebaseio.com",
+  projectId: "tu-proyecto",
+  storageBucket: "tu-proyecto.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abc123xyz"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -839,29 +692,54 @@ function goBackToSearch() {
   goToSearch();
 }
 
-// ========== RESULTS — RELEVANT PRODUCT IMAGE ==========
-function goToResults() {
+// ========== FUNCIÓN PRINCIPAL: BUSCAR IMAGEN DEL PRODUCTO ==========
+async function fetchProductImage(query) {
+  const cleanQuery = encodeURIComponent(query + " producto foto");
+  
+  // Intentar primero con Bing Image Search API
+  if (BING_API_KEY) {
+    try {
+      const response = await fetch(`${BING_ENDPOINT}?q=${cleanQuery}&count=1&safeSearch=Moderate`, {
+        headers: { "Ocp-Apim-Subscription-Key": BING_API_KEY }
+      });
+      const data = await response.json();
+      if (data.value && data.value.length > 0) {
+        return data.value[0].contentUrl;
+      }
+    } catch (e) {
+      console.log("Bing API falló:", e);
+    }
+  }
+  
+  // Respaldo con Google Custom Search API
+  if (GOOGLE_API_KEY && GOOGLE_CX) {
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/customsearch/v1?q=${cleanQuery}&cx=${GOOGLE_CX}&searchType=image&key=${GOOGLE_API_KEY}&num=1`
+      );
+      const data = await response.json();
+      if (data.items && data.items.length > 0) {
+        return data.items[0].link;
+      }
+    } catch (e) {
+      console.log("Google API falló:", e);
+    }
+  }
+  
+  // Respaldo final: enlace directo a búsqueda de imágenes (no muestra imagen pero avisa)
+  return null;
+}
+
+// ========== RESULTS SCREEN ==========
+async function goToResults() {
   const query = document.getElementById('product-search').value.trim();
   if (!query) return alert('Escribe el nombre del producto');
   
   pendingProduct.name = query;
-  const encoded = encodeURIComponent(query);
   
-  const imgEl = document.getElementById('product-image');
-
-  // Primary: Unsplash direct product image
-  pendingProduct.image = `https://source.unsplash.com/400x400/?${encoded}`;
-  imgEl.src = pendingProduct.image;
-
-  // Fallback 1
-  imgEl.onerror = function() {
-    this.src = `https://loremflickr.com/400/400/${encoded}`;
-    // Fallback 2
-    this.onerror = function() {
-      this.src = `https://picsum.photos/seed/${encoded}/400/400`;
-      this.onerror = null;
-    };
-  };
+  // Mostrar estado de carga
+  const imageContainer = document.getElementById('image-container');
+  imageContainer.innerHTML = '<div class="loading-img">🔍 Buscando imagen del producto...</div>';
   
   document.getElementById('product-name-display').textContent = query;
   document.getElementById('product-size').value = '';
@@ -871,6 +749,29 @@ function goToResults() {
   resetStoreSelection();
   updateSummary();
   showScreen('screen-results');
+  
+  // Buscar imagen real del producto
+  const imageUrl = await fetchProductImage(query);
+  
+  if (imageUrl) {
+    pendingProduct.image = imageUrl;
+    imageContainer.innerHTML = `
+      <img id="product-image" src="${imageUrl}" alt="Imagen: ${query}" 
+           onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'error-img\\'>⚠️ Imagen no disponible</div>'">
+    `;
+  } else {
+    // Sin API configurada: mostrar mensaje y enlace directo
+    imageContainer.innerHTML = `
+      <div class="error-img">
+        ⚠️ Configura una API para ver imágenes de productos<br>
+        <span class="api-note">
+          Obtén una clave gratuita en <b>Azure Portal</b> (Bing Image Search) o <b>Google Cloud</b> (Custom Search API)<br>
+          y pégala en el código donde dice <code>BING_API_KEY</code> o <code>GOOGLE_API_KEY</code>
+        </span>
+      </div>
+    `;
+    pendingProduct.image = '';
+  }
 }
 
 function toggleAmazonOptions() {
@@ -998,8 +899,11 @@ function renderWishCard(wish, allowDelete = true) {
   return `
     <div class="wish-item">
       <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:flex-start;">
-        <img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:12px; background:#fff; padding:8px; border:1px solid var(--apple-border);" 
-             onerror="this.src='https://source.unsplash.com/100x100/?${encoded}'; this.onerror=function(){this.src='https://picsum.photos/seed/${encoded}/100/100'; this.onerror=null;}">
+        ${wish.image 
+          ? `<img src="${wish.image}" alt="${wish.name}" style="width:100px; height:100px; object-fit:contain; border-radius:12px; background:#fff; padding:8px; border:1px solid var(--apple-border);" 
+               onerror="this.style.display='none'">`
+          : `<div style="width:100px; height:100px; display:flex; align-items:center; justify-content:center; border-radius:12px; background:#f5f5f7; border:1px solid var(--apple-border); font-size:12px; color:var(--apple-secondary);">Sin imagen</div>`
+        }
         <div style="flex:1; min-width:200px;">
           <strong style="font-size:17px;">${wish.name}</strong>
           ${wish.isFavorite ? '<span class="favorite-tag">⭐ Favorita</span>' : ''}
