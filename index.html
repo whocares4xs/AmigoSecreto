@@ -909,33 +909,47 @@ async function eliminarDeseo(indice) {
 }
 
 ///////////PARA BORRAR LISTAS DE MIS LISTAS////////
-  const item = document.getElementById("existing-lists");
+  
+const container = document.getElementById("existing-lists");
   let holdTimeout;
-  const holdDuration = 1000; // 1 second in milliseconds
+  const holdDuration = 1000; // 1 second
 
-  // Function to start the timer
   function startHold(e) {
-    // Prevent default context menu on long press for mobile
+    if (e.target === container) return;
+
+    // Find the immediate child element under the parent container
+    const targetItem = e.target.closest(`#existing-lists > *`);
+    if (!targetItem) return;
+
+    if (e.type === 'touchstart') {
+      e.preventDefault();
+    }
+
+    // Start the countdown
     holdTimeout = setTimeout(() => {
-      item.remove(); // Deletes the div using MDN's Element.remove() API
+      // 1. Trigger the confirmation dialog box
+      const userConfirmed = confirm("Are you sure you want to delete this item?");
+      
+      // 2. If the user clicks 'OK', remove the item
+      if (userConfirmed) {
+        targetItem.remove();
+        // OPTIONAL: Call your backend API here to delete it permanently
+      }
     }, holdDuration);
   }
 
-  // Function to cancel the timer if released early
   function cancelHold() {
     clearTimeout(holdTimeout);
   }
 
-  // Mouse Events
-  item.addEventListener("mousedown", startHold);
-  item.addEventListener("mouseup", cancelHold);
-  item.addEventListener("mouseleave", cancelHold);
+  // Event Listeners for the parent container
+  container.addEventListener("mousedown", startHold);
+  container.addEventListener("mouseup", cancelHold);
+  container.addEventListener("mouseleave", cancelHold);
 
-  // Touch Events (for mobile/tablets)
-  item.addEventListener("touchstart", startHold);
-  item.addEventListener("touchend", cancelHold);
-  item.addEventListener("touchcancel", cancelHold);
-
+  container.addEventListener("touchstart", startHold, { passive: false });
+  container.addEventListener("touchend", cancelHold);
+  container.addEventListener("touchcancel", cancelHold);
 
     
 </script>
