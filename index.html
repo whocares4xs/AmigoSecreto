@@ -908,50 +908,7 @@ async function eliminarDeseo(indice) {
   await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).set(misDeseos);
 }
 
-///////////PARA BORRAR LISTAS DE MIS LISTAS////////
-  
-const container = document.getElementById("existing-lists");
-  let holdTimeout;
-  const holdDuration = 1000; // 1 second
 
-  function startHold(e) {
-    if (e.target === container) return;
-
-    // Find the immediate child element under the parent container
-    const targetItem = e.target.closest(`#existing-lists > *`);
-    if (!targetItem) return;
-
-    if (e.type === 'touchstart') {
-      e.preventDefault();
-    }
-
-    // Start the countdown
-    holdTimeout = setTimeout(() => {
-      // 1. Trigger the confirmation dialog box
-      const userConfirmed = confirm("Are you sure you want to delete this item?");
-      
-      // 2. If the user clicks 'OK', remove the item
-      if (userConfirmed) {
-        targetItem.remove();
-        // OPTIONAL: Call your backend API here to delete it permanently
-      }
-    }, holdDuration);
-  }
-
-  function cancelHold() {
-    clearTimeout(holdTimeout);
-  }
-
-  // Event Listeners for the parent container
-  container.addEventListener("mousedown", startHold);
-  container.addEventListener("mouseup", cancelHold);
-  container.addEventListener("mouseleave", cancelHold);
-
-  container.addEventListener("touchstart", startHold, { passive: false });
-  container.addEventListener("touchend", cancelHold);
-  container.addEventListener("touchcancel", cancelHold);
-
-    
 </script>
 </body>
 </html>
