@@ -907,6 +907,37 @@ async function eliminarDeseo(indice) {
   
   await db.ref(`lists/${listaActualId}/members/${usuarioActual}`).set(misDeseos);
 }
+
+///////////PARA BORRAR LISTAS DE MIS LISTAS////////
+  const item = document.getElementById("existing-lists");
+  let holdTimeout;
+  const holdDuration = 1000; // 1 second in milliseconds
+
+  // Function to start the timer
+  function startHold(e) {
+    // Prevent default context menu on long press for mobile
+    holdTimeout = setTimeout(() => {
+      item.remove(); // Deletes the div using MDN's Element.remove() API
+    }, holdDuration);
+  }
+
+  // Function to cancel the timer if released early
+  function cancelHold() {
+    clearTimeout(holdTimeout);
+  }
+
+  // Mouse Events
+  item.addEventListener("mousedown", startHold);
+  item.addEventListener("mouseup", cancelHold);
+  item.addEventListener("mouseleave", cancelHold);
+
+  // Touch Events (for mobile/tablets)
+  item.addEventListener("touchstart", startHold);
+  item.addEventListener("touchend", cancelHold);
+  item.addEventListener("touchcancel", cancelHold);
+
+
+    
 </script>
 </body>
 </html>
